@@ -5,6 +5,7 @@ using Volo.Abp.Identity.Web.Navigation;
 using Volo.Abp.SettingManagement.Web.Navigation;
 using Volo.Abp.TenantManagement.Web.Navigation;
 using Volo.Abp.UI.Navigation;
+using Volo.Abp.Users;
 
 namespace PPMRm.Web.Menus
 {
@@ -20,6 +21,7 @@ namespace PPMRm.Web.Menus
 
         private async Task ConfigureMainMenuAsync(MenuConfigurationContext context)
         {
+            var currentUser = (ICurrentUser)context.ServiceProvider.GetService(typeof(ICurrentUser));
             var administration = context.Menu.GetAdministration();
             var l = context.GetLocalizer<PPMRmResource>();
 
@@ -34,7 +36,7 @@ namespace PPMRm.Web.Menus
                 )
             );
 
-            if(await context.IsGrantedAsync(PPMRmConsts.Permissions.DataProvider))
+            if(await context.IsGrantedAsync(PPMRmConsts.Permissions.DataReviewer))
             {
                 context.Menu.GetAdministration().AddItem(
                 new ApplicationMenuItem(
@@ -62,7 +64,26 @@ namespace PPMRm.Web.Menus
                     )
                 );
             }
-            
+
+            if(currentUser.IsAuthenticated)
+            {
+                context.Menu.AddItem(new ApplicationMenuItem(
+                    "Help",
+                    l["Menu:Help"],
+                    icon: "fa fa-book",
+                    url: "/help"
+                ));
+            }
+
+            if (!currentUser.IsAuthenticated)
+            {
+                context.Menu.AddItem(new ApplicationMenuItem(
+                    "Resources",
+                    l["Menu:Resources"],
+                    icon: "fa fa-book",
+                    url: "/resources"
+                ));
+            }
 
             if (MultiTenancyConsts.IsEnabled)
             {
