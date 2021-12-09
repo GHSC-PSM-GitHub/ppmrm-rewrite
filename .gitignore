@@ -1,3 +1,4 @@
 .ionide
 .mfractor
 src/PPMRm.DbMigrator/Logs
+src/PPMRm.Web/Logs

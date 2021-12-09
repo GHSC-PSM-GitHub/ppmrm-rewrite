@@ -33,7 +33,37 @@ namespace PPMRm.Web.Menus
                     order: 0
                 )
             );
+
+            if(await context.IsGrantedAsync(PPMRmConsts.Permissions.DataProvider))
+            {
+                context.Menu.GetAdministration().AddItem(
+                new ApplicationMenuItem(
+                    "DataManagement",
+                    l["Menu:DataManagement"],
+                    icon: "fa fa-book"
+                    ).AddItem(
+                        new ApplicationMenuItem(
+                            "DataManagement.Products",
+                            l["Menu:Products"],
+                            url: "/products"
+                        )
+                    ).AddItem(
+                        new ApplicationMenuItem(
+                            "DataManagement.Countries",
+                            l["Menu:Countries"],
+                            url: "/countries"
+                        )
+                    ).AddItem(
+                        new ApplicationMenuItem(
+                            "DataManagement.Programs",
+                            l["Menu:Programs"],
+                            url: "/programs"
+                        )
+                    )
+                );
+            }
             
+
             if (MultiTenancyConsts.IsEnabled)
             {
                 administration.SetSubItemOrder(TenantManagementMenuNames.GroupName, 1);
