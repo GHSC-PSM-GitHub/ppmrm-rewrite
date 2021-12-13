@@ -13,6 +13,7 @@ using Volo.Abp.TenantManagement;
 using Volo.Abp.Validation.Localization;
 using Volo.Abp.VirtualFileSystem;
 using Volo.Abp.BlobStoring.Database;
+using Volo.CmsKit;
 
 namespace PPMRm
 {
@@ -27,6 +28,7 @@ namespace PPMRm
         typeof(AbpTenantManagementDomainSharedModule)
         )]
     [DependsOn(typeof(BlobStoringDatabaseDomainSharedModule))]
+    [DependsOn(typeof(CmsKitDomainSharedModule))]
     public class PPMRmDomainSharedModule : AbpModule
     {
         public override void PreConfigureServices(ServiceConfigurationContext context)

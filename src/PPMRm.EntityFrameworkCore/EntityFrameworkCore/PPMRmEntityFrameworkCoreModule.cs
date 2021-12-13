@@ -11,6 +11,7 @@ using Volo.Abp.PermissionManagement.EntityFrameworkCore;
 using Volo.Abp.SettingManagement.EntityFrameworkCore;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
 using Volo.Abp.BlobStoring.Database.EntityFrameworkCore;
+using Volo.CmsKit.EntityFrameworkCore;
 
 namespace PPMRm.EntityFrameworkCore
 {
@@ -27,6 +28,7 @@ namespace PPMRm.EntityFrameworkCore
         typeof(AbpFeatureManagementEntityFrameworkCoreModule)
         )]
     [DependsOn(typeof(BlobStoringDatabaseEntityFrameworkCoreModule))]
+    [DependsOn(typeof(CmsKitEntityFrameworkCoreModule))]
     public class PPMRmEntityFrameworkCoreModule : AbpModule
     {
         public override void PreConfigureServices(ServiceConfigurationContext context)

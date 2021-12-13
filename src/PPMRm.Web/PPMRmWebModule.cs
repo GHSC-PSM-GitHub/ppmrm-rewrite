@@ -37,6 +37,7 @@ using Volo.Abp.UI.Navigation.Urls;
 using Volo.Abp.UI;
 using Volo.Abp.UI.Navigation;
 using Volo.Abp.VirtualFileSystem;
+using Volo.CmsKit.Web;
 
 namespace PPMRm.Web
 {
@@ -54,6 +55,7 @@ namespace PPMRm.Web
         typeof(AbpAspNetCoreSerilogModule),
         typeof(AbpSwashbuckleModule)
         )]
+    [DependsOn(typeof(CmsKitWebModule))]
     public class PPMRmWebModule : AbpModule
     {
         public override void PreConfigureServices(ServiceConfigurationContext context)
