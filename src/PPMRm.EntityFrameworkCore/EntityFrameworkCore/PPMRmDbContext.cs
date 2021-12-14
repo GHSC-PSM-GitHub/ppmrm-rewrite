@@ -14,6 +14,8 @@ using Volo.Abp.TenantManagement;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
 using Volo.Abp.BlobStoring.Database.EntityFrameworkCore;
 using Volo.CmsKit.EntityFrameworkCore;
+using PPMRm.Core;
+using Volo.Abp.EntityFrameworkCore.Modeling;
 
 namespace PPMRm.EntityFrameworkCore
 {
@@ -52,8 +54,13 @@ namespace PPMRm.EntityFrameworkCore
         public DbSet<Tenant> Tenants { get; set; }
         public DbSet<TenantConnectionString> TenantConnectionStrings { get; set; }
 
+        // Core Data Management
+        public DbSet<Product> Products { get; set; }
+        public DbSet<Country> Countries { get; set; }
+        public DbSet<Program> Programs { get; set; }
+
         #endregion
-        
+
         public PPMRmDbContext(DbContextOptions<PPMRmDbContext> options)
             : base(options)
         {
@@ -75,16 +82,44 @@ namespace PPMRm.EntityFrameworkCore
             builder.ConfigureFeatureManagement();
             builder.ConfigureTenantManagement();
 
-            /* Configure your own tables/entities inside here */
+            // Configure CMSKit and Blobstoring
+            builder.ConfigureBlobStoring();
+            builder.ConfigureCmsKit();
 
+
+
+            /* Configure your own tables/entities inside here */
             //builder.Entity<YourEntity>(b =>
             //{
             //    b.ToTable(PPMRmConsts.DbTablePrefix + "YourEntities", PPMRmConsts.DbSchema);
             //    b.ConfigureByConvention(); //auto configure for the base class props
             //    //...
             //});
-            builder.ConfigureBlobStoring();
-            builder.ConfigureCmsKit();
+            builder.Entity<Product>(b =>
+            {
+                b.ToTable(PPMRmConsts.DbTablePrefix + "Products",
+                    PPMRmConsts.DbSchema);
+                b.ConfigureByConvention(); //auto configure for the base class props
+                b.Property(x => x.Name).IsRequired().HasMaxLength(128);
+                b.Property(x => x.DisplayName).IsRequired().HasMaxLength(128);
+                b.Property(x => x.BaseUnitMultiplier).IsRequired().HasDefaultValue(1);
+            });
+
+            builder.Entity<Country>(b =>
+            {
+                b.ToTable(PPMRmConsts.DbTablePrefix + "Countries",
+                    PPMRmConsts.DbSchema);
+                b.ConfigureByConvention(); //auto configure for the base class props
+                b.Property(x => x.Name).IsRequired().HasMaxLength(128);
+            });
+
+            builder.Entity<Program>(b =>
+            {
+                b.ToTable(PPMRmConsts.DbTablePrefix + "Programs",
+                    PPMRmConsts.DbSchema);
+                b.ConfigureByConvention(); //auto configure for the base class props
+                b.Property(x => x.Name).IsRequired().HasMaxLength(128);
+            });
         }
     }
 }

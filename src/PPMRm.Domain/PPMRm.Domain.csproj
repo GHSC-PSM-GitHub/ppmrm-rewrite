@@ -28,5 +28,6 @@
 
   <ItemGroup>
     <Folder Include="Permissions\" />
+    <Folder Include="Core\" />
   </ItemGroup>
 </Project>
