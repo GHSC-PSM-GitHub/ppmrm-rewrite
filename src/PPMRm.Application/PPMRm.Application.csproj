@@ -22,4 +22,7 @@
     <PackageReference Include="Volo.CmsKit.Application" Version="4.4.4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Core\" />
+  </ItemGroup>
 </Project>
