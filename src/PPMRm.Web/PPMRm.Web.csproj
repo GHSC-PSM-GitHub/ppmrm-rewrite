@@ -52,4 +52,9 @@
     <PackageReference Include="Volo.Abp.SettingManagement.Web" Version="4.4.4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\logos\" />
+    <Folder Include="Components\Footer\" />
+    <Folder Include="wwwroot\images\" />
+  </ItemGroup>
 </Project>
