@@ -75,16 +75,6 @@ namespace PPMRm.Web.Menus
                 ));
             }
 
-            if (!currentUser.IsAuthenticated)
-            {
-                context.Menu.AddItem(new ApplicationMenuItem(
-                    "Resources",
-                    l["Menu:Resources"],
-                    icon: "fa fa-book",
-                    url: "/resources"
-                ));
-            }
-
             if (MultiTenancyConsts.IsEnabled)
             {
                 administration.SetSubItemOrder(TenantManagementMenuNames.GroupName, 1);
