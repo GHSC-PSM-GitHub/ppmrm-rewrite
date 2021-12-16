@@ -6,6 +6,13 @@ namespace PPMRm.Core
 {
     public class Program : AuditedAggregateRoot<string>, ISoftDelete
     {
+        public Program()
+        {
+
+        }
+        public Program(string id) : base(id)
+        {
+        }
         public string Name { get; set; }
         public bool IsDeleted { get; set; }
     }
