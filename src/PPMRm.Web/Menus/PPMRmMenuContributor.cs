@@ -63,16 +63,94 @@ namespace PPMRm.Web.Menus
                         )
                     )
                 );
+
+                context.Menu.AddItem(
+                    new ApplicationMenuItem(
+                        "DataEntry",
+                       "Data Entry & View",
+                        icon: "fa fa-order"
+                        ).AddItem(
+                            new ApplicationMenuItem(
+                                "Orders",
+                                "Orders",
+                                url: "/orders"
+                            )
+                        ).AddItem(
+                            new ApplicationMenuItem(
+                                "Shipments",
+                                "Shipments",
+                                url: "/shipments"
+                            )
+                        )
+                );
+
+                context.Menu.AddItem(
+                    new ApplicationMenuItem(
+                        "Reports",
+                       "Reports",
+                        icon: "fa fa-order"
+                        ).AddItem(
+                            new ApplicationMenuItem(
+                                "Orders",
+                                "Orders",
+                                url: "/orders"
+                            )
+                        ).AddItem(
+                            new ApplicationMenuItem(
+                                "Shipments",
+                                "Shipments",
+                                url: "/shipments"
+                            )
+                        )
+                );
+                context.Menu.AddItem(
+                    new ApplicationMenuItem(
+                        "Graphs",
+                       "Graphs",
+                        icon: "fa fa-order"
+                        ).AddItem(
+                            new ApplicationMenuItem(
+                                "Orders",
+                                "Orders",
+                                url: "/orders"
+                            )
+                        ).AddItem(
+                            new ApplicationMenuItem(
+                                "Shipments",
+                                "Shipments",
+                                url: "/shipments"
+                            )
+                        )
+                );
+                context.Menu.AddItem(
+                    new ApplicationMenuItem(
+                        "Reports",
+                       "Indicator Reports",
+                        icon: "fa fa-order"
+                        ).AddItem(
+                            new ApplicationMenuItem(
+                                "Orders",
+                                "Orders",
+                                url: "/orders"
+                            )
+                        ).AddItem(
+                            new ApplicationMenuItem(
+                                "Shipments",
+                                "Shipments",
+                                url: "/shipments"
+                            )
+                        )
+                );
             }
 
             if(currentUser.IsAuthenticated)
             {
-                context.Menu.AddItem(new ApplicationMenuItem(
-                    "Help",
-                    l["Menu:Help"],
-                    icon: "fa fa-book",
-                    url: "/help"
-                ));
+                //context.Menu.AddItem(new ApplicationMenuItem(
+                //    "Help",
+                //    l["Menu:Help"],
+                //    icon: "fa fa-book",
+                //    url: "/pages/help"
+                //));
             }
 
             if (MultiTenancyConsts.IsEnabled)
