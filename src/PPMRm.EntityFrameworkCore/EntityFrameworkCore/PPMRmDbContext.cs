@@ -58,6 +58,7 @@ namespace PPMRm.EntityFrameworkCore
         public DbSet<Product> Products { get; set; }
         public DbSet<Country> Countries { get; set; }
         public DbSet<Program> Programs { get; set; }
+        public DbSet<Period> Periods { get; set; }
 
         #endregion
 
@@ -101,6 +102,7 @@ namespace PPMRm.EntityFrameworkCore
                     PPMRmConsts.DbSchema);
                 b.ConfigureByConvention(); //auto configure for the base class props
                 b.Property(x => x.Name).IsRequired().HasMaxLength(128);
+                b.HasIndex(x => x.Name).IsUnique();
                 b.Property(x => x.DisplayName).IsRequired().HasMaxLength(128);
                 b.Property(x => x.BaseUnitMultiplier).IsRequired().HasDefaultValue(1);
             });
@@ -111,6 +113,9 @@ namespace PPMRm.EntityFrameworkCore
                     PPMRmConsts.DbSchema);
                 b.ConfigureByConvention(); //auto configure for the base class props
                 b.Property(x => x.Name).IsRequired().HasMaxLength(128);
+                b.HasIndex(x => x.Name).IsUnique();
+                b.Property(x => x.ARTMISName).IsRequired().HasMaxLength(128);
+                b.HasIndex(x => x.ARTMISName).IsUnique();
             });
 
             builder.Entity<Program>(b =>
@@ -119,6 +124,15 @@ namespace PPMRm.EntityFrameworkCore
                     PPMRmConsts.DbSchema);
                 b.ConfigureByConvention(); //auto configure for the base class props
                 b.Property(x => x.Name).IsRequired().HasMaxLength(128);
+                b.HasIndex(x => x.Name).IsUnique();
+            });
+
+            builder.Entity<Period>(b =>
+            {
+                b.ToTable(PPMRmConsts.DbTablePrefix + "Periods",
+                    PPMRmConsts.DbSchema);
+                b.ConfigureByConvention(); //auto configure for the base class props
+                b.HasIndex(x => new { x.Year, x.Month }).IsUnique();
             });
         }
     }
