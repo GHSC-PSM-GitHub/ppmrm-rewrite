@@ -7,6 +7,7 @@ namespace PPMRm
         public PPMRmMartenRegistry()
         {
             //TODO: Define Aggregate & Entity configurations
+            //For<Order>().Duplicate(x => x.OrderNumber);
         }
     }
 }
