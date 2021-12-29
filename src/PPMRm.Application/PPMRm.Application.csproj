@@ -10,6 +10,7 @@
   <ItemGroup>
     <ProjectReference Include="..\PPMRm.Domain\PPMRm.Domain.csproj" />
     <ProjectReference Include="..\PPMRm.Application.Contracts\PPMRm.Application.Contracts.csproj" />
+    <ProjectReference Include="..\PPMRm.Marten\PPMRm.Marten.csproj" />
   </ItemGroup>
 
   <ItemGroup>
