@@ -3,6 +3,7 @@ using Marten;
 using Volo.Abp.Domain.Services;
 using System;
 using System.Threading.Tasks;
+using Volo.Abp.Auditing;
 
 namespace PPMRm.Repository
 {
@@ -22,6 +23,8 @@ namespace PPMRm.Repository
                 // Take non-persisted events, push them to the event stream, indexed by the aggregate ID
                 var events = aggregate.GetUncommittedEvents().ToArray();
                 session.Events.Append(aggregate.Id, aggregate.Version, events);
+                if(aggregate as IHasModificationTime != null)
+                    ((IHasModificationTime)aggregate).LastModificationTime = DateTime.UtcNow;
                 await session.SaveChangesAsync();
             }
             aggregate.ClearUncommittedEvents();
