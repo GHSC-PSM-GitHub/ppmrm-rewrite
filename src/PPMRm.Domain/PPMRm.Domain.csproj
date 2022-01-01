@@ -29,5 +29,9 @@
   <ItemGroup>
     <Folder Include="Permissions\" />
     <Folder Include="Core\" />
+    <Folder Include="Entities\" />
+    <Folder Include="Services\" />
+    <Folder Include="Entities\Events\" />
+    <Folder Include="ETOs\" />
   </ItemGroup>
 </Project>
