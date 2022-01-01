@@ -14,9 +14,9 @@ namespace PPMRm.Core
         private IRepository<Product, string> ProductRepository { get; }
         private IRepository<Country, string> CountryRepository { get; }
         private IRepository<Program, Programs> ProgramRepository { get; }
-        private IRepository<Period, string> PeriodRepository { get; }
+        private IRepository<Period, int> PeriodRepository { get; }
 
-        public CoreDataSeedContributor(IRepository<Product, string> productRepository, IRepository<Country, string> countryRepository, IRepository<Program, Programs> programRepository, IRepository<Period, string> periodRepository)
+        public CoreDataSeedContributor(IRepository<Product, string> productRepository, IRepository<Country, string> countryRepository, IRepository<Program, Programs> programRepository, IRepository<Period, int> periodRepository)
         {
             ProductRepository = productRepository;
             CountryRepository = countryRepository;

@@ -3,9 +3,9 @@ using Volo.Abp.Domain.Entities;
 
 namespace PPMRm.Core
 {
-    public class Period : AggregateRoot<string>
+    public class Period : AggregateRoot<int>
     {
-        public Period(int year, int month) : base($"{year}{month:00}")
+        public Period(int year, int month) : base(Convert.ToInt32($"{year}{month:00}"))
         {
             if (month < 1 || month > 12) throw new ArgumentOutOfRangeException(nameof(month));
             if (year < 2021 || year > 2100) throw new ArgumentOutOfRangeException(nameof(year));

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PPMRm.EntityFrameworkCore;
@@ -10,9 +11,10 @@ using Volo.Abp.EntityFrameworkCore;
 namespace PPMRm.Migrations
 {
     [DbContext(typeof(PPMRmDbContext))]
-    partial class PPMRmDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220101154304_RemovedPeriodAggregate")]
+    partial class RemovedPeriodAggregate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -86,46 +88,6 @@ namespace PPMRm.Migrations
                         .IsUnique();
 
                     b.ToTable("AppCountries");
-                });
-
-            modelBuilder.Entity("PPMRm.Core.Period", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasMaxLength(40)
-                        .HasColumnType("character varying(40)")
-                        .HasColumnName("ConcurrencyStamp");
-
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("ExtraProperties")
-                        .HasColumnType("text")
-                        .HasColumnName("ExtraProperties");
-
-                    b.Property<int>("Month")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Quarter")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<int>("Year")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Year", "Month")
-                        .IsUnique();
-
-                    b.ToTable("AppPeriods");
                 });
 
             modelBuilder.Entity("PPMRm.Core.Product", b =>
