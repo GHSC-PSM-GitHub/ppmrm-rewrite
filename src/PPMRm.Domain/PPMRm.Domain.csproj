@@ -33,5 +33,7 @@
     <Folder Include="Services\" />
     <Folder Include="Entities\Events\" />
     <Folder Include="ETOs\" />
+    <Folder Include="Commands\" />
+    <Folder Include="Repository\" />
   </ItemGroup>
 </Project>
