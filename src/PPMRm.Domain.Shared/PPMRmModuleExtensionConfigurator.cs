@@ -7,6 +7,9 @@ namespace PPMRm
 {
     public static class PPMRmModuleExtensionConfigurator
     {
+
+        private const string CountryIdPropertyName = "CountryId";
+        private const string CountryIdPropertyDisplayName = "Country";
         private static readonly OneTimeRunner OneTimeRunner = new OneTimeRunner();
 
         public static void Configure()
@@ -67,6 +70,29 @@ namespace PPMRm
              * See the documentation for more:
              * https://docs.abp.io/en/abp/latest/Module-Entity-Extensions
              */
+
+            OneTimeRunner.Run(() =>
+            {
+                ObjectExtensionManager.Instance.Modules()
+                    .ConfigureIdentity(identity =>
+                    {
+                        identity.ConfigureUser(user =>
+                        {
+                            user.AddOrUpdateProperty<string>( //property type: string
+                                CountryIdPropertyName, //property name
+                                property =>
+                                {
+                                    //validation rules
+                                    property.DefaultValue = null;
+                                    property.UI.Lookup.Url = "/api/app/country?MaxResultCount=100&Sorting=name";
+                                    property.UI.Lookup.DisplayPropertyName = "name";
+                                    //...other configurations for this property
+                                    property.DisplayName = new Volo.Abp.Localization.FixedLocalizableString(CountryIdPropertyDisplayName);
+                                }
+                            );
+                        });
+                    });
+            });
         }
     }
 }
