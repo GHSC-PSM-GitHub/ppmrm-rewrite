@@ -10,6 +10,7 @@ namespace PPMRm
             CreateMap<Product, ProductDto>();
             CreateMap<Country, CountryDto>();
             CreateMap<Program, ProgramDto>();
+            CreateMap<Period, PeriodDto>();
         }
     }
 }
