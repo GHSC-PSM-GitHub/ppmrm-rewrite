@@ -3,38 +3,38 @@
     $(function () {
 
 
-        var dataTable = $('#OrdersTable').DataTable(
+        var dataTable = $('#ShipmentsTable').DataTable(
             abp.libs.datatables.normalizeConfiguration({
                 serverSide: true,
                 paging: true,
                 order: [[1, "asc"]],
                 searching: false,
                 scrollX: true,
-                ajax: abp.libs.datatables.createAjax(pPMRm.orders.order.getList),
+                ajax: abp.libs.datatables.createAjax(pPMRm.orders.order.getShipmentsList),
                 columnDefs: [
                     {
-                        title: "Country",
-                        data: "country"
+                        title: "Product",
+                        data: "productName"
                     },
                     {
-                        title: "RO Number",
-                        data: "country"
+                        title: "Quantity",
+                        data: "productName"
                     },
                     {
-                        title: "Status",
-                        data: "country"
+                        title: "Base Unit Multiplier",
+                        data: "productName"
                     },
                     {
                         title: "RDD",
-                        data: "country"
+                        data: "productName"
                     },
                     {
                         title: "EDD",
-                        data: "country"
+                        data: "productName"
                     },
                     {
                         title: "AcDD",
-                        data: "country"
+                        data: "productName"
                     }
                 ]
             })

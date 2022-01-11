@@ -8,7 +8,7 @@
             order: [[1, "asc"]],
             searching: false,
             scrollX: true,
-            ajax: abp.libs.datatables.createAjax(pPMRm.core.country.getList),
+            ajax: abp.libs.datatables.createAjax(pPMRm.core.country.getUserCountryList),
             columnDefs: [
                 {
                     title: "Code",
@@ -19,13 +19,9 @@
                     data: "name"
                 },
                 {
-                    title: "CreationTime", data: "creationTime",
+                    title: "Actions", data: "id",
                     render: function (data) {
-                        return luxon
-                            .DateTime
-                            .fromISO(data, {
-                                locale: abp.localization.currentCulture.name
-                            }).toLocaleString(luxon.DateTime.DATETIME_SHORT);
+                        return '<a href="/country/' + data + '/periods">View Periods</a>';
                     }
                 }
             ]

@@ -71,23 +71,55 @@ namespace PPMRm.Web.Menus
                         icon: "fa fa-order"
                         ).AddItem(
                             new ApplicationMenuItem(
-                                "Orders",
-                                "Orders",
-                                url: "/orders"
+                                "CSUpdates",
+                                "Enter CS Updates",
+                                url: "/countryperiods/csupdates"
                             )
                         ).AddItem(
                             new ApplicationMenuItem(
-                                "Shipments",
-                                "Shipments",
+                                "ProductData",
+                                "Enter/View Product Data",
+                                url: "/countries"
+                            )
+                        ).AddItem(
+                            new ApplicationMenuItem(
+                                "DownloadForm",
+                                "Download Data Entry Form",
                                 url: "/shipments"
                             )
                         )
                 );
 
+                //context.Menu.AddItem(
+                //    new ApplicationMenuItem(
+                //        "DataEntry",
+                //       "Data Entry & View",
+                //        icon: "fa fa-order"
+                //        ).AddItem(
+                //            new ApplicationMenuItem(
+                //                "CSUpdates",
+                //                "Enter CS Updates",
+                //                url: "/countryperiods/csupdates"
+                //            )
+                //        ).AddItem(
+                //            new ApplicationMenuItem(
+                //                "ProductData",
+                //                "Enter/View Product Data",
+                //                url: "/countries"
+                //            )
+                //        ).AddItem(
+                //            new ApplicationMenuItem(
+                //                "DownloadFOrm",
+                //                "Download Data Entry Form",
+                //                url: "/shipments"
+                //            )
+                //        )
+                //);
+
                 context.Menu.AddItem(
                     new ApplicationMenuItem(
-                        "Reports",
-                       "Reports",
+                        "ARTMIS",
+                       "ARTMIS",
                         icon: "fa fa-order"
                         ).AddItem(
                             new ApplicationMenuItem(
@@ -103,25 +135,25 @@ namespace PPMRm.Web.Menus
                             )
                         )
                 );
-                context.Menu.AddItem(
-                    new ApplicationMenuItem(
-                        "Graphs",
-                       "Graphs",
-                        icon: "fa fa-order"
-                        ).AddItem(
-                            new ApplicationMenuItem(
-                                "Orders",
-                                "Orders",
-                                url: "/orders"
-                            )
-                        ).AddItem(
-                            new ApplicationMenuItem(
-                                "Shipments",
-                                "Shipments",
-                                url: "/shipments"
-                            )
-                        )
-                );
+                //context.Menu.AddItem(
+                //    new ApplicationMenuItem(
+                //        "Graphs",
+                //       "Graphs",
+                //        icon: "fa fa-order"
+                //        ).AddItem(
+                //            new ApplicationMenuItem(
+                //                "Orders",
+                //                "Orders",
+                //                url: "/orders"
+                //            )
+                //        ).AddItem(
+                //            new ApplicationMenuItem(
+                //                "Shipments",
+                //                "Shipments",
+                //                url: "/shipments"
+                //            )
+                //        )
+                //);
                 context.Menu.AddItem(
                     new ApplicationMenuItem(
                         "Reports",
