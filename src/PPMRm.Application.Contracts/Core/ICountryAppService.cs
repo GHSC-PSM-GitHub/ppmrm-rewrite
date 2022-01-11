@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 
@@ -10,6 +11,6 @@ namespace PPMRm.Core
             PagedAndSortedResultRequestDto, //Used for paging/sorting
             CountryDto>
     {
-        
+        Task<PagedResultDto<CountryDto>> GetUserCountryListAsync(PagedAndSortedResultRequestDto input);
     }
 }
