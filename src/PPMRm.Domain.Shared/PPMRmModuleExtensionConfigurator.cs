@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using PPMRm.Identity;
 using Volo.Abp.Identity;
 using Volo.Abp.ObjectExtending;
 using Volo.Abp.Threading;
@@ -7,9 +8,6 @@ namespace PPMRm
 {
     public static class PPMRmModuleExtensionConfigurator
     {
-
-        private const string CountryIdPropertyName = "CountryId";
-        private const string CountryIdPropertyDisplayName = "Country";
         private static readonly OneTimeRunner OneTimeRunner = new OneTimeRunner();
 
         public static void Configure()
@@ -79,7 +77,7 @@ namespace PPMRm
                         identity.ConfigureUser(user =>
                         {
                             user.AddOrUpdateProperty<string>( //property type: string
-                                CountryIdPropertyName, //property name
+                                IdentityConsts.UserExtensionProperties.CountryId, //property name
                                 property =>
                                 {
                                     //validation rules
@@ -87,7 +85,26 @@ namespace PPMRm
                                     property.UI.Lookup.Url = "/api/app/country?MaxResultCount=100&Sorting=name";
                                     property.UI.Lookup.DisplayPropertyName = "name";
                                     //...other configurations for this property
-                                    property.DisplayName = new Volo.Abp.Localization.FixedLocalizableString(CountryIdPropertyDisplayName);
+                                    property.DisplayName = new Volo.Abp.Localization.FixedLocalizableString(IdentityConsts.UserExtensionProperties.CountryIdDisplayName);
+                                }
+                            );
+                        });
+                    });
+
+                ObjectExtensionManager.Instance.Modules()
+                    .ConfigureIdentity(identity =>
+                    {
+                        identity.ConfigureUser(user =>
+                        {
+                            user.AddOrUpdateProperty<UserType>( //property type: string
+                                IdentityConsts.UserExtensionProperties.UserType, //property name
+                                property =>
+                                {
+                                    property.Attributes.Add(new RequiredAttribute());
+                                    //validation rules
+                                    property.DefaultValue = UserType.DataProvider;
+                                    //...other configurations for this property
+                                    property.DisplayName = new Volo.Abp.Localization.FixedLocalizableString(IdentityConsts.UserExtensionProperties.UserTypeDisplayName);
                                 }
                             );
                         });
