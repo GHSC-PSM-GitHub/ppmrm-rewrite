@@ -35,5 +35,7 @@
     <Folder Include="ETOs\" />
     <Folder Include="Commands\" />
     <Folder Include="Repository\" />
+    <Folder Include="Orders\" />
+    <Folder Include="CountryPeriods\" />
   </ItemGroup>
 </Project>
