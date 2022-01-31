@@ -96,5 +96,14 @@ namespace PPMRm.ARTMIS
             public const int Delete = 2;
             public const int Update = 3;
         }
+
+        public static class OrderDeliveryDateTypes
+        {
+            public const string RequestedDeliveryDate = "RDD";
+            public const string EstimatedDeliveryDate = "EDD";
+            public const string LatestEstimatedDeliveryDate = "LeDD";
+            public const string RevisedAgreedDeliveryDate = "RaDD";
+            public const string ActualDeliveryDate = "AcDD";
+        }
     }
 }
