@@ -6,6 +6,10 @@ namespace PPMRm.ARTMIS
 {
     public class ARTMISConsts
     {
+        public const string DateTimeFormat = "yyyyMMddHHmmss";
+        public const int TimestampLength = 14;
+        public const int ProductIdLength = 12;
+
         public const string ChangeIndicator = "CHANGE_IND";
         public const string EnterpriseCode = "ENTERPRISE_CODE";
 
@@ -84,6 +88,13 @@ namespace PPMRm.ARTMIS
             public const string PortOfDestination = "PORT_OF_DESTINATION";
             public const string PortOfOrigin = "PORT_OF_ORIGIN";
             public const string ChangeIndicator = ARTMISConsts.ChangeIndicator;
+        }
+
+        public static class ChangeIndicatorConsts
+        {
+            public const int Insert = 1;
+            public const int Delete = 2;
+            public const int Update = 3;
         }
     }
 }
