@@ -35,12 +35,37 @@
     }
     class Program
     {
-        public const string ConnectionString = @"Host=localhost;Port=5432;Database=ppmrm_rewrite_artmis;User ID=postgres;Password=admin;";
+        public const string ConnectionString = "Host=localhost;Port=5432;Database=ppmrm_rewrite_artmis;User ID=postgres;Password=admin;";
+
 
         static List<OrderEto> orderEvents;
         static List<Item> items;
         static List<string> Categories = new List<string>{ "ACTs","mRDTs", "Other Pharma", "Severe Malaria Meds", "SP" };
+
         async static Task Main(string[] args)
+        {
+            orderEvents = new List<OrderEto>();
+            var processRunner = StreamProcessRunner.Create<string>(DefineProcess);
+            await processRunner.ExecuteAsync(args[0]);
+            using var store = DocumentStore.For(ConnectionString);
+            using var session = store.LightweightSession();
+            var sortedEvents = orderEvents.OrderBy(e => e.FileDateTimeOffset).ThenBy(e => e.LineNumber);
+            var firstEvent = sortedEvents.First();
+            var lastEvent = sortedEvents.Last();
+            Console.WriteLine($"Total: - {orderEvents.Count}");
+            Console.WriteLine($"First: - {firstEvent.FileDateTimeOffset} - {firstEvent.LineNumber} - {firstEvent.FileName} ");
+            Console.WriteLine($"Last: - {lastEvent.FileDateTimeOffset} - {lastEvent.LineNumber} - {lastEvent.FileName} ");
+
+            var eventsByOrder = sortedEvents.GroupBy(e => e.OrderNumber).Select(e => new {Key = e.Key, Count = e.Count()});;
+            Console.WriteLine($"Unique orders - {eventsByOrder.Count()}");
+            Console.WriteLine($"Max events per order - {eventsByOrder.OrderByDescending(e => e.Count).First().Key}");
+            Console.WriteLine($"Max events per order - {eventsByOrder.OrderByDescending(e => e.Count).First().Count}");
+            foreach(var e in sortedEvents.Where(i => i.OrderNumber == "RO10123272"))
+            {
+                Console.WriteLine($"{e.FileNameTimestamp} - {e.LineNumber} - {e.OrderNumber} - {e.OrderLineNumber} - {e.ProductId} ");
+            }
+        }
+        async static Task SeedItems(string[] args)
         {
             orderEvents = new List<OrderEto>();
             items = new List<Item>();
@@ -67,7 +92,7 @@
         private static void DefineProcess(ISingleStream<string> contextStream)
         {
             var orderStream = contextStream
-                .CrossApplyFolderFiles("list all required files", "202112*.tar.gz", true)
+                .CrossApplyFolderFiles("list all required files", "2021*.tar.gz", true)
                 .CrossApplyGZipFiles("extract files from zip", "*order*.txt")
                 .CrossApplyTextFile("parse file", 
                     FlatFileDefinition.Create(i => new OrderEto
@@ -106,7 +131,8 @@
                         UOM = i.ToColumn(ARTMISConsts.OrderHeaders.UOM)
 
                     }).IsColumnSeparated('|'))
-                .Do("display zip file name on console", i => Console.WriteLine($"{i.FileDateTimeOffset.Date.ToShortDateString()} - {i.LineNumber} - {i.OrderNumber}"));
+                //.Do("display zip file name on console", i => Console.WriteLine($"{i.FileDateTimeOffset.Date.ToShortDateString()} - {i.LineNumber} - {i.OrderNumber}"));
+                .Do("add to list", i => orderEvents.Add(i));
             // TODO: Define the ETL process here
             
         }
