@@ -59,6 +59,6 @@ namespace PPMRm.ARTMIS.ETL
             });
             var mapper = config.CreateMapper();
             return mapper.Map<RemoteOrderEvent>(orderEto);
-        };
+        }
     }
 }
