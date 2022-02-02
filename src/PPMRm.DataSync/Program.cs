@@ -14,7 +14,8 @@
     using Paillave.Etl.EntityFrameworkCore;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
-
+    using Marten;
+    using PPMRm.Items;
     public class PPMRmDbContext : DbContext
     {
         public PPMRmDbContext()
@@ -22,7 +23,7 @@
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql(@"Host=localhost;Port=5432;Database=ppmrm_artmis;User ID=postgres;Password=admin;");
+            optionsBuilder.UseNpgsql(@"Host=localhost;Port=5432;Database=ppmrm_rewrite_artmis;User ID=postgres;Password=admin;");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -34,6 +35,7 @@
     }
     class Program
     {
+        public const string ConnectionString = @"Host=localhost;Port=5432;Database=ppmrm_rewrite_artmis;User ID=postgres;Password=admin;";
 
         static List<OrderEto> orderEvents;
         static List<Item> items;
@@ -45,13 +47,17 @@
             var processRunner = StreamProcessRunner.Create<string>(ProcessItems);
             using (var dbCtx = new PPMRmDbContext())
             {
+                using var store = DocumentStore.For(ConnectionString);
+                using var session = store.LightweightSession();
+
                 dbCtx.Database.EnsureCreated();
                 var executionOptions = new ExecutionOptions<string>
                 {
                     Resolver = new SimpleDependencyResolver().Register<DbContext>(dbCtx),
                 };
                 var res = await processRunner.ExecuteAsync(args[0], executionOptions);
-                dbCtx.Items.AddRange(items.Where(i => Categories.Contains( i.TracerCategory)));
+                session.StoreObjects(items.Where(i => Categories.Contains( i.TracerCategory)));
+                await session.SaveChangesAsync();
                 await dbCtx.SaveChangesAsync();
             }
             
@@ -152,19 +158,5 @@
         }
     }
 
-    public class Item
-    {
-        [Key]
-        public string Id { get; set; }
-        [Required]
-        public string Name { get; set; }
-        public string BaseUnit { get; set; }
-        [Required]
-        public decimal BaseUnitMultiplier { get; set; }
-        public string TracerCategory { get; set; }
-        public string UOM { get; set; }
-        public int? NumberOfTreatments { get; set; }
-        public string ProductId { get; set; }
-
-    }
+    
 }

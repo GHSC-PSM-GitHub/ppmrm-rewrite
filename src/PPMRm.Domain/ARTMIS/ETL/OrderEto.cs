@@ -16,10 +16,10 @@ namespace PPMRm.ARTMIS.ETL
         public string ExternalStatusStage { get; set; }
         public string ParentRONumber { get; set; }
         public string RONumber { get; set; }
-        public int? ROPrimeLineNumber { get; set; }
+        public int ROPrimeLineNumber { get; set; }
         public string PODOIONumber { get; set; }
         public string OrderNumber { get; set; }
-        public int? OrderLineNumber { get; set; }
+        public int OrderLineNumber { get; set; }
         public string ItemId { get; set; }
         public string UOM { get; set; }
         public decimal? UnitPrice { get; set; }
@@ -44,5 +44,5 @@ namespace PPMRm.ARTMIS.ETL
         public string ProductId => $"{ItemId.Substring(0, ARTMISConsts.ProductIdLength)}P";
         public string FileNameTimestamp => FileName.Substring(0, ARTMISConsts.TimestampLength);
         public DateTimeOffset FileDateTimeOffset => DateTimeOffset.ParseExact(FileNameTimestamp, ARTMISConsts.DateTimeFormat, System.Globalization.CultureInfo.InvariantCulture);
-    }
+        }
 }

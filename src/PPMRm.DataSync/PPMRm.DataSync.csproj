@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="11.0.0" />
+    <PackageReference Include="marten" Version="4.3.0" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.10" />
     <PackageReference Include="Paillave.EtlNet.EntityFrameworkCore" Version="2.0.4" />
     <PackageReference Include="Paillave.EtlNet.FileSystem" Version="2.0.4" />
@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EtlNet.GZip\EtlNet.GZip.csproj" />
+    <ProjectReference Include="..\PPMRm.Domain\PPMRm.Domain.csproj" />
   </ItemGroup>
 
 </Project>

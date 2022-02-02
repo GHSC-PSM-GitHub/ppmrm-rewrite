@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,19 +22,5 @@ namespace PPMRm.DataSync
         public decimal? CatalogPrice { get; set; }
         public string CountryOfOrigin { get; set; }
         public string ManufacturerLocation { get; set; }
-    }
-
-    public static class ItemMapping
-    {
-        public readonly static Dictionary<string, string> Mapping = new Dictionary<string, string>
-        {
-            { "Artemether/Lumefantrine 20/120 mg Dispersible Tablet, 1 x 6x1 Blister Pack Tablets", "" },
-            { "Artemether/Lumefantrine 20/120 mg Dispersible Tablet, 30 x 6x1 Blister Pack Tablets", "" },
-            { "Artemether/Lumefantrine 20/120 mg Tablet, 30 x 6x1 Blister Pack Tablets", "" },
-            {"", "" },
-            {"", "" },
-            {"", "" },
-            {"", "" }
-        };
     }
 }

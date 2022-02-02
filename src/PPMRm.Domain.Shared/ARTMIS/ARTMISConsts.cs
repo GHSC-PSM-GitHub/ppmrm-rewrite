@@ -6,6 +6,7 @@ namespace PPMRm.ARTMIS
 {
     public class ARTMISConsts
     {
+        public const string DateFormat = "yyyy-MM-dd";
         public const string DateTimeFormat = "yyyyMMddHHmmss";
         public const int TimestampLength = 14;
         public const int ProductIdLength = 12;
