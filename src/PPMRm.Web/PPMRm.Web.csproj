@@ -20,6 +20,7 @@
     <Content Remove="Logs\**" />
     <EmbeddedResource Remove="Logs\**" />
     <None Remove="Logs\**" />
+    <Content Remove="Pages\Items\Index.cshtml" />
     <Content Remove="wwwroot\libs\lodash\lodash.min.js" />
     <Content Remove="wwwroot\libs\jquery-form\jquery.form.min.js" />
     <Content Remove="wwwroot\libs\jquery-form\jquery.form.min.js.map" />
@@ -521,5 +522,17 @@
     <Folder Include="Pages\Shipments\" />
     <Folder Include="Pages\CountryPeriods\" />
     <Folder Include="Pages\CountryPeriods\ViewModels\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Pages\Items\Index.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Pages\Items\Index.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Pages\Items\Index.cshtml" />
   </ItemGroup>
 </Project>

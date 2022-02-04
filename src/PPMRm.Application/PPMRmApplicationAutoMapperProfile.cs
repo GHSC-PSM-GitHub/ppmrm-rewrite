@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using PPMRm.Core;
+using PPMRm.Items;
 
 namespace PPMRm
 {
@@ -11,6 +12,7 @@ namespace PPMRm
             CreateMap<Country, CountryDto>();
             CreateMap<Program, ProgramDto>();
             CreateMap<Period, PeriodDto>();
+            CreateMap<Item, ItemDto>();
         }
     }
 }

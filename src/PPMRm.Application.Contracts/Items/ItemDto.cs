@@ -1,11 +1,13 @@
-using Volo.Abp.Domain.Entities;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace PPMRm.Items
 {
-    public class Item : Entity<string>
+    public class ItemDto
     {
         public string Id { get; set; }
-        
+
         public string Name { get; set; }
         public string BaseUnit { get; set; }
 
@@ -13,7 +15,5 @@ namespace PPMRm.Items
         public string TracerCategory { get; set; }
         public string UOM { get; set; }
         public int? NumberOfTreatments { get; set; }
-        public string ProductId { get; set; }
-
     }
 }

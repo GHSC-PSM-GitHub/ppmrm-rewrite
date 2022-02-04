@@ -123,6 +123,12 @@ namespace PPMRm.Web.Menus
                         icon: "fa fa-order"
                         ).AddItem(
                             new ApplicationMenuItem(
+                                "Items",
+                                "Items",
+                                url: "/items"
+                            )
+                        ).AddItem(
+                            new ApplicationMenuItem(
                                 "Orders",
                                 "Orders",
                                 url: "/orders"

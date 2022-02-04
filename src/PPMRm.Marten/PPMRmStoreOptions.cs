@@ -17,7 +17,7 @@ namespace PPMRm
 
             // Add Schema Registries
             Schema.Include<PPMRmMartenRegistry>();
-
+            Schema.For<Items.Item>().Index(x => x.Name);
 
             // Run the Order as an inline projection
             Projections.SelfAggregate<ARTMIS.Orders.Order>(ProjectionLifecycle.Inline);
