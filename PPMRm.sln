@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29020.237
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PPMRm.Domain", "src\PPMRm.Domain\PPMRm.Domain.csproj", "{554AD327-6DBA-4F8F-96F8-81CE7A0C863F}"
 EndProject
@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PPMRm.Application", "src\PP
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PPMRm.EntityFrameworkCore", "src\PPMRm.EntityFrameworkCore\PPMRm.EntityFrameworkCore.csproj", "{C956DD76-69C8-4A9C-83EA-D17DF83340FD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PPMRm.Web", "src\PPMRm.Web\PPMRm.Web.csproj", "{068855E8-9240-4F1A-910B-CF825794513B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PPMRm.Web", "src\PPMRm.Web\PPMRm.Web.csproj", "{068855E8-9240-4F1A-910B-CF825794513B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{CA9AC87F-097E-4F15-8393-4BC07735A5B0}"
 EndProject
@@ -37,19 +37,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PPMRm.HttpApi.Client.Consol
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PPMRm.DbMigrator", "src\PPMRm.DbMigrator\PPMRm.DbMigrator.csproj", "{AA94D832-1CCC-4715-95A9-A483F23A1A5D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PPMRm.Marten", "src\PPMRm.Marten\PPMRm.Marten.csproj", "{FD20386D-6BF9-47A0-8F14-8AFDB3EE83FB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PPMRm.Marten", "src\PPMRm.Marten\PPMRm.Marten.csproj", "{FD20386D-6BF9-47A0-8F14-8AFDB3EE83FB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EventSourcing.Net", "EventSourcing.Net", "{AC9D87E0-0EAB-4D51-9394-0BAF8F9F1213}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "src\Core\Core.csproj", "{41034578-BB52-4A5B-BA34-8E3E620A0D05}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "src\Core\Core.csproj", "{41034578-BB52-4A5B-BA34-8E3E620A0D05}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Serialization", "src\Core.Serialization\Core.Serialization.csproj", "{C0D4C528-FB8A-4F72-A66B-29ABB3BCB8B6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core.Serialization", "src\Core.Serialization\Core.Serialization.csproj", "{C0D4C528-FB8A-4F72-A66B-29ABB3BCB8B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Marten", "src\Core.Marten\Core.Marten.csproj", "{1B1F61A5-9AFD-4BC3-9141-89A66FB83EAF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core.Marten", "src\Core.Marten\Core.Marten.csproj", "{1B1F61A5-9AFD-4BC3-9141-89A66FB83EAF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EtlNet.GZip", "src\EtlNet.GZip\EtlNet.GZip.csproj", "{BE0E9926-889C-4259-A378-AFC0717E78BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EtlNet.GZip", "src\EtlNet.GZip\EtlNet.GZip.csproj", "{BE0E9926-889C-4259-A378-AFC0717E78BE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PPMRm.DataSync", "src\PPMRm.DataSync\PPMRm.DataSync.csproj", "{D57D2B1A-5717-4463-ACE5-7883E43245B8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PPMRm.DataSync", "src\PPMRm.DataSync\PPMRm.DataSync.csproj", "{D57D2B1A-5717-4463-ACE5-7883E43245B8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
