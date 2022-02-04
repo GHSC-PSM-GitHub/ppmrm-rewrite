@@ -11,6 +11,7 @@ namespace PPMRm
         public static Guid ToGuid(this string input)
         {
             byte[] databytes = Encoding.Default.GetBytes(input);
+            Array.Resize(ref databytes, 16);
             return new Guid(databytes);
         }
 
