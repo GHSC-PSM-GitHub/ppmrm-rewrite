@@ -16,6 +16,8 @@
     using System.Linq;
     using Marten;
     using PPMRm.Items;
+    using Marten.Events.Projections;
+
     public class PPMRmDbContext : DbContext
     {
         public PPMRmDbContext()
@@ -35,7 +37,7 @@
     }
     class Program
     {
-        public const string ConnectionString = "Host=localhost;Port=5432;Database=ppmrm_rewrite_artmis;User ID=postgres;Password=admin;";
+        public const string ConnectionString = "Host=localhost;Port=5432;Database=ppmrm_core;User ID=postgres;Password=admin;";
 
 
         static List<OrderEto> orderEvents;
@@ -44,11 +46,42 @@
 
         async static Task Main(string[] args)
         {
+            var store = DocumentStore.For(opts =>
+            {
+                opts.Connection(ConnectionString);
+                // Run the Order as an inline projection
+                opts.Projections.SelfAggregate<ARTMIS.Orders.Order>(ProjectionLifecycle.Inline);
+            });
+            using var session = store.OpenSession();
+           // var order = session.Query<ARTMIS.Orders.Order>().Where(o => o.OrderNumber == "RO10137105").SingleOrDefault();
+            var decemberShipments = session.Query<ARTMIS.Orders.Order>().Where(o => o.DisplayDate > new DateTime(2021, 12, 1) && o.Lines.Any() && o.CountryId == "Angola");
+            
+            Console.WriteLine($"December shipments: {decemberShipments.Count()}");
+            foreach (var order in decemberShipments.ToList())
+            {
+                Console.WriteLine($"{order.RONumber}-{order.OrderNumber}-{order.CountryId}-{order.DisplayDate.Value.ToShortDateString()}-{order.DeliveryDateType}");
+                foreach (var line in order.Lines.OrderBy(l => l.LineNumber))
+                {
+                    Console.WriteLine($"{line.LineNumber} - {line.ProductId} - {line.OrderedQuantity}");
+                }
+
+            }
+            
+            Console.ReadLine();
+
+        }
+        async static Task SeedOrders(string[] args)
+        {
             orderEvents = new List<OrderEto>();
             var processRunner = StreamProcessRunner.Create<string>(DefineProcess);
-            await processRunner.ExecuteAsync(args[0]);
-            using var store = DocumentStore.For(ConnectionString);
-            using var session = store.LightweightSession();
+            await processRunner.ExecuteAsync(@"..\..\..\data");
+            var store = DocumentStore.For(opts =>
+            {
+                opts.Connection(ConnectionString);
+                // Run the Order as an inline projection
+                opts.Projections.SelfAggregate<ARTMIS.Orders.Order>(ProjectionLifecycle.Inline);
+            });
+            using var session = store.OpenSession();
             var sortedEvents = orderEvents.OrderBy(e => e.FileDateTimeOffset).ThenBy(e => e.LineNumber);
             var firstEvent = sortedEvents.First();
             var lastEvent = sortedEvents.Last();
@@ -56,14 +89,16 @@
             Console.WriteLine($"First: - {firstEvent.FileDateTimeOffset} - {firstEvent.LineNumber} - {firstEvent.FileName} ");
             Console.WriteLine($"Last: - {lastEvent.FileDateTimeOffset} - {lastEvent.LineNumber} - {lastEvent.FileName} ");
 
-            var eventsByOrder = sortedEvents.GroupBy(e => e.OrderNumber).Select(e => new {Key = e.Key, Count = e.Count()});;
+            var eventsByOrder = sortedEvents.GroupBy(e => e.OrderNumber).ToDictionary(e => e.Key, e => e.ToList());;
             Console.WriteLine($"Unique orders - {eventsByOrder.Count()}");
-            Console.WriteLine($"Max events per order - {eventsByOrder.OrderByDescending(e => e.Count).First().Key}");
-            Console.WriteLine($"Max events per order - {eventsByOrder.OrderByDescending(e => e.Count).First().Count}");
-            foreach(var e in sortedEvents.Where(i => i.OrderNumber == "RO10123272"))
+            foreach(var e in eventsByOrder)
             {
-                Console.WriteLine($"{e.FileNameTimestamp} - {e.LineNumber} - {e.OrderNumber} - {e.OrderLineNumber} - {e.ProductId} ");
+                var orderEvents = e.Value.Select(e => ARTMIS.Orders.OrderEvent.Create(e));
+                var orderId = e.Key.ToGuid();
+                session.Events.StartStream<ARTMIS.Orders.Order>(orderId, orderEvents);
+                Console.WriteLine($"Stored Order number: {e.Key}-{e.Value.Count()}");
             }
+            await session.SaveChangesAsync();
         }
         async static Task SeedItems(string[] args)
         {
