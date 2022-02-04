@@ -1,4 +1,5 @@
 ﻿using GoldenEye.Events;
+using PPMRm.ARTMIS.ETL;
 using PPMRm.Core;
 using System;
 using System.Collections.Generic;
@@ -30,7 +31,7 @@ namespace PPMRm.ARTMIS.Orders
                 PODOIONumber = poDoIoNumber
             };
     }
-    public abstract record OrderEvent : IEvent
+    public record OrderEvent
     {
         public string EnterpriseCode { get; set; }
         public string RecipientCountry { get; set; }
@@ -38,10 +39,10 @@ namespace PPMRm.ARTMIS.Orders
         public string ExternalStatusStage { get; set; }
         public string ParentRONumber { get; set; }
         public string RONumber { get; set; }
-        public int? ROPrimeLineNumber { get; set; }
+        public int ROPrimeLineNumber { get; set; }
         public string PODOIONumber { get; set; }
         public string OrderNumber { get; set; }
-        public int? OrderLineNumber { get; set; }
+        public int OrderLineNumber { get; set; }
         public string ItemId { get; set; }
         public string ProductId { get; set; }
         public string UOM { get; set; }
@@ -68,12 +69,42 @@ namespace PPMRm.ARTMIS.Orders
 
         public Guid StreamId => OrderNumber.ToGuid();
 
-        public OrderEvent Create()
+        public static OrderEvent Create(OrderEto o)
         {
-            OrderEvent orderEvent;
-            // TODO: add If condition on change indicator
-            orderEvent = new OrderLineInserted();
-            return orderEvent;
+            return new OrderEvent
+            {
+                ActualDeliveryDate = o.ActualDeliveryDate,
+                ActualShipDate = o.ActualShipDate,
+                ChangeIndicator = o.ChangeIndicator,
+                ConsigneeCompanyName = o.ConsigneeCompanyName,
+                EnterpriseCode = o.EnterpriseCode,
+                EstimatedDeliveryDate = o.EstimatedDeliveryDate,
+                ExternalStatusStage = o.ExternalStatusStage,
+                ExternalStatusStageSequence = o.ExternalStatusStageSequence,
+                ItemId = o.ItemId,
+                ProductId = o.ProductId,
+                LatestEstimatedDeliveryDate = o.LatestEstimatedDeliveryDate,
+                LineTotal = o.LineTotal,
+                OrderedQuantity = o.OrderedQuantity,
+                OrderLineNumber = o.OrderLineNumber,
+                OrderNumber = o.OrderNumber,
+                OrderType = o.OrderType,
+                ParentOrderEntryDate = o.ParentOrderEntryDate,
+                ParentRONumber = o.ParentRONumber,
+                PODOIONumber = o.PODOIONumber,
+                POReleasedForFulfillmentDate = o.POReleasedForFulfillmentDate,
+                PSMSourceApprovalDate = o.PSMSourceApprovalDate,
+                QACompletedDate = o.QACompletedDate,
+                QAInitiatedDate = o.QAInitiatedDate,
+                RecipientCountry = o.RecipientCountry,
+                RequestedDeliveryDate = o.RequestedDeliveryDate,
+                RevisedAgreedDeliveryDate = o.RevisedAgreedDeliveryDate,
+                RONumber = o.RONumber,
+                ROPrimeLineNumber = o.ROPrimeLineNumber,
+                StatusSequence = o.StatusSequence,
+                UnitPrice = o.UnitPrice,
+                UOM = o.UOM
+            };
         }
 
     }

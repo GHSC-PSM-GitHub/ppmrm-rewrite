@@ -8,14 +8,9 @@ using Volo.Abp;
 
 namespace PPMRm.ARTMIS.Orders
 {
-    internal class Order : Aggregate<string>
+    public class Order : Aggregate
     {
-        internal Order(string orderNumber, string countryId, string enterpriseCode, string parentRoNumber, string roNumber, string poDoIoNumber)
-        {           
-            var @event = OrderCreated.Create(orderNumber, countryId, enterpriseCode, parentRoNumber, roNumber, poDoIoNumber);
-            Enqueue(@event);
-            Apply(@event);
-        }
+
         #region Properties
         public string OrderNumber { get; set; }
 
@@ -54,54 +49,62 @@ namespace PPMRm.ARTMIS.Orders
         public List<OrderLine> Lines { get; set; } = new();
         #endregion
 
-        public void Apply(OrderCreated @event)
+        #region Extended ES
+        //public void Apply(OrderCreated @event)
+        //{
+        //    Id = @event.OrderNumber;
+        //    OrderNumber = @event.OrderNumber;
+        //    CountryId = @event.CountryId;
+        //    EnterpriseCode = @event.EnterpriseCode;
+        //    ParentRONumber = @event.ParentRONumber;
+        //    RONumber = @event.RONumber;
+        //    PODOIONumber = @event.PODOIONumber;
+        //    Version++;
+        //}
+
+        //public void Apply(OrderLineRemoved @event)
+        //{
+        //    ApplyHeaders(@event);
+        //    Lines.RemoveAll(l => l.LineNumber == @event.OrderLineNumber);
+        //    Version++;
+        //}
+
+        //public void Apply(OrderLineUpdated @event)
+        //{
+        //    ApplyHeaders(@event);
+        //    Lines.RemoveAll(l => l.LineNumber == @event.OrderLineNumber);
+        //    Lines.Add(CreateOrderLine(@event));
+        //    Version++;
+        //}
+
+        //public void Apply(OrderLineInserted @event)
+        //{
+        //    ApplyHeaders(@event);
+        //    Lines.RemoveAll(l => l.LineNumber == @event.OrderLineNumber);
+        //    Lines.Add(CreateOrderLine(@event));
+        //    Version++;
+        //}
+        #endregion
+
+        public void Apply(OrderEvent @event)
         {
-            Id = @event.OrderNumber;
+            ApplyHeaders(@event);
+            Lines.RemoveAll(l => l.LineNumber == @event.OrderLineNumber);
+            if(@event.ChangeIndicator != ChangeIndicator.Delete)
+            {
+                Lines.Add(CreateOrderLine(@event));
+            }           
+            Version++;
+        }
+        void ApplyHeaders(OrderEvent @event)
+        {
             OrderNumber = @event.OrderNumber;
-            CountryId = @event.CountryId;
+            CountryId = @event.RecipientCountry;
             EnterpriseCode = @event.EnterpriseCode;
             ParentRONumber = @event.ParentRONumber;
             RONumber = @event.RONumber;
             PODOIONumber = @event.PODOIONumber;
-            Version++;
-        }
 
-        public void Apply(OrderLineRemoved @event)
-        {
-            ApplyHeaders(@event);
-            Lines.RemoveAll(l => l.LineNumber == @event.OrderLineNumber);
-            Version++;
-        }
-
-        public void Apply(OrderLineUpdated @event)
-        {
-            ApplyHeaders(@event);
-            Lines.RemoveAll(l => l.LineNumber == @event.OrderLineNumber);
-            Lines.Add(CreateOrderLine(@event));
-            Version++;
-        }
-
-        public void Apply(OrderLineInserted @event)
-        {
-            ApplyHeaders(@event);
-            Lines.RemoveAll(l => l.LineNumber == @event.OrderLineNumber);
-            Lines.Add(CreateOrderLine(@event));
-            Version++;
-        }
-
-        static OrderLine CreateOrderLine(OrderEvent @event)
-        {
-            return new OrderLine
-            {
-                LineNumber = @event.OrderLineNumber.Value,
-                ItemId = @event.ItemId,
-                ProductId = @event.ProductId,
-                UOM = @event.UOM,
-                OrderedQuantity = @event.OrderedQuantity.GetValueOrDefault()
-            };
-        }
-        void ApplyHeaders(OrderEvent @event)
-        {
             RequestedDeliveryDate = @event.RequestedDeliveryDate;
             EstimatedDeliveryDate = @event.EstimatedDeliveryDate;
             LatestEstimatedDeliveryDate = @event.LatestEstimatedDeliveryDate;
@@ -119,6 +122,19 @@ namespace PPMRm.ARTMIS.Orders
             DeliveryDateType = ActualDeliveryDate != null ? ARTMISConsts.OrderDeliveryDateTypes.ActualDeliveryDate :
                                 EstimatedDeliveryDate != null ? ARTMISConsts.OrderDeliveryDateTypes.EstimatedDeliveryDate :
                                 RequestedDeliveryDate != null ? ARTMISConsts.OrderDeliveryDateTypes.RequestedDeliveryDate : null;
+        }
+
+        static OrderLine CreateOrderLine(OrderEvent @event)
+        {
+            return new OrderLine
+            {
+                LineNumber = @event.OrderLineNumber,
+                ROPrimeLineNumber = @event.ROPrimeLineNumber,
+                ItemId = @event.ItemId,
+                ProductId = @event.ProductId,
+                UOM = @event.UOM,
+                OrderedQuantity = @event.OrderedQuantity.GetValueOrDefault()
+            };
         }
     }
 }
