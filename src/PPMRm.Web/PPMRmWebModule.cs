@@ -121,6 +121,7 @@ namespace PPMRm.Web
                     bundle =>
                     {
                         bundle.AddFiles("/global-styles.css");
+                        bundle.AddFiles("/styles/bootstrap-multiselect.css");
                     }
                 );
             });

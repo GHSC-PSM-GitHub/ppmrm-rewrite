@@ -13,6 +13,9 @@ namespace PPMRm
             CreateMap<Program, ProgramDto>();
             CreateMap<Period, PeriodDto>();
             CreateMap<Item, ItemDto>();
+            CreateMap<ARTMIS.Orders.Order, Orders.OrderDto>();
+            CreateMap<ARTMIS.Orders.OrderLine, Orders.OrderLineDto>();
+
         }
     }
 }

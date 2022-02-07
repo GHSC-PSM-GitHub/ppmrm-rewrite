@@ -518,7 +518,6 @@
     <Folder Include="Pages\Products\" />
     <Folder Include="Pages\Countries\" />
     <Folder Include="Pages\Programs\" />
-    <Folder Include="Pages\Orders\" />
     <Folder Include="Pages\Shipments\" />
     <Folder Include="Pages\CountryPeriods\" />
     <Folder Include="Pages\CountryPeriods\ViewModels\" />

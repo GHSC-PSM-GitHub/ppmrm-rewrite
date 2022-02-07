@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <Import Project="..\..\common.props" />
 
@@ -27,6 +27,5 @@
     <Folder Include="Core\" />
     <Folder Include="CountryPeriods\" />
     <Folder Include="Orders\" />
-    <Folder Include="Shipments\" />
   </ItemGroup>
 </Project>

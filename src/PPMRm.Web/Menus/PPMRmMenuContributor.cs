@@ -133,12 +133,6 @@ namespace PPMRm.Web.Menus
                                 "Orders",
                                 url: "/orders"
                             )
-                        ).AddItem(
-                            new ApplicationMenuItem(
-                                "Shipments",
-                                "Shipments",
-                                url: "/shipments"
-                            )
                         )
                 );
                 //context.Menu.AddItem(

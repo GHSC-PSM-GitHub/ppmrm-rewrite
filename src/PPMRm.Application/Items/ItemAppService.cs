@@ -21,7 +21,7 @@ namespace PPMRm.Items
         async public Task<ItemDto> GetAsync(string id)
         {
             using var session = DocumentStore.LightweightSession();
-            var item = session.Load<Item>(id);
+            var item = await session.LoadAsync<Item>(id);
             return ObjectMapper.Map<Item, ItemDto>(item);
 
         }

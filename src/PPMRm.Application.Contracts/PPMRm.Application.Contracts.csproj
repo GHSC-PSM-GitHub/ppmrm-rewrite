@@ -25,6 +25,5 @@
   <ItemGroup>
     <Folder Include="Core\" />
     <Folder Include="CountryPeriods\" />
-    <Folder Include="Orders\" />
   </ItemGroup>
 </Project>

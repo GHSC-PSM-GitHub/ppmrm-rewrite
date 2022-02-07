@@ -31,11 +31,14 @@ namespace PPMRm.Core
         static Expression<Func<Period, bool>> Filter(GetPeriodListDto input)
         {
             if (input == null) return p => true;
+            var startYear = input.StartYear ?? 2021;
+            var startMonth = input.StartMonth ?? 1;
+            var endYear = input.EndYear ?? 2100;
+            var endMonth = input.EndMonth ?? 12;
+            var startPeriod = Convert.ToInt32($"{startYear}{startMonth:00}");
+            var endPeriod = Convert.ToInt32($"{endYear}{endMonth:00}");
             return p =>
-                (!input.StartYear.HasValue || p.Year >= input.StartYear.Value) &&
-                (!input.EndYear.HasValue || p.Year <= input.EndYear.Value) &&
-                (!input.StartMonth.HasValue || p.Month >= input.StartMonth.Value) &&
-                (!input.EndMonth.HasValue || p.Month <= input.EndMonth.Value);
+                p.Id >= startPeriod && p.Id <= endPeriod;
         }
     }
 }
