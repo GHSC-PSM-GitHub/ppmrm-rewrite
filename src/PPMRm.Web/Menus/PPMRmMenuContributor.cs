@@ -36,8 +36,28 @@ namespace PPMRm.Web.Menus
                 )
             );
 
-            //if(await context.IsGrantedAsync(PPMRmConsts.Permissions.DataReviewer))
-            //{
+            if (await context.IsGrantedAsync(PPMRmConsts.Permissions.DataReviewer))
+            {
+                context.Menu.AddItem(
+                    new ApplicationMenuItem(
+                        "ARTMIS",
+                       "ARTMIS",
+                        icon: "fa fa-order"
+                        ).AddItem(
+                            new ApplicationMenuItem(
+                                "Items",
+                                "Items",
+                                url: "/items"
+                            )
+                        ).AddItem(
+                            new ApplicationMenuItem(
+                                "Orders",
+                                "Orders",
+                                url: "/orders"
+                            )
+                        )
+                );
+            }
             //    context.Menu.GetAdministration().AddItem(
             //    new ApplicationMenuItem(
             //        "DataManagement",
@@ -64,77 +84,77 @@ namespace PPMRm.Web.Menus
             //        )
             //    );
 
-                //context.Menu.AddItem(
-                //    new ApplicationMenuItem(
-                //        "DataEntry",
-                //       "Data Entry & View",
-                //        icon: "fa fa-order"
-                //        ).AddItem(
-                //            new ApplicationMenuItem(
-                //                "CSUpdates",
-                //                "Enter CS Updates",
-                //                url: "/countryperiods/csupdates"
-                //            )
-                //        ).AddItem(
-                //            new ApplicationMenuItem(
-                //                "ProductData",
-                //                "Enter/View Product Data",
-                //                url: "/countries"
-                //            )
-                //        ).AddItem(
-                //            new ApplicationMenuItem(
-                //                "DownloadForm",
-                //                "Download Data Entry Form",
-                //                url: "/shipments"
-                //            )
-                //        )
-                //);
+            //context.Menu.AddItem(
+            //    new ApplicationMenuItem(
+            //        "DataEntry",
+            //       "Data Entry & View",
+            //        icon: "fa fa-order"
+            //        ).AddItem(
+            //            new ApplicationMenuItem(
+            //                "CSUpdates",
+            //                "Enter CS Updates",
+            //                url: "/countryperiods/csupdates"
+            //            )
+            //        ).AddItem(
+            //            new ApplicationMenuItem(
+            //                "ProductData",
+            //                "Enter/View Product Data",
+            //                url: "/countries"
+            //            )
+            //        ).AddItem(
+            //            new ApplicationMenuItem(
+            //                "DownloadForm",
+            //                "Download Data Entry Form",
+            //                url: "/shipments"
+            //            )
+            //        )
+            //);
 
-                //context.Menu.AddItem(
-                //    new ApplicationMenuItem(
-                //        "DataEntry",
-                //       "Data Entry & View",
-                //        icon: "fa fa-order"
-                //        ).AddItem(
-                //            new ApplicationMenuItem(
-                //                "CSUpdates",
-                //                "Enter CS Updates",
-                //                url: "/countryperiods/csupdates"
-                //            )
-                //        ).AddItem(
-                //            new ApplicationMenuItem(
-                //                "ProductData",
-                //                "Enter/View Product Data",
-                //                url: "/countries"
-                //            )
-                //        ).AddItem(
-                //            new ApplicationMenuItem(
-                //                "DownloadFOrm",
-                //                "Download Data Entry Form",
-                //                url: "/shipments"
-                //            )
-                //        )
-                //);
+            //context.Menu.AddItem(
+            //    new ApplicationMenuItem(
+            //        "DataEntry",
+            //       "Data Entry & View",
+            //        icon: "fa fa-order"
+            //        ).AddItem(
+            //            new ApplicationMenuItem(
+            //                "CSUpdates",
+            //                "Enter CS Updates",
+            //                url: "/countryperiods/csupdates"
+            //            )
+            //        ).AddItem(
+            //            new ApplicationMenuItem(
+            //                "ProductData",
+            //                "Enter/View Product Data",
+            //                url: "/countries"
+            //            )
+            //        ).AddItem(
+            //            new ApplicationMenuItem(
+            //                "DownloadFOrm",
+            //                "Download Data Entry Form",
+            //                url: "/shipments"
+            //            )
+            //        )
+            //);
 
-                context.Menu.AddItem(
-                    new ApplicationMenuItem(
-                        "ARTMIS",
-                       "ARTMIS",
-                        icon: "fa fa-order"
-                        ).AddItem(
-                            new ApplicationMenuItem(
-                                "Items",
-                                "Items",
-                                url: "/items"
-                            )
-                        ).AddItem(
-                            new ApplicationMenuItem(
-                                "Orders",
-                                "Orders",
-                                url: "/orders"
-                            )
-                        )
-                );
+            //context.Menu.AddItem(
+            //        new ApplicationMenuItem(
+            //            "ARTMIS",
+            //           "ARTMIS",
+            //            icon: "fa fa-order"
+            //            ).AddItem(
+            //                new ApplicationMenuItem(
+            //                    "Items",
+            //                    "Items",
+            //                    url: "/items"
+            //                )
+            //            ).AddItem(
+            //                new ApplicationMenuItem(
+            //                    "Orders",
+            //                    "Orders",
+            //                    url: "/orders"
+            //                )
+            //            )
+            //    );
                 //context.Menu.AddItem(
                 //    new ApplicationMenuItem(
                 //        "Graphs",
