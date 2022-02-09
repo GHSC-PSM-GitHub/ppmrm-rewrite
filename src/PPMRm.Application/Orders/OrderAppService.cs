@@ -30,13 +30,17 @@ namespace PPMRm.Orders
             return ObjectMapper.Map<ARTMIS.Orders.Order, OrderDto>(order);
         }
 
-        async public Task<PagedResultDto<OrderDto>> GetListAsync(PagedAndSortedResultRequestDto input)
+        async public Task<PagedResultDto<OrderDto>> GetListAsync(GetOrdersDto input)
         {
             using var session = DocumentStore.LightweightSession();
-            var totalCount = await session.Query<ARTMIS.Orders.Order>().Where(o => o.DisplayDate > new DateTime(2021,12,1) && o.Lines.Any()).CountAsync();
+            var ordersQueryable = session.Query<ARTMIS.Orders.Order>().Where(o => o.DisplayDate > new DateTime(2021, 12, 1) && o.Lines.Any());
+            if (input?.Countries?.Any() ?? false)
+                ordersQueryable = ordersQueryable.Where(o => input.Countries.Contains(o.CountryId));
+
+            var totalCount = await ordersQueryable.CountAsync();
             var products = await session.Query<Items.Item>().ToListAsync();
             var productIds = products.Select(p => p.ProductId).ToList();
-            var items = await session.Query<ARTMIS.Orders.Order>().Where(o => o.DisplayDate > new DateTime(2021, 12, 1) && o.Lines.Any()).OrderBy(i => i.CountryId).Skip(input.SkipCount).Take(input.MaxResultCount).ToListAsync();
+            var items = await ordersQueryable.OrderBy(i => i.CountryId).Skip(input.SkipCount).Take(input.MaxResultCount).ToListAsync();
             var result = ObjectMapper.Map<List<ARTMIS.Orders.Order>, List<OrderDto>>(items.ToList());
             foreach (var o in result)
             {

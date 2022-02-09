@@ -7,7 +7,6 @@ namespace PPMRm.Orders
 {
     public class GetOrdersDto : PagedResultRequestDto
     {
-        public string CountryId { get; set; }
-        public DateTime? OrderStartDate { get; set; }
+        public List<string> Countries { get; set; }
     }
 }

@@ -9,7 +9,7 @@ namespace PPMRm.Orders
     public interface IOrderAppService : IReadOnlyAppService<OrderDto,
                                                             OrderDto,
                                                             string,
-                                                            PagedAndSortedResultRequestDto>
+                                                            GetOrdersDto>
     {
         Task<(List<Core.CountryDto>, List<Core.PeriodDto>)> GetFiltersAsync();
         
