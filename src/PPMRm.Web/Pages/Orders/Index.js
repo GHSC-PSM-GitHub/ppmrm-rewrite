@@ -16,7 +16,6 @@ function format(d) {
         // ...use `element`...
     }
 
-    //alert(linesHtml);
     // `d` is the original data object for the row
     return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
         '<thead>' +
@@ -29,14 +28,22 @@ function format(d) {
 }
 
 $(document).ready(function () {
+
+    var inputAction = function (requestData, dataTableSettings) {
+        return {
+            countries: $("#SelectedCountries").val()
+        };
+    };
+
     var dataTable = $('#OrdersTable').DataTable(
         abp.libs.datatables.normalizeConfiguration({
             serverSide: true,
+            processing: true,
             paging: true,
             order: [[1, "asc"]],
             searching: false,
             scrollX: true,
-            ajax: abp.libs.datatables.createAjax(pPMRm.orders.order.getList),
+            ajax: abp.libs.datatables.createAjax(pPMRm.orders.order.getList, inputAction),
             columnDefs: [
                 {
                     title: "Country",
@@ -83,6 +90,10 @@ $(document).ready(function () {
         })
     );
 
+    $('#SelectedCountries').on('change', function () {
+        dataTable.ajax.reload();
+    });
+
     //$("#OrdersTable tbody").click(function () {
     //    alert("Handler for .click() called.");
     //});
@@ -104,7 +115,9 @@ $(document).ready(function () {
         }
     });
     $("#SelectedCountries").multiselect({
+        includeSelectAllOption: true,
         enableFiltering: true,
+        enableCaseInsensitiveFiltering: true,
         maxHeight: 200,
         buttonWidth: '250px'
     });

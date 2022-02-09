@@ -17,27 +17,8 @@
 <abp-card>
     <abp-card-header>
         <h2>ARTMIS Orders</h2>
-        <form class="form-inline">
-
-            <abp-select asp-for="@Model.SelectedCountries" asp-items="@Model.Countries" />
-
-            <!-- <label class="sr-only" for="inlineFormInputGroupUsername2">Username</label>
-            <div class="input-group mb-2 mr-sm-2">
-            <div class="input-group-prepend">
-                <div class="input-group-text"></div>
-            </div>
-            <input type="text" class="form-control" id="inlineFormInputGroupUsername2" placeholder="Username">
-            </div>
-
-            <div class="form-check mb-2 mr-sm-2">
-            <input class="form-check-input" type="checkbox" id="inlineFormCheck">
-            <label class="form-check-label" for="inlineFormCheck">
-                Remember me
-            </label>
-            </div> -->
-            
-             <abp-button id="reload" button-type="Primary" type="button">Refresh</abp-button>
-        </form>
+        
+         <abp-select asp-for="@Model.SelectedCountries" asp-items="@Model.Countries" />
     </abp-card-header>
     <abp-card-body>
         <abp-table striped-rows="true" id="OrdersTable"></abp-table>
