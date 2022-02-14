@@ -27,6 +27,7 @@
         public static class DataFormats
         {
             public const string DateDisplayFormat = "yyyy-MM-dd";
+            public const string MultiselectSelectAllValue = "null";
         }
     }
 }

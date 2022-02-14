@@ -13,6 +13,7 @@
 {
     <abp-script src="/Pages/Orders/Index.js" />
     <abp-script src="/js/bootstrap-multiselect.min.js" />
+    <abp-script src="/js/dataTables.buttons.min.js" />
 }
 <abp-card>
     <abp-card-header>
@@ -24,6 +25,9 @@
             </div>
             <div class="col-sm">
          <abp-select asp-for="@Model.SelectedProducts" asp-items="@Model.Products" />
+            </div>
+            <div class="col-sm" id="btnExport">
+         
             </div>
           </div>
         </div>

@@ -42,7 +42,9 @@ namespace PPMRm.Orders
         {
             using var session = DocumentStore.LightweightSession();
             var products = await session.Query<Items.Item>().ToListAsync();
-            var pIds = input.Products ?? new List<string>();
+            var pIds = products.Select(p => p.Id).ToList();
+            if (input?.Products?.Any() ?? false)
+                pIds = pIds.Where(p => input.Products.Contains(p)).ToList();
             var ordersQueryable = session.Query<ARTMIS.Orders.Order>().Where(o => (o.Lines.Any(_ => pIds.Contains(_.ProductId))) && (((o.ActualDeliveryDate == null) || o.DisplayDate > new DateTime(2021, 12, 1))));
             if (input?.Countries?.Any() ?? false)
                 ordersQueryable = ordersQueryable.Where(o => input.Countries.Contains(o.CountryId));

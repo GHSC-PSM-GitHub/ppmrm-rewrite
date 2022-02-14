@@ -22,6 +22,7 @@ function format(d) {
             '<td>' + element.totalQuantity + '</td>' +
             '<td>' + element.rdd + '</td>' +
             '<td>' + element.edd + '</td>' +
+            '<td>' + element.raDD + '</td>' +
             '<td>' + element.acDD + '</td>' +
             '</tr>';
         // ...use `element`...
@@ -30,7 +31,7 @@ function format(d) {
     // `d` is the original data object for the row
     return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
         '<thead>' +
-        '<tr><td>Line #</td><td>Product ID</td><td>Name</td><td>UOM</td><td>Quantity</td><td>Multiplier</td><td>Total</td><td>RDD</td><td>EDD</td><td>AcDD</td></tr>' +
+        '<tr><td>Line #</td><td>Product ID</td><td>Name</td><td>UOM</td><td>Quantity</td><td>Multiplier</td><td>Total</td><td>RDD</td><td>EDD</td><td>RaDD</td><td>AcDD</td></tr>' +
         '</thead>' +
         '<tbody>' + 
         linesHtml +
@@ -41,6 +42,8 @@ function format(d) {
 $(document).ready(function () {
 
     var inputAction = function (requestData, dataTableSettings) {
+        var countries = $("SelectedCountries").find("option:selected");
+        var products = $("SelectedCountries").find("option:selected");
         return {
             countries: $("#SelectedCountries").val(),
             products: $("#SelectedProducts").val()
@@ -82,6 +85,13 @@ $(document).ready(function () {
         })
     );
 
+    new $.fn.dataTable.Buttons(dataTable, {
+        buttons: [
+            'copy', 'excel', 'pdf'
+        ]
+    });
+
+
     $('#SelectedCountries').on('change', function () {
         dataTable.ajax.reload();
     });
@@ -110,6 +120,7 @@ $(document).ready(function () {
         }
     });
     $("#SelectedCountries").multiselect({
+        selectAllValue: 'multiselect-all',
         includeSelectAllOption: true,
         enableFiltering: true,
         enableCaseInsensitiveFiltering: true,
@@ -117,6 +128,7 @@ $(document).ready(function () {
         buttonWidth: '250px'
     });
     $("#SelectedProducts").multiselect({
+        selectAllValue: 'multiselect-all',
         includeSelectAllOption: true,
         enableFiltering: true,
         enableCaseInsensitiveFiltering: true,
