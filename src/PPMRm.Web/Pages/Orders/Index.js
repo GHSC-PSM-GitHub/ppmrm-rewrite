@@ -52,6 +52,10 @@ $(document).ready(function () {
 
     var dataTable = $('#OrdersTable').DataTable(
         abp.libs.datatables.normalizeConfiguration({
+            buttons: [
+                'copyHtml5',
+                'csvHtml5'
+            ],
             serverSide: true,
             processing: true,
             paging: true,
@@ -84,12 +88,6 @@ $(document).ready(function () {
             ]
         })
     );
-
-    new $.fn.dataTable.Buttons(dataTable, {
-        buttons: [
-            'copy', 'excel', 'pdf'
-        ]
-    });
 
 
     $('#SelectedCountries').on('change', function () {
