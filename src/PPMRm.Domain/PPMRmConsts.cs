@@ -23,5 +23,10 @@
 
             public static string[] All => new[] {ACTs, mRDTs, SevereMalariaMeds, SP, OtherPharma};
         }
+
+        public static class DataFormats
+        {
+            public const string DateDisplayFormat = "yyyy-MM-dd";
+        }
     }
 }

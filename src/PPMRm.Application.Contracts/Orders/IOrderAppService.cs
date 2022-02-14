@@ -12,6 +12,6 @@ namespace PPMRm.Orders
                                                             GetOrdersDto>
     {
         Task<(List<Core.CountryDto>, List<Core.PeriodDto>)> GetFiltersAsync();
-        
+        Task<PagedResultDto<OrderLineDto>> GetShipmentsAsync(GetOrdersDto input);
     }
 }

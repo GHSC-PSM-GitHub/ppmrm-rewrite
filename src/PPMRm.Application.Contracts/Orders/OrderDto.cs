@@ -61,6 +61,16 @@ namespace PPMRm.Orders
         public decimal OrderedQuantity { get; set; }
         public decimal BaseUnitMultiplier => Item?.BaseUnitMultiplier ?? 1;
         public decimal TotalQuantity => OrderedQuantity * BaseUnitMultiplier;
+        public DateTime? RequestedDeliveryDate { get; set; }
+        public DateTime? RevisedAgreedDeliveryDate { get; set; }
+
+        public DateTime? EstimatedDeliveryDate { get; set; }
+
+        public DateTime? ActualDeliveryDate { get; set; }
+        public string RDD => RequestedDeliveryDate?.ToString("yyyy-MM-dd") ?? string.Empty;
+        public string RaDD => RevisedAgreedDeliveryDate?.ToString("yyyy-MM-dd") ?? string.Empty;
+        public string EDD => EstimatedDeliveryDate?.ToString("yyyy-MM-dd") ?? string.Empty;
+        public string AcDD => ActualDeliveryDate?.ToString("yyyy-MM-dd") ?? string.Empty;
     }
 
     public class ShipmentDto : AuditedEntityDto<string>

@@ -133,8 +133,20 @@ namespace PPMRm.ARTMIS.Orders
                 ItemId = @event.ItemId,
                 ProductId = @event.ProductId,
                 UOM = @event.UOM,
-                OrderedQuantity = @event.OrderedQuantity.GetValueOrDefault()
-            };
+                OrderedQuantity = @event.OrderedQuantity.GetValueOrDefault(),
+                RequestedDeliveryDate = @event.RequestedDeliveryDate,
+                EstimatedDeliveryDate = @event.EstimatedDeliveryDate,
+                LatestEstimatedDeliveryDate = @event.LatestEstimatedDeliveryDate,
+                RevisedAgreedDeliveryDate = @event.RevisedAgreedDeliveryDate,
+                ActualDeliveryDate = @event.ActualDeliveryDate,
+                ActualShipDate = @event.ActualShipDate,
+                // Apply Order Display Date
+                DisplayDate = @event.ActualDeliveryDate ?? @event.EstimatedDeliveryDate ?? @event.RequestedDeliveryDate,
+                DeliveryDateType = @event.ActualDeliveryDate != null ? ARTMISConsts.OrderDeliveryDateTypes.ActualDeliveryDate :
+                                @event.EstimatedDeliveryDate != null ? ARTMISConsts.OrderDeliveryDateTypes.EstimatedDeliveryDate :
+                                @event.RequestedDeliveryDate != null ? ARTMISConsts.OrderDeliveryDateTypes.RequestedDeliveryDate : null
+
+        };
         }
     }
 }

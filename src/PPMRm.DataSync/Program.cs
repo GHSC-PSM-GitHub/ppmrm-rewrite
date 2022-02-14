@@ -17,6 +17,8 @@
     using Marten;
     using PPMRm.Items;
     using Marten.Events.Projections;
+    using System.Threading;
+    using Baseline.Dates;
 
     public class PPMRmDbContext : DbContext
     {
@@ -52,21 +54,39 @@
                 // Run the Order as an inline projection
                 opts.Projections.SelfAggregate<ARTMIS.Orders.Order>(ProjectionLifecycle.Inline);
             });
-            using var session = store.OpenSession();
-           // var order = session.Query<ARTMIS.Orders.Order>().Where(o => o.OrderNumber == "RO10137105").SingleOrDefault();
-            var decemberShipments = session.Query<ARTMIS.Orders.Order>().Where(o => o.DisplayDate > new DateTime(2021, 12, 1) && o.Lines.Any() && o.CountryId == "Angola");
-            
-            Console.WriteLine($"December shipments: {decemberShipments.Count()}");
-            foreach (var order in decemberShipments.ToList())
-            {
-                Console.WriteLine($"{order.RONumber}-{order.OrderNumber}-{order.CountryId}-{order.DisplayDate.Value.ToShortDateString()}-{order.DeliveryDateType}");
-                foreach (var line in order.Lines.OrderBy(l => l.LineNumber))
-                {
-                    Console.WriteLine($"{line.LineNumber} - {line.ProductId} - {line.OrderedQuantity}");
-                }
+            // Define the cancellation token.
+            CancellationTokenSource source = new CancellationTokenSource();
+            CancellationToken cancellation = source.Token;
+            using var daemon = store.BuildProjectionDaemon();
 
-            }
-            
+            // Fire up everything!
+            await daemon.StartAllShards();
+
+            //// or instead, rebuild a single projection
+            //await daemon.RebuildProjection("a projection name", cancellation);
+
+            // or a single projection by its type
+            await daemon.RebuildProjection<ARTMIS.Orders.Order>(cancellation);// Be careful with this. Wait until the async daemon has completely
+                                                                              // caught up with the currently known high water mark
+            await daemon.WaitForNonStaleData(1.Minutes());
+
+            await daemon.StopAll();
+
+            // using var session = store.OpenSession();
+            //// var order = session.Query<ARTMIS.Orders.Order>().Where(o => o.OrderNumber == "RO10137105").SingleOrDefault();
+            // var decemberShipments = session.Query<ARTMIS.Orders.Order>().Where(o => o.DisplayDate > new DateTime(2021, 12, 1) && o.Lines.Any() && o.CountryId == "Angola");
+
+            // Console.WriteLine($"December shipments: {decemberShipments.Count()}");
+            // foreach (var order in decemberShipments.ToList())
+            // {
+            //     Console.WriteLine($"{order.RONumber}-{order.OrderNumber}-{order.CountryId}-{order.DisplayDate.Value.ToShortDateString()}-{order.DeliveryDateType}");
+            //     foreach (var line in order.Lines.OrderBy(l => l.LineNumber))
+            //     {
+            //         Console.WriteLine($"{line.LineNumber} - {line.ProductId} - {line.OrderedQuantity}");
+            //     }
+
+            // }
+
             Console.ReadLine();
 
         }

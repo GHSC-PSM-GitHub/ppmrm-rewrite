@@ -19,6 +19,7 @@
         <h2>ARTMIS Orders</h2>
         
          <abp-select asp-for="@Model.SelectedCountries" asp-items="@Model.Countries" />
+         <abp-select asp-for="@Model.SelectedProducts" asp-items="@Model.Products" />
     </abp-card-header>
     <abp-card-body>
         <abp-table striped-rows="true" id="OrdersTable"></abp-table>

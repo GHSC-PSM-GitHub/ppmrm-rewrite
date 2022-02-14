@@ -1,4 +1,12 @@
-﻿
+﻿function formatDate(d) {
+    alert(d);
+    if (d.toString() == "null") return "-";
+    //alert(JSON.parse(JSON.stringify(d)));
+    var date = new Date(JSON.parse(JSON.stringify(d)));
+    if (!isNaN(date))
+        return date.toLocaleDateString('en-CA');
+    else return "-";
+}
 function format(d) {
 
     var linesHtml = "";
@@ -12,6 +20,9 @@ function format(d) {
             '<td>' + element.orderedQuantity + '</td>' +
             '<td>' + element.baseUnitMultiplier + '</td>' +
             '<td>' + element.totalQuantity + '</td>' +
+            '<td>' + element.rdd + '</td>' +
+            '<td>' + element.edd + '</td>' +
+            '<td>' + element.acDD + '</td>' +
             '</tr>';
         // ...use `element`...
     }
@@ -19,7 +30,7 @@ function format(d) {
     // `d` is the original data object for the row
     return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
         '<thead>' +
-        '<tr><td>Line #</td><td>Product ID</td><td>Name</td><td>UOM</td><td>Quantity</td><td>Multiplier</td><td>Total</td></tr>' +
+        '<tr><td>Line #</td><td>Product ID</td><td>Name</td><td>UOM</td><td>Quantity</td><td>Multiplier</td><td>Total</td><td>RDD</td><td>EDD</td><td>AcDD</td></tr>' +
         '</thead>' +
         '<tbody>' + 
         linesHtml +
@@ -31,7 +42,8 @@ $(document).ready(function () {
 
     var inputAction = function (requestData, dataTableSettings) {
         return {
-            countries: $("#SelectedCountries").val()
+            countries: $("#SelectedCountries").val(),
+            products: $("#SelectedProducts").val()
         };
     };
 
@@ -54,32 +66,12 @@ $(document).ready(function () {
                     data: "roNumber"
                 },
                 {
+                    title: "Order Number",
+                    data: "orderNumber"
+                },
+                {
                     title: "PO/DO/IO Number",
                     data: "podoioNumber"
-                },
-                {
-                    title: "RDD",
-                    data: "requestedDeliveryDate",
-                    dataFormat: "date"
-                },
-                {
-                    title: "EDD",
-                    data: "estimatedDeliveryDate",
-                    dataFormat: "date"
-                },
-                {
-                    title: "AcDD",
-                    data: "actualDeliveryDate",
-                    dataFormat: "date"
-                },
-                {
-                    title: "Display Date",
-                    data: "displayDate",
-                    dataFormat: "date"
-                },
-                {
-                    title: "PPMRm Date",
-                    data: "deliveryDateType"
                 },
                 {
                     "className": 'dt-control',
@@ -94,6 +86,9 @@ $(document).ready(function () {
         dataTable.ajax.reload();
     });
 
+    $('#SelectedProducts').on('change', function () {
+        dataTable.ajax.reload();
+    });
     //$("#OrdersTable tbody").click(function () {
     //    alert("Handler for .click() called.");
     //});
@@ -115,6 +110,13 @@ $(document).ready(function () {
         }
     });
     $("#SelectedCountries").multiselect({
+        includeSelectAllOption: true,
+        enableFiltering: true,
+        enableCaseInsensitiveFiltering: true,
+        maxHeight: 200,
+        buttonWidth: '250px'
+    });
+    $("#SelectedProducts").multiselect({
         includeSelectAllOption: true,
         enableFiltering: true,
         enableCaseInsensitiveFiltering: true,
