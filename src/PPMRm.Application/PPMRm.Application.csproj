@@ -10,6 +10,7 @@
   <ItemGroup>
     <ProjectReference Include="..\PPMRm.Domain\PPMRm.Domain.csproj" />
     <ProjectReference Include="..\PPMRm.Application.Contracts\PPMRm.Application.Contracts.csproj" />
+    <ProjectReference Include="..\PPMRm.Marten\PPMRm.Marten.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,4 +23,9 @@
     <PackageReference Include="Volo.CmsKit.Application" Version="4.4.4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Core\" />
+    <Folder Include="CountryPeriods\" />
+    <Folder Include="Orders\" />
+  </ItemGroup>
 </Project>

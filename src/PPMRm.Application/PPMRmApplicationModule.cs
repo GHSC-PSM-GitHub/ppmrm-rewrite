@@ -18,7 +18,8 @@ namespace PPMRm
         typeof(AbpPermissionManagementApplicationModule),
         typeof(AbpTenantManagementApplicationModule),
         typeof(AbpFeatureManagementApplicationModule),
-        typeof(AbpSettingManagementApplicationModule)
+        typeof(AbpSettingManagementApplicationModule),
+        typeof(PPMRmMartenModule)
         )]
     [DependsOn(typeof(CmsKitApplicationModule))]
     public class PPMRmApplicationModule : AbpModule

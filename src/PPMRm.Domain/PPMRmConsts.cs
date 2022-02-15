@@ -12,5 +12,22 @@
             public const string DataProvider = "DataProvider";
             public const string DataReviewer = "DataReviewer";
         }
+
+        public static class ProductTracerCategories
+        {
+            public const string ACTs = "ACTs";
+            public const string mRDTs = "mRDTs";
+            public const string SevereMalariaMeds = "Severe Malaria Meds";
+            public const string SP = "SP";
+            public const string OtherPharma = "Other Pharma";
+
+            public static string[] All => new[] {ACTs, mRDTs, SevereMalariaMeds, SP, OtherPharma};
+        }
+
+        public static class DataFormats
+        {
+            public const string DateDisplayFormat = "yyyy-MM-dd";
+            public const string MultiselectSelectAllValue = "null";
+        }
     }
 }

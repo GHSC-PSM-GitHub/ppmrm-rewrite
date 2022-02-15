@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <Import Project="..\..\common.props" />
 
@@ -22,4 +22,8 @@
     <PackageReference Include="Volo.CmsKit.Application.Contracts" Version="4.4.4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Core\" />
+    <Folder Include="CountryPeriods\" />
+  </ItemGroup>
 </Project>

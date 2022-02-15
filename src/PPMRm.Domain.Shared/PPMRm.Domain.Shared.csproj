@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <Import Project="..\..\common.props" />
 
@@ -30,4 +30,10 @@
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="5.0.*" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ARTMIS\ETL\" />
+    <Folder Include="Core\" />
+    <Folder Include="CountryPeriods\" />
+    <Folder Include="Identity\" />
+  </ItemGroup>
 </Project>

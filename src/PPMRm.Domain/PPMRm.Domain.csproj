@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <Import Project="..\..\common.props" />
 
@@ -8,10 +8,23 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Commands\**" />
+    <Compile Remove="ETOs\**" />
+    <Compile Remove="Orders\**" />
+    <EmbeddedResource Remove="Commands\**" />
+    <EmbeddedResource Remove="ETOs\**" />
+    <EmbeddedResource Remove="Orders\**" />
+    <None Remove="Commands\**" />
+    <None Remove="ETOs\**" />
+    <None Remove="Orders\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\PPMRm.Domain.Shared\PPMRm.Domain.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="GoldenEye" Version="1.0.0-alpha.9" />
     <PackageReference Include="Volo.Abp.BlobStoring.Database.Domain" Version="4.4.4" />
     <PackageReference Include="Volo.Abp.Emailing" Version="4.4.4" />
     <PackageReference Include="Volo.Abp.Identity.Domain" Version="4.4.4" />
@@ -28,5 +41,11 @@
 
   <ItemGroup>
     <Folder Include="Permissions\" />
+    <Folder Include="Core\" />
+    <Folder Include="Entities\" />
+    <Folder Include="Services\" />
+    <Folder Include="Entities\Events\" />
+    <Folder Include="Repository\" />
+    <Folder Include="CountryPeriods\" />
   </ItemGroup>
 </Project>
