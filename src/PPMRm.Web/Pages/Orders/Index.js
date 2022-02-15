@@ -22,7 +22,6 @@ function format(d) {
             '<td>' + element.totalQuantity + '</td>' +
             '<td>' + element.rdd + '</td>' +
             '<td>' + element.edd + '</td>' +
-            '<td>' + element.raDD + '</td>' +
             '<td>' + element.acDD + '</td>' +
             '</tr>';
         // ...use `element`...
@@ -31,7 +30,7 @@ function format(d) {
     // `d` is the original data object for the row
     return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
         '<thead>' +
-        '<tr><td>Line #</td><td>Product ID</td><td>Name</td><td>UOM</td><td>Quantity</td><td>Multiplier</td><td>Total</td><td>RDD</td><td>EDD</td><td>RaDD</td><td>AcDD</td></tr>' +
+        '<tr><td>Line #</td><td>Product ID</td><td>Name</td><td>UOM</td><td>Quantity</td><td>Multiplier</td><td>Total</td><td>RDD</td><td>EDD</td><td>AcDD</td></tr>' +
         '</thead>' +
         '<tbody>' + 
         linesHtml +
@@ -131,7 +130,8 @@ $(document).ready(function () {
         enableFiltering: true,
         enableCaseInsensitiveFiltering: true,
         maxHeight: 200,
-        buttonWidth: '250px'
+        maxWidth: 400,
+        buttonWidth: '400px'
     });
     $(document).on("click", "#reload", function () {
         dataTable.reload();
