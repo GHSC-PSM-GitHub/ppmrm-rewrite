@@ -55,8 +55,9 @@ namespace PPMRm.Orders
             var result = ObjectMapper.Map<List<ARTMIS.Orders.Order>, List<OrderDto>>(items.ToList());
             foreach (var o in result)
             {
+                o.Lines.RemoveAll(l => !pIds.Contains(l.ProductId));
                 foreach (var l in o.Lines)
-                {
+                {                   
                     l.Item = ObjectMapper.Map<Items.Item, Items.ItemDto>(products.SingleOrDefault(i => i.Id == l.ProductId));
                     l.RequestedDeliveryDate = l.RequestedDeliveryDate;
                     l.EstimatedDeliveryDate = l.EstimatedDeliveryDate;
