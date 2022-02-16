@@ -35,10 +35,22 @@ namespace PPMRm.Core
             var startMonth = input.StartMonth ?? 1;
             var endYear = input.EndYear ?? 2100;
             var endMonth = input.EndMonth ?? 12;
-            var startPeriod = Convert.ToInt32($"{startYear}{startMonth:00}");
-            var endPeriod = Convert.ToInt32($"{endYear}{endMonth:00}");
+            return Filter(startMonth, startYear, endMonth, endYear);
+            //var startPeriod = Convert.ToInt32($"{startYear}{startMonth:00}");
+            //var endPeriod = Convert.ToInt32($"{endYear}{endMonth:00}");
+            //return p =>
+            //    p.Id >= startPeriod && p.Id <= endPeriod;
+        }
+
+        static Expression<Func<Period, bool>> Filter(int startMonth, int startYear, int endMonth, int endYear)
+        {
             return p =>
-                p.Id >= startPeriod && p.Id <= endPeriod;
+                p.Year >= startYear && p.Year <= endYear &&
+                (
+                    (p.Year == startYear && p.Month >= startMonth) ||
+                    (p.Year == endYear && p.Month <= endMonth) ||
+                    (p.Year > startYear && p.Year < endYear)
+                );
         }
     }
 }
