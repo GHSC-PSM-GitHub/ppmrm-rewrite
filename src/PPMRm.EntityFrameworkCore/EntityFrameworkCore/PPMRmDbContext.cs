@@ -16,6 +16,7 @@ using Volo.Abp.BlobStoring.Database.EntityFrameworkCore;
 using Volo.CmsKit.EntityFrameworkCore;
 using PPMRm.Core;
 using Volo.Abp.EntityFrameworkCore.Modeling;
+using PPMRm.Products;
 
 namespace PPMRm.EntityFrameworkCore
 {
@@ -98,13 +99,10 @@ namespace PPMRm.EntityFrameworkCore
             //});
             builder.Entity<Product>(b =>
             {
-                b.ToTable(PPMRmConsts.DbTablePrefix + "Products",
+                b.ToTable("Products",
                     PPMRmConsts.DbSchema);
                 b.ConfigureByConvention(); //auto configure for the base class props
                 b.Property(x => x.Name).IsRequired().HasMaxLength(128);
-                b.HasIndex(x => x.Name).IsUnique();
-                b.Property(x => x.DisplayName).IsRequired().HasMaxLength(128);
-                b.Property(x => x.BaseUnitMultiplier).IsRequired().HasDefaultValue(1);
             });
 
             builder.Entity<Country>(b =>
