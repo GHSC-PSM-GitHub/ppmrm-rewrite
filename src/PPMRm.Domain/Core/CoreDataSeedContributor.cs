@@ -11,14 +11,12 @@ namespace PPMRm.Core
 {
     public class CoreDataSeedContributor : IDataSeedContributor, ITransientDependency
     {
-        private IRepository<Product, string> ProductRepository { get; }
         private IRepository<Country, string> CountryRepository { get; }
         private IRepository<Program, Programs> ProgramRepository { get; }
         private IRepository<Period, int> PeriodRepository { get; }
 
-        public CoreDataSeedContributor(IRepository<Product, string> productRepository, IRepository<Country, string> countryRepository, IRepository<Program, Programs> programRepository, IRepository<Period, int> periodRepository)
+        public CoreDataSeedContributor(IRepository<Country, string> countryRepository, IRepository<Program, Programs> programRepository, IRepository<Period, int> periodRepository)
         {
-            ProductRepository = productRepository;
             CountryRepository = countryRepository;
             ProgramRepository = programRepository;
             PeriodRepository = periodRepository;
@@ -27,11 +25,6 @@ namespace PPMRm.Core
         [UnitOfWork]
         public async Task SeedAsync(DataSeedContext context)
         {
-            if(await ProductRepository.GetCountAsync() <= 0)
-            {
-
-            }
-
             if(await CountryRepository.GetCountAsync() <= 0)
             {
                 var countries = List.Where(c => c.IsDeleted == false);
