@@ -26,7 +26,7 @@ namespace PPMRm.Web.Pages.Orders
             Countries = filters.Item1.Select(c => new SelectListItem { Value = c.ARTMISName, Text = c.Name }).ToList();
             Periods = filters.Item2.Select(p => new SelectListItem { Value = p.Id.ToString(), Text = p.ShortName }).ToList();
             SelectedCountries = Countries.Select(c => c.Value).ToList();
-            Products = session.Query<PPMRm.Items.Item>().OrderBy(i => i.Name).Select(i => new SelectListItem { Value = i.Id, Text = i.Name }).ToList();
+            Products = session.Query<PPMRm.Items.Item>().Where(i => i.ProductId != null).OrderBy(i => i.Name).Select(i => new SelectListItem { Value = i.Id, Text = i.Name }).ToList();
             SelectedProducts = Products.Select(p => p.Value).ToList();
         }
         public List<SelectListItem> Countries { get; set; } = new();

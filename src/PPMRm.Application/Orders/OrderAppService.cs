@@ -41,7 +41,7 @@ namespace PPMRm.Orders
         async public Task<PagedResultDto<OrderDto>> GetListAsync(GetOrdersDto input)
         {
             using var session = DocumentStore.LightweightSession();
-            var products = await session.Query<Items.Item>().ToListAsync();
+            var products = await session.Query<Items.Item>().Where(i => i.ProductId != null).ToListAsync();
             var pIds = products.Select(p => p.Id).ToList();
             if (input?.Products?.Any() ?? false)
                 pIds = pIds.Where(p => input.Products.Contains(p)).ToList();
