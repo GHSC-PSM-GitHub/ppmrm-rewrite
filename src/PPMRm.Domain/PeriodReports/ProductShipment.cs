@@ -6,6 +6,7 @@ namespace PPMRm.PeriodReports
     public class ProductShipment : Entity<Guid>
     {
         public string PeriodReportId { get; set; }
+        public int ProgramId { get; set; }
         public Supplier Supplier { get; set; }
         public DateTime? ShipmentDate { get; set; }
         public ShipmentDateType ShipmentDateType { get; set; }

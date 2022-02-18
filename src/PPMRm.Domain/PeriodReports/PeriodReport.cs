@@ -15,14 +15,15 @@ namespace PPMRm.PeriodReports
         {
 
         }
-        internal PeriodReport(string countryId, int periodId)
+        internal PeriodReport(string countryId, int periodId) : base($"{countryId}-{periodId}")
         {
             Check.NotNullOrWhiteSpace(countryId, nameof(countryId), 3, 3);
-            Id = $"{countryId}-{periodId}";
             CountryId = countryId;
             PeriodId = periodId;
             CommoditySecurityUpdates = new CommoditySecurityUpdates();
             ReportStatus = PeriodReportStatus.Initialized;
+            ProductShipments = new List<ProductShipment>();
+            ProductStocks = new List<ProductStock>();
         }
 
         public string CountryId { get; private set; }
@@ -30,6 +31,9 @@ namespace PPMRm.PeriodReports
         public CommoditySecurityUpdates CommoditySecurityUpdates { get; set; }
 
         public PeriodReportStatus? ReportStatus { get; private set; }
+
+        public ICollection<ProductShipment> ProductShipments { get; set; }
+        public ICollection<ProductStock> ProductStocks { get; set; }
 
         public void SetCSUpdates(CommoditySecurityUpdates csUpdates)
         {
