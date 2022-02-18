@@ -1,12 +1,12 @@
-﻿using System;
+﻿using PPMRm.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Volo.Abp.Domain.Entities;
 using Volo.Abp.Domain.Entities.Auditing;
 
-namespace PPMRm.ProgramReports
+namespace PPMRm.PeriodReports
 {
     public class ProductStock : AuditedEntity
     {
@@ -15,13 +15,15 @@ namespace PPMRm.ProgramReports
 
         }
 
-        public ProductStock(Guid programReportId, string productId)
+        public ProductStock(string periodReportId, Programs program, string productId)
         {
-            ProgramReportId = programReportId;
+            PeriodReportId = periodReportId;
+            ProgramId = (int)program;
             ProductId = productId;
         }
 
-        public Guid ProgramReportId { get; set; }
+        public string PeriodReportId { get; set; }
+        public int ProgramId { get; set; }
         public string ProductId { get; set; }
         public decimal SOH { get; set; }
         public DateTime? DateOfSOH { get; set; }
@@ -30,7 +32,7 @@ namespace PPMRm.ProgramReports
         public DateTime? DateActionNeededBy { get; set; }
         public override object[] GetKeys()
         {
-            return new object[] { ProgramReportId, ProductId };
+            return new object[] { PeriodReportId, ProgramId, ProductId };
         }
     }
 }

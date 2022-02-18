@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace PPMRm.ProgramReports
+namespace PPMRm.PeriodReports
 {
     public enum Supplier
     {

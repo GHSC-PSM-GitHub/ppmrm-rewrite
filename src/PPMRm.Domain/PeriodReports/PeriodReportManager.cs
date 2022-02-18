@@ -1,5 +1,4 @@
 ﻿using PPMRm.Core;
-using PPMRm.ProgramReports;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +7,7 @@ using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Domain.Services;
+
 namespace PPMRm.PeriodReports
 {
     public class PeriodReportManager : DomainService
