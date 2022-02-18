@@ -6,7 +6,7 @@ namespace PPMRm.Core
 {
     public interface IProgramAppService : ICrudAppService<
             ProgramDto, 
-            Programs, 
+            int, 
             PagedAndSortedResultRequestDto,
             ProgramDto>
     {

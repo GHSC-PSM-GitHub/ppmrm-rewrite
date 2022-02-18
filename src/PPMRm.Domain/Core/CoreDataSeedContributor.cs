@@ -12,10 +12,10 @@ namespace PPMRm.Core
     public class CoreDataSeedContributor : IDataSeedContributor, ITransientDependency
     {
         private IRepository<Country, string> CountryRepository { get; }
-        private IRepository<Program, Programs> ProgramRepository { get; }
+        private IRepository<Program, int> ProgramRepository { get; }
         private IRepository<Period, int> PeriodRepository { get; }
 
-        public CoreDataSeedContributor(IRepository<Country, string> countryRepository, IRepository<Program, Programs> programRepository, IRepository<Period, int> periodRepository)
+        public CoreDataSeedContributor(IRepository<Country, string> countryRepository, IRepository<Program, int> programRepository, IRepository<Period, int> periodRepository)
         {
             CountryRepository = countryRepository;
             ProgramRepository = programRepository;
