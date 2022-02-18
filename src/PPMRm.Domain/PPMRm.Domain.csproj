@@ -46,6 +46,5 @@
     <Folder Include="Services\" />
     <Folder Include="Entities\Events\" />
     <Folder Include="Repository\" />
-    <Folder Include="CountryPeriods\" />
   </ItemGroup>
 </Project>

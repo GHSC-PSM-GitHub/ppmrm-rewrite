@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using PPMRm.CountryPeriods;
 using PPMRm.Web.Pages.CountryPeriods.ViewModels;
 
 namespace PPMRm.Web.Pages.CountryPeriods
@@ -16,12 +15,12 @@ namespace PPMRm.Web.Pages.CountryPeriods
 
         public CountryPeriodDetailViewModel CountryPeriod { get; set; }
 
-        ICountryPeriodAppService CountryPeriodAppService { get; }
+        //ICountryPeriodAppService CountryPeriodAppService { get; }
 
-        public DetailModel(ICountryPeriodAppService countryPeriodAppService)
-        {
-            CountryPeriodAppService = countryPeriodAppService;
-        }
+        //public DetailModel(ICountryPeriodAppService countryPeriodAppService)
+        //{
+        //    CountryPeriodAppService = countryPeriodAppService;
+        //}
 
         public void OnGet()
         {
