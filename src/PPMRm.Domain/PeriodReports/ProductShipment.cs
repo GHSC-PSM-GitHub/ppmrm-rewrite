@@ -5,17 +5,34 @@ namespace PPMRm.PeriodReports
 {
     public class ProductShipment : Entity<Guid>
     {
-        public string PeriodReportId { get; set; }
-        public int ProgramId { get; set; }
-        public Supplier Supplier { get; set; }
-        public DateTime? ShipmentDate { get; set; }
-        public ShipmentDateType ShipmentDateType { get; set; }
-        public string ProductId { get; set; }
+        private ProductShipment()
+        {
+
+        }
+
+        internal ProductShipment(Guid id, string periodReportId, int programId, string productId, Supplier supplier, DateTime? shipmentDate, ShipmentDateType shipmentDateType, decimal quantity, ShipmentDataSource shipmentDataSource)
+        {
+
+        }
+        public string PeriodReportId { get; protected set; }
+        public int ProgramId { get; protected set; }
+        public Supplier Supplier { get; protected set; }
+        public DateTime? ShipmentDate { get; protected set; }
+        public ShipmentDateType ShipmentDateType { get; protected set; }
+        public string ProductId { get; protected set; }
         /// <summary>
         /// (Optional) ARTMIS Item/Product ID
         /// </summary>
-        public string ItemId { get; set; }
-        public decimal Quantity { get; set; }
-        public ShipmentDataSource DataSource { get; set; }
+        public string ItemId { get; protected set; }
+        public decimal Quantity { get; protected set; }
+        public ShipmentDataSource DataSource { get; protected set; }
+
+        internal static ProductShipment CreateARTMISShipment(Guid id, string periodReportId, int programId, string productId, DateTime? shipmentDate, ShipmentDateType shipmentDateType, decimal quantity, string psmProductId = null)
+        {
+            return new ProductShipment(id, periodReportId, programId, productId, Supplier.PMI, shipmentDate, shipmentDateType, quantity, ShipmentDataSource.ARTMIS)
+            {
+                ItemId = psmProductId
+            };
+        }
     }
 }

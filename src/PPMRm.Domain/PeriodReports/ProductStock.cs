@@ -10,26 +10,39 @@ namespace PPMRm.PeriodReports
 {
     public class ProductStock : AuditedEntity
     {
-        public ProductStock()
+        private ProductStock()
         {
 
         }
 
-        public ProductStock(string periodReportId, Programs program, string productId)
+        internal ProductStock(string periodReportId, Programs program, string productId) : this(periodReportId, (int)program, productId)
+        {
+        }
+
+        internal ProductStock(string periodReportId, int programId, string productId)
         {
             PeriodReportId = periodReportId;
-            ProgramId = (int)program;
+            ProgramId = programId;
             ProductId = productId;
         }
 
-        public string PeriodReportId { get; set; }
-        public int ProgramId { get; set; }
-        public string ProductId { get; set; }
-        public decimal SOH { get; set; }
-        public DateTime? DateOfSOH { get; set; }
-        public decimal? AMC { get; set; }
-        public string ActionRecommended { get; set; }
-        public DateTime? DateActionNeededBy { get; set; }
+        public string PeriodReportId { get; protected set; }
+        public int ProgramId { get; protected set; }
+        public string ProductId { get; protected set; }
+        public decimal SOH { get; protected set; }
+        public DateTime? DateOfSOH { get; protected set; }
+        public decimal? AMC { get; protected set; }
+        public string ActionRecommended { get; protected set; }
+        public DateTime? DateActionNeededBy { get; protected set; }
+
+        internal void Update(decimal soh, DateTime? dateOfSoh, decimal? amc, string actionRecommended, DateTime? dateActionNeededBy)
+        {
+            SOH = soh;
+            DateOfSOH = dateOfSoh;
+            AMC = amc;
+            ActionRecommended = actionRecommended;
+            DateActionNeededBy = dateActionNeededBy;
+        }
         public override object[] GetKeys()
         {
             return new object[] { PeriodReportId, ProgramId, ProductId };

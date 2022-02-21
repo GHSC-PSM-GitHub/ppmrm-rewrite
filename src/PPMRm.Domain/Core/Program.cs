@@ -6,7 +6,7 @@ namespace PPMRm.Core
 {
     public class Program : AuditedAggregateRoot<int>, ISoftDelete
     {
-        public Program()
+        private Program()
         {
 
         }

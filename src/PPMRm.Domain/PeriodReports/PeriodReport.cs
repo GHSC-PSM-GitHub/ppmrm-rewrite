@@ -11,14 +11,13 @@ namespace PPMRm.PeriodReports
 {
     public class PeriodReport : FullAuditedAggregateRoot<string>
     {
-        public PeriodReport()
+        private PeriodReport()
         {
 
         }
         internal PeriodReport(string countryId, int periodId) : base($"{countryId}-{periodId}")
-        {
-            Check.NotNullOrWhiteSpace(countryId, nameof(countryId), 3, 3);
-            CountryId = countryId;
+        {   
+            CountryId = Check.NotNullOrWhiteSpace(countryId, nameof(countryId));
             PeriodId = periodId;
             CommoditySecurityUpdates = new CommoditySecurityUpdates();
             ReportStatus = PeriodReportStatus.Initialized;
@@ -28,16 +27,16 @@ namespace PPMRm.PeriodReports
 
         public string CountryId { get; private set; }
         public int PeriodId { get; private set; }
-        public CommoditySecurityUpdates CommoditySecurityUpdates { get; set; }
+        public CommoditySecurityUpdates CommoditySecurityUpdates { get; private set; }
 
         public PeriodReportStatus? ReportStatus { get; private set; }
 
-        public ICollection<ProductShipment> ProductShipments { get; set; }
-        public ICollection<ProductStock> ProductStocks { get; set; }
+        public ICollection<ProductShipment> ProductShipments { get; private set; }
+        public ICollection<ProductStock> ProductStocks { get; private set; }
 
         public void SetCSUpdates(CommoditySecurityUpdates csUpdates)
         {
-            CommoditySecurityUpdates = csUpdates ?? throw new ArgumentNullException(nameof(csUpdates));
+            CommoditySecurityUpdates = Check.NotNull(csUpdates, nameof(csUpdates));
         }
 
         public void Open() => ReportStatus = PeriodReportStatus.Open;
