@@ -99,7 +99,7 @@ namespace PPMRm.Core
             new Country("Brunei Darussalam", "BN", "BRN", "096"){ IsDeleted = true },
             new Country("Bulgaria", "BG", "BGR", "100"){ IsDeleted = true },
             new Country("Burkina Faso", "BF", "BFA", "854"),
-            new Country("Burundi", "BI", "BDI", "108"),
+            new Country("Burundi", "BI", "BDI", "108"){ IsDeleted = true },
             new Country("Cabo Verde", "CV", "CPV", "132"){ IsDeleted = true },
             new Country("Cambodia", "KH", "KHM", "116"),
             new Country("Cameroon", "CM", "CMR", "120"),
