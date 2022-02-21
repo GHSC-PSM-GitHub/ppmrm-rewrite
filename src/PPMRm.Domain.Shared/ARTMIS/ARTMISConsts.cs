@@ -10,6 +10,7 @@ namespace PPMRm.ARTMIS
         public const string DateTimeFormat = "yyyyMMddHHmmss";
         public const int TimestampLength = 14;
         public const int ProductIdLength = 12;
+        public const int PeriodIdLength = 6;
 
         public const string ChangeIndicator = "CHANGE_IND";
         public const string EnterpriseCode = "ENTERPRISE_CODE";

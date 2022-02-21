@@ -43,6 +43,11 @@ namespace PPMRm.ARTMIS.ETL
         public ChangeIndicator ChangeIndicator { get; set; }
         public string ProductId => $"{ItemId.Substring(0, ARTMISConsts.ProductIdLength)}P";
         public string FileNameTimestamp => FileName.Substring(0, ARTMISConsts.TimestampLength);
+        public int PeriodId => Convert.ToInt32(FileName.Substring(0, ARTMISConsts.PeriodIdLength));
+        public string CountryId => Core.CoreDataSeedContributor.List.SingleOrDefault(c => c.Name == RecipientCountry)?.ThreeLetterCode;
+        public long FileTimestamp => Convert.ToInt64(FileName.Substring(0, ARTMISConsts.TimestampLength));
+        public long EventTimestamp => FileTimestamp + LineNumber;
+        public string OrderLineId => $"{OrderNumber}-{OrderLineNumber}";
         public DateTimeOffset FileDateTimeOffset => DateTimeOffset.ParseExact(FileNameTimestamp, ARTMISConsts.DateTimeFormat, System.Globalization.CultureInfo.InvariantCulture);
         }
 }
