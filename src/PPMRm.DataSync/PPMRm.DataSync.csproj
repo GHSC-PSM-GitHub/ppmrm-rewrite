@@ -17,6 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\EtlNet.GZip\EtlNet.GZip.csproj" />
     <ProjectReference Include="..\PPMRm.Domain\PPMRm.Domain.csproj" />
+    <ProjectReference Include="..\PPMRm.Marten\PPMRm.Marten.csproj" />
   </ItemGroup>
 
 </Project>
