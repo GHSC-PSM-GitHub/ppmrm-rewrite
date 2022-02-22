@@ -10,9 +10,16 @@ namespace PPMRm.PeriodReports
 
         }
 
-        internal ProductShipment(Guid id, string periodReportId, int programId, string productId, Supplier supplier, DateTime? shipmentDate, ShipmentDateType shipmentDateType, decimal quantity, ShipmentDataSource shipmentDataSource)
+        internal ProductShipment(Guid id, string periodReportId, int programId, string productId, Supplier supplier, DateTime? shipmentDate, ShipmentDateType shipmentDateType, decimal quantity, ShipmentDataSource shipmentDataSource) : base(id)
         {
-
+            PeriodReportId = periodReportId;
+            ProgramId = programId;
+            ProductId = productId;
+            Supplier = supplier;
+            ShipmentDate = shipmentDate;
+            ShipmentDateType = shipmentDateType;
+            Quantity = quantity;
+            DataSource = shipmentDataSource;
         }
         public string PeriodReportId { get; protected set; }
         public int ProgramId { get; protected set; }

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PPMRm.EntityFrameworkCore;
@@ -10,9 +11,10 @@ using Volo.Abp.EntityFrameworkCore;
 namespace PPMRm.Migrations
 {
     [DbContext(typeof(PPMRmDbContext))]
-    partial class PPMRmDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220222122715_ModifiedPeriodReports")]
+    partial class ModifiedPeriodReports
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -180,9 +182,46 @@ namespace PPMRm.Migrations
                     b.ToTable("AppPrograms");
                 });
 
+            modelBuilder.Entity("PPMRm.PeriodReports.CommoditySecurityUpdates", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ForecastingAndSupplyPlanning")
+                        .HasColumnType("text");
+
+                    b.Property<string>("GovernanceAndFinancing")
+                        .HasColumnType("text");
+
+                    b.Property<string>("HumanResourcesCapacityDevelopmentAndTraining")
+                        .HasColumnType("text");
+
+                    b.Property<string>("LogisticsManagementInformationSystem")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProcurementProductInformationAndRegistration")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProductStockLevelsInformation")
+                        .HasColumnType("text");
+
+                    b.Property<string>("SupplyChainCommitteePolicyAndDonorCoordination")
+                        .HasColumnType("text");
+
+                    b.Property<string>("WarehousingAndDistribution")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AppCSUpdates");
+                });
+
             modelBuilder.Entity("PPMRm.PeriodReports.PeriodReport", b =>
                 {
                     b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<string>("CommoditySecurityUpdatesId")
                         .HasColumnType("text");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -207,6 +246,8 @@ namespace PPMRm.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CommoditySecurityUpdatesId");
+
                     b.HasIndex("PeriodId");
 
                     b.HasIndex("CountryId", "PeriodId")
@@ -218,6 +259,7 @@ namespace PPMRm.Migrations
             modelBuilder.Entity("PPMRm.PeriodReports.ProductShipment", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<int>("DataSource")
@@ -227,6 +269,10 @@ namespace PPMRm.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("PeriodReportId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("PeriodReportId1")
                         .HasColumnType("text");
 
                     b.Property<string>("ProductId")
@@ -251,6 +297,8 @@ namespace PPMRm.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("PeriodReportId");
+
+                    b.HasIndex("PeriodReportId1");
 
                     b.HasIndex("ProductId");
 
@@ -298,10 +346,15 @@ namespace PPMRm.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("LastModifierId");
 
+                    b.Property<string>("PeriodReportId1")
+                        .HasColumnType("text");
+
                     b.Property<decimal>("SOH")
                         .HasColumnType("numeric");
 
                     b.HasKey("PeriodReportId", "ProgramId", "ProductId");
+
+                    b.HasIndex("PeriodReportId1");
 
                     b.HasIndex("ProductId");
 
@@ -2543,8 +2596,21 @@ namespace PPMRm.Migrations
                     b.ToTable("CmsUsers");
                 });
 
+            modelBuilder.Entity("PPMRm.PeriodReports.CommoditySecurityUpdates", b =>
+                {
+                    b.HasOne("PPMRm.PeriodReports.PeriodReport", null)
+                        .WithMany()
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("PPMRm.PeriodReports.PeriodReport", b =>
                 {
+                    b.HasOne("PPMRm.PeriodReports.CommoditySecurityUpdates", "CommoditySecurityUpdates")
+                        .WithMany()
+                        .HasForeignKey("CommoditySecurityUpdatesId");
+
                     b.HasOne("PPMRm.Core.Country", null)
                         .WithMany()
                         .HasForeignKey("CountryId")
@@ -2557,51 +2623,20 @@ namespace PPMRm.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("PPMRm.PeriodReports.CommoditySecurityUpdates", "CommoditySecurityUpdates", b1 =>
-                        {
-                            b1.Property<string>("PeriodReportId")
-                                .HasColumnType("text");
-
-                            b1.Property<string>("ForecastingAndSupplyPlanning")
-                                .HasColumnType("text");
-
-                            b1.Property<string>("GovernanceAndFinancing")
-                                .HasColumnType("text");
-
-                            b1.Property<string>("HumanResourcesCapacityDevelopmentAndTraining")
-                                .HasColumnType("text");
-
-                            b1.Property<string>("LogisticsManagementInformationSystem")
-                                .HasColumnType("text");
-
-                            b1.Property<string>("ProcurementProductInformationAndRegistration")
-                                .HasColumnType("text");
-
-                            b1.Property<string>("ProductStockLevelsInformation")
-                                .HasColumnType("text");
-
-                            b1.Property<string>("SupplyChainCommitteePolicyAndDonorCoordination")
-                                .HasColumnType("text");
-
-                            b1.Property<string>("WarehousingAndDistribution")
-                                .HasColumnType("text");
-
-                            b1.HasKey("PeriodReportId");
-
-                            b1.ToTable("AppPeriodReports");
-
-                            b1.WithOwner()
-                                .HasForeignKey("PeriodReportId");
-                        });
-
                     b.Navigation("CommoditySecurityUpdates");
                 });
 
             modelBuilder.Entity("PPMRm.PeriodReports.ProductShipment", b =>
                 {
                     b.HasOne("PPMRm.PeriodReports.PeriodReport", null)
+                        .WithMany()
+                        .HasForeignKey("PeriodReportId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PPMRm.PeriodReports.PeriodReport", null)
                         .WithMany("ProductShipments")
-                        .HasForeignKey("PeriodReportId");
+                        .HasForeignKey("PeriodReportId1");
 
                     b.HasOne("PPMRm.Products.Product", null)
                         .WithMany()
@@ -2619,10 +2654,14 @@ namespace PPMRm.Migrations
             modelBuilder.Entity("PPMRm.PeriodReports.ProductStock", b =>
                 {
                     b.HasOne("PPMRm.PeriodReports.PeriodReport", null)
-                        .WithMany("ProductStocks")
+                        .WithMany()
                         .HasForeignKey("PeriodReportId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("PPMRm.PeriodReports.PeriodReport", null)
+                        .WithMany("ProductStocks")
+                        .HasForeignKey("PeriodReportId1");
 
                     b.HasOne("PPMRm.Products.Product", null)
                         .WithMany()

@@ -50,7 +50,7 @@ namespace PPMRm.Products
         };
         public static class ProductValues
         {
-            public static readonly (string Id, string Name, TracerCategory Category) ArtemetherLumefantrine80mg480mg6x1Blisters = ("AL6X1-80", "Artemether/Lumefantrine 80mg/480 mg 6x1 Blisters", TracerCategory.ACTs);
+            public static readonly (string Id, string Name, TracerCategory Category) ArtemetherLumefantrine80mg480mg6x1Blisters = ("AL6x1-80", "Artemether/Lumefantrine 80mg/480 mg 6x1 Blisters", TracerCategory.ACTs);
             public static readonly (string Id, string Name, TracerCategory Category) ArtemetherLumefantrine20mg120mg6x1Blisters = ("AL6x1-20", "Artemether/Lumefantrine 20mg/120mg 6x1 Blisters", TracerCategory.ACTs);
             public static readonly (string Id, string Name, TracerCategory Category) ArtemetherLumefantrine20mg120mg6x2Blisters = ("AL6x2-20", "Artemether/Lumefantrine 20mg/120mg 6x2 Blisters", TracerCategory.ACTs);
             public static readonly (string Id, string Name, TracerCategory Category) ArtemetherLumefantrine20mg120mg6x3Blisters = ("AL6x3-20", "Artemether/Lumefantrine 20mg/120mg 6x3 Blisters", TracerCategory.ACTs);

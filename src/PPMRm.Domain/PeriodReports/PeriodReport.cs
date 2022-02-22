@@ -10,7 +10,7 @@ using Volo.Abp.Domain.Entities.Auditing;
 
 namespace PPMRm.PeriodReports
 {
-    public class PeriodReport : FullAuditedAggregateRoot<string>
+    public class PeriodReport : AggregateRoot<string>
     {
         private PeriodReport()
         {
@@ -38,6 +38,22 @@ namespace PPMRm.PeriodReports
         public void SetCSUpdates(CommoditySecurityUpdates csUpdates)
         {
             CommoditySecurityUpdates = Check.NotNull(csUpdates, nameof(csUpdates));
+        }
+        /// <summary>
+        /// TO DO, Move this logic to CountryAggregate
+        /// </summary>
+        /// <returns></returns>
+        public List<int> GetDefaultProgramIds()
+        {
+            switch (CountryId)
+            {
+                case CountryConsts.CountryCodes.Uganda:
+                    return new List<int> { (int)Programs.PublicSector, (int)Programs.PNFP };
+                case CountryConsts.CountryCodes.Myanmar:
+                    return new List<int> { (int)Programs.NationalMalariaProgram, (int)Programs.CAPMalaria };
+                default:
+                    return new List<int> { (int)Programs.NationalMalariaProgram };
+            }
         }
         public int GetARTMISProgramId() => (int)GetARTMISProgram();
         public Programs GetARTMISProgram()

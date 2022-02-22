@@ -60,6 +60,7 @@ namespace PPMRm.EntityFrameworkCore
         public DbSet<Country> Countries { get; set; }
         public DbSet<Program> Programs { get; set; }
         public DbSet<Period> Periods { get; set; }
+        public DbSet<PeriodReport> PeriodReports { get; set; }
 
         #endregion
 
@@ -138,25 +139,19 @@ namespace PPMRm.EntityFrameworkCore
                 b.ToTable(PPMRmConsts.DbTablePrefix + "PeriodReports", PPMRmConsts.DbSchema);
                 b.ConfigureByConvention();
                 b.HasIndex(x => new { x.CountryId, x.PeriodId }).IsUnique();
-                ;// ADD THE MAPPING FOR THE RELATION
+                // ADD THE MAPPING FOR THE RELATION
+                b.HasMany(x => x.ProductShipments).WithOne().HasForeignKey(x => x.PeriodReportId);
+                b.HasMany(x => x.ProductStocks).WithOne().HasForeignKey(x => x.PeriodReportId);
+                b.OwnsOne(x => x.CommoditySecurityUpdates);
                 b.HasOne<Country>().WithMany().HasForeignKey(x => x.CountryId).IsRequired();
                 b.HasOne<Period>().WithMany().HasForeignKey(x => x.PeriodId).IsRequired();
-            });
-
-            builder.Entity<CommoditySecurityUpdates>(b =>
-            {
-                b.ToTable(PPMRmConsts.DbTablePrefix + "CSUpdates", PPMRmConsts.DbSchema);
-                b.ConfigureByConvention();
-                b.HasOne<PeriodReport>().WithMany().HasForeignKey(x => x.Id).IsRequired();
             });
 
             builder.Entity<ProductStock>(b =>
             {
                 b.ToTable(PPMRmConsts.DbTablePrefix + "ProductStocks", PPMRmConsts.DbSchema);
                 b.ConfigureByConvention();
-                b.HasKey(x => new { x.PeriodReportId, x.ProgramId, x.ProductId })
-                ;// ADD THE MAPPING FOR THE RELATION
-                b.HasOne<PeriodReport>().WithMany().HasForeignKey(x => x.PeriodReportId).IsRequired();
+                b.HasKey(x => new { x.PeriodReportId, x.ProgramId, x.ProductId });
                 b.HasOne<Program>().WithMany().HasForeignKey(x => x.ProgramId).IsRequired();
                 b.HasOne<Product>().WithMany().HasForeignKey(x => x.ProductId).IsRequired();
             });
@@ -166,7 +161,6 @@ namespace PPMRm.EntityFrameworkCore
                 b.ToTable(PPMRmConsts.DbTablePrefix + "ProductShipments", PPMRmConsts.DbSchema);
                 b.ConfigureByConvention();
                 ;// ADD THE MAPPING FOR THE RELATION
-                b.HasOne<PeriodReport>().WithMany().HasForeignKey(x => x.PeriodReportId).IsRequired();
                 b.HasOne<Program>().WithMany().HasForeignKey(x => x.ProgramId).IsRequired();
                 b.HasOne<Product>().WithMany().HasForeignKey(x => x.ProductId).IsRequired();
             });
