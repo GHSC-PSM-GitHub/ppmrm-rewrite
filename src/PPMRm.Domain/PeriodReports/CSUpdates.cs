@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Volo.Abp.Domain.Entities;
 using Volo.Abp.Domain.Values;
 
 namespace PPMRm.PeriodReports
 {
-    public class CommoditySecurityUpdates : ValueObject
+    public class CommoditySecurityUpdates : Entity<string>
     {
         public string ForecastingAndSupplyPlanning { get; set; }
         public string ProcurementProductInformationAndRegistration { get; set; }
@@ -17,17 +18,5 @@ namespace PPMRm.PeriodReports
         public string HumanResourcesCapacityDevelopmentAndTraining { get; set; }
         public string SupplyChainCommitteePolicyAndDonorCoordination { get; set; }
         public string ProductStockLevelsInformation { get; set; }
-
-        protected override IEnumerable<object> GetAtomicValues()
-        {
-            yield return ForecastingAndSupplyPlanning;
-            yield return ProcurementProductInformationAndRegistration;
-            yield return WarehousingAndDistribution;
-            yield return LogisticsManagementInformationSystem;
-            yield return GovernanceAndFinancing;
-            yield return HumanResourcesCapacityDevelopmentAndTraining;
-            yield return SupplyChainCommitteePolicyAndDonorCoordination;
-            yield return ProductStockLevelsInformation;
-        }
     }
 }

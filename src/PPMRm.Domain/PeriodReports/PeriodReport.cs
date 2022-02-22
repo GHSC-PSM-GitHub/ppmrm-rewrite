@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PPMRm.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -38,6 +39,51 @@ namespace PPMRm.PeriodReports
         {
             CommoditySecurityUpdates = Check.NotNull(csUpdates, nameof(csUpdates));
         }
+        public int GetARTMISProgramId() => (int)GetARTMISProgram();
+        public Programs GetARTMISProgram()
+        {
+            switch (CountryId)
+            {
+                case CountryConsts.CountryCodes.Uganda:
+                    return Programs.PNFP;
+                case CountryConsts.CountryCodes.Myanmar:
+                    return Programs.CAPMalaria;
+                default:
+                    return Programs.NationalMalariaProgram;
+            }
+        }
+        /// <summary>
+        /// ARTMIS Shipments
+        /// </summary>
+        /// <param name="orderLineId"></param>
+        /// <param name="productId"></param>
+        /// <param name="shipmentDate"></param>
+        /// <param name="shipmentDateType"></param>
+        /// <param name="quantity"></param>
+        public void AddOrUpdateShipment(string orderLineId, string productId, DateTime? shipmentDate, ShipmentDateType shipmentDateType, decimal quantity)
+        {
+            var shipment = new ProductShipment(orderLineId.ToGuid(), Id, GetARTMISProgramId(), productId, Supplier.PMI, shipmentDate, shipmentDateType, quantity, ShipmentDataSource.ARTMIS);
+            ProductShipments.RemoveAll(s => s.Id == shipment.Id);
+            ProductShipments.Add(shipment);
+        }
+
+        /// <summary>
+        /// Add/update other shipments
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="programId"></param>
+        /// <param name="productId"></param>
+        /// <param name="supplier"></param>
+        /// <param name="shipmentDate"></param>
+        /// <param name="shipmentDateType"></param>
+        /// <param name="quantity"></param>
+        public void AddOrUpdateShipment(Guid id, int programId, string productId, Supplier supplier, DateTime? shipmentDate, ShipmentDateType shipmentDateType, decimal quantity)
+        {
+            var shipment = new ProductShipment(id, Id, programId, productId, supplier, shipmentDate, shipmentDateType, quantity, ShipmentDataSource.CountryTeam);
+            ProductShipments.Add(shipment);
+        }
+
+        public void RemoveShipment(Guid id) => ProductShipments.RemoveAll(s => s.Id == id);
 
         public void Open() => ReportStatus = PeriodReportStatus.Open;
         public void Close() => ReportStatus = PeriodReportStatus.Closed;
