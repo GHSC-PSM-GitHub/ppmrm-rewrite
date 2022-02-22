@@ -39,7 +39,7 @@
     }
     class Program
     {
-        public const string ConnectionString = "Host=localhost;Port=5432;Database=ppmrm_artmis;User ID=postgres;Password=admin;";
+        public const string ConnectionString = "Host=localhost;Port=5432;Database=ppmrm_period_reports;User ID=postgres;Password=admin;";
 
 
         static List<OrderEto> orderEvents;
@@ -48,19 +48,19 @@
 
         async static Task Main(string[] args)
         {
-            var store = new DocumentStore(new PPMRmStoreOptions(ConnectionString, null));
-            using var session = store.OpenSession();
+            //var store = new DocumentStore(new PPMRmStoreOptions(ConnectionString, null));
+            //using var session = store.OpenSession();
 
-            var repo = new ARTMIS.PeriodShipments.PeriodShipmentRepository(session);
+            //var repo = new ARTMIS.PeriodShipments.PeriodShipmentRepository(session);
 
-            var shipment = await repo.GetAsync("AGO", 202112);
+            //var shipment = await repo.GetAsync("AGO", 202112);
 
-            if (shipment == null) { throw new Exception(); };
+            //if (shipment == null) { throw new Exception(); };
 
-            var decShipments = shipment.Shipments.Where(s => s.PPMRmProductId != null && (s.ShipmentDate >= new DateTime(2021, 12, 01) || s.ShipmentDateType != ARTMISConsts.OrderDeliveryDateTypes.ActualDeliveryDate)).ToList();
-            //
+            //var decShipments = shipment.Shipments.Where(s => s.PPMRmProductId != null && (s.ShipmentDate >= new DateTime(2021, 12, 01) || s.ShipmentDateType != ARTMISConsts.OrderDeliveryDateTypes.ActualDeliveryDate)).ToList();
+            ////
             //await SeedOrders(args);
-
+            //await SeedItems(new string[] { @"..\..\..\data" });
             // using var session = store.OpenSession();
             //// var order = session.Query<ARTMIS.Orders.Order>().Where(o => o.OrderNumber == "RO10137105").SingleOrDefault();
             // var decemberShipments = session.Query<ARTMIS.Orders.Order>().Where(o => o.DisplayDate > new DateTime(2021, 12, 1) && o.Lines.Any() && o.CountryId == "Angola");
@@ -132,8 +132,8 @@
                 {
                     Resolver = new SimpleDependencyResolver().Register<DbContext>(dbCtx),
                 };
-                var res = await processRunner.ExecuteAsync(args[0], executionOptions);
-                session.StoreObjects(items.Where(i => Categories.Contains( i.TracerCategory)));
+                var res = await processRunner.ExecuteAsync(@"..\..\..\data", executionOptions);
+                session.StoreObjects(items.Where(i => i.ProductId != null));
                 await session.SaveChangesAsync();
                 await dbCtx.SaveChangesAsync();
             }
@@ -221,7 +221,8 @@
                     BaseUnitMultiplier = i.BaseUnitMultiplier,
                     NumberOfTreatments = i.ProductNumberOfTreatments,
                     TracerCategory = i.TracerCategory,
-                    UOM = i.UOM
+                    UOM = i.UOM,
+                    ProductId = ARTMISConsts.PPMRmProductMappings.GetOrDefault(i.ProductId)
 
                 })
                 .Distinct("remove duplicates", i => i.Id)
