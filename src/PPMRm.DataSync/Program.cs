@@ -39,7 +39,7 @@
     }
     class Program
     {
-        public const string ConnectionString = "Host=localhost;Port=5432;Database=ppmrm_core;User ID=postgres;Password=admin;";
+        public const string ConnectionString = "Host=localhost;Port=5432;Database=ppmrm_artmis;User ID=postgres;Password=admin;";
 
 
         static List<OrderEto> orderEvents;
@@ -48,29 +48,18 @@
 
         async static Task Main(string[] args)
         {
-            var store = DocumentStore.For(opts =>
-            {
-                opts.Connection(ConnectionString);
-                // Run the Order as an inline projection
-                opts.Projections.SelfAggregate<ARTMIS.Orders.Order>(ProjectionLifecycle.Inline);
-            });
-            // Define the cancellation token.
-            CancellationTokenSource source = new CancellationTokenSource();
-            CancellationToken cancellation = source.Token;
-            using var daemon = store.BuildProjectionDaemon();
+            var store = new DocumentStore(new PPMRmStoreOptions(ConnectionString, null));
+            using var session = store.OpenSession();
 
-            // Fire up everything!
-            await daemon.StartAllShards();
+            var repo = new ARTMIS.PeriodShipments.PeriodShipmentRepository(session);
 
-            //// or instead, rebuild a single projection
-            //await daemon.RebuildProjection("a projection name", cancellation);
+            var shipment = await repo.GetAsync("AGO", 202112);
 
-            // or a single projection by its type
-            await daemon.RebuildProjection<ARTMIS.Orders.Order>(cancellation);// Be careful with this. Wait until the async daemon has completely
-                                                                              // caught up with the currently known high water mark
-            await daemon.WaitForNonStaleData(1.Minutes());
+            if (shipment == null) { throw new Exception(); };
 
-            await daemon.StopAll();
+            var decShipments = shipment.Shipments.Where(s => s.PPMRmProductId != null && (s.ShipmentDate >= new DateTime(2021, 12, 01) || s.ShipmentDateType != ARTMISConsts.OrderDeliveryDateTypes.ActualDeliveryDate)).ToList();
+            //
+            //await SeedOrders(args);
 
             // using var session = store.OpenSession();
             //// var order = session.Query<ARTMIS.Orders.Order>().Where(o => o.OrderNumber == "RO10137105").SingleOrDefault();
@@ -173,7 +162,7 @@
                         ItemId = i.ToColumn(ARTMISConsts.OrderHeaders.ItemId),
                         LatestEstimatedDeliveryDate = i.ToOptionalDateColumn(ARTMISConsts.OrderHeaders.LatestEstimatedDeliveryDate, ARTMISConsts.DateFormat),
                         LineTotal = i.ToNumberColumn<decimal?>(ARTMISConsts.OrderHeaders.LineTotal, ""),
-                        OrderedQuantity = i.ToNumberColumn<decimal?>(ARTMISConsts.OrderHeaders.OrderedQuantity, "."),
+                        OrderedQuantity = i.ToNumberColumn<decimal>(ARTMISConsts.OrderHeaders.OrderedQuantity, "."),
                         OrderLineNumber = i.ToNumberColumn<int>(ARTMISConsts.OrderHeaders.OrderLineNumber, ""),
                         OrderNumber = i.ToColumn(ARTMISConsts.OrderHeaders.OrderNumber),
                         OrderType = i.ToColumn(ARTMISConsts.OrderHeaders.OrderType),
