@@ -14,12 +14,23 @@ namespace PPMRm.ARTMIS.OrderLines
         public string CountryId { get; set; }
         public string RONumber { get; set; }
         public int ROPrimeLineNumber { get; set; }
+        /// <summary>
+        /// ARTMIS Product ID
+        /// </summary>
         public string ProductId { get; set; }
+        /// <summary>
+        /// ARTMIS Item ID
+        /// </summary>
         public string ItemId { get; set; }
+        public string PPMRmProductId { get; set; }
         public string UOM { get; set; }
+        public decimal? UnitPrice { get; set; }
+        public decimal? LineTotal { get; set; }
         public decimal OrderedQuantity { get; set; }
-        public DateTime? QAInitiatedDate { get; set; }
-        public DateTime? QACompletedDate { get; set; }
+
+        public DateTime? ParentOrderEntryDate { get; set; }
+        public DateTime? PSMSourceApprovalDate { get; set; }
+        public DateTime? POReleasedForFulfillmentDate { get; set; }
         public DateTime? ActualShipDate { get; set; }
 
 
@@ -29,8 +40,12 @@ namespace PPMRm.ARTMIS.OrderLines
         public DateTime? LatestEstimatedDeliveryDate { get; set; }
         public DateTime? ActualDeliveryDate { get; set; }
 
-        public DateTime? DisplayDate { get; set; }
-        public string DeliveryDateType { get; set; }
+        public string OrderType { get; set; }
+        public string StatusSequence { get; set; }
+        public string ExternalStatusStageSequence { get; set; }
+
+        public DateTime? ShipmentDate { get; set; }
+        public string ShipmentDateType { get; set; }
 
 
     }

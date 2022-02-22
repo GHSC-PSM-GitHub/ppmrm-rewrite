@@ -95,30 +95,38 @@
             orderEvents = new List<OrderEto>();
             var processRunner = StreamProcessRunner.Create<string>(DefineProcess);
             await processRunner.ExecuteAsync(@"..\..\..\data");
-            var store = DocumentStore.For(opts =>
-            {
-                opts.Connection(ConnectionString);
-                // Run the Order as an inline projection
-                opts.Projections.SelfAggregate<ARTMIS.Orders.Order>(ProjectionLifecycle.Inline);
-            });
+            var store = new DocumentStore(new PPMRmStoreOptions(ConnectionString, null));
             using var session = store.OpenSession();
-            var sortedEvents = orderEvents.OrderBy(e => e.FileDateTimeOffset).ThenBy(e => e.LineNumber);
-            var firstEvent = sortedEvents.First();
-            var lastEvent = sortedEvents.Last();
-            Console.WriteLine($"Total: - {orderEvents.Count}");
-            Console.WriteLine($"First: - {firstEvent.FileDateTimeOffset} - {firstEvent.LineNumber} - {firstEvent.FileName} ");
-            Console.WriteLine($"Last: - {lastEvent.FileDateTimeOffset} - {lastEvent.LineNumber} - {lastEvent.FileName} ");
+            var sortedEvents = orderEvents.OrderBy(e => e.FileName).ThenBy(e => e.LineNumber).Select(e => OrderLineEvent.Create(e));
+            var changeSets = sortedEvents.GroupBy(e => e.OrderLineId).ToDictionary(g => g.Key, g => g.ToList());
 
-            var eventsByOrder = sortedEvents.GroupBy(e => e.OrderNumber).ToDictionary(e => e.Key, e => e.ToList());;
-            Console.WriteLine($"Unique orders - {eventsByOrder.Count()}");
-            foreach(var e in eventsByOrder)
+            foreach (var c in changeSets)
             {
-                var orderEvents = e.Value.Select(e => ARTMIS.Orders.OrderEvent.Create(e));
-                var orderId = e.Key.ToGuid();
-                session.Events.StartStream<ARTMIS.Orders.Order>(orderId, orderEvents);
-                Console.WriteLine($"Stored Order number: {e.Key}-{e.Value.Count()}");
+                
+                try
+                {
+                    
+                    session.Events.StartStream<ARTMIS.OrderLines.OrderLine>(c.Key, c.Value.OrderBy(e => e.EventTimestamp));
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine($"Changeset: {c.Key} already exists1");
+                    return;
+                }
+
             }
             await session.SaveChangesAsync();
+            //var firstEvent = changeSets.First().Value.First();
+            ////Console.WriteLine($"Total: - {orderEvents.Count}");
+            //Console.WriteLine($"First: - {firstEvent.FileName} - {firstEvent.FileTimestamp} - {firstEvent.EventTimestamp} - {firstEvent.PeriodId} - {firstEvent.CountryId} - {firstEvent.OrderLineId}");
+
+
+            ////var eventsByOrderLine = sortedEvents.GroupBy(e => e.OrderLineId).ToDictionary(e => e.Key, e => e.ToList());
+            ////Console.WriteLine($"Unique orders - {eventsByOrderLine.Count()}");
+            ////session.Events.StartStream("order", sortedEvents);
+            //await session.SaveChangesAsync();
+            Console.WriteLine($"Completed importing ARTMIS Changesets!");
+            Console.ReadLine();
         }
         async static Task SeedItems(string[] args)
         {

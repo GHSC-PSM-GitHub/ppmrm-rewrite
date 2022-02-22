@@ -24,7 +24,7 @@ namespace PPMRm.ARTMIS.ETL
         public string UOM { get; set; }
         public decimal? UnitPrice { get; set; }
         public decimal? LineTotal { get; set; }
-        public decimal? OrderedQuantity { get; set; }
+        public decimal OrderedQuantity { get; set; }
 
         public DateTime? ParentOrderEntryDate { get; set; }
         public DateTime? PSMSourceApprovalDate { get; set; }
