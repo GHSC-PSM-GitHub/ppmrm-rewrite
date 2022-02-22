@@ -1,5 +1,39 @@
 ﻿@page
 @model PPMRm.Web.Pages.PeriodReports.IndexModel
-@{
+@section styles{
+   <style type="text/css">
+    li.multiselect-item {
+        text-align: left;
+    }    
+   </style>
+}
+@section scripts
+{
+    <abp-script src="/Pages/PeriodReports/Index.js" />
+    <abp-script src="/js/bootstrap-multiselect.min.js" />
+    <abp-script src="/js/dataTables.buttons.min.js" />
 }
 
+<div class="container">
+    <div class="row">
+            
+    <h2>Period Reports</h2>
+    </div>
+</div>
+<abp-card>
+    <abp-card-header>
+        <div class="container">
+          <div class="row">
+            <div class="col-sm">
+         <abp-select asp-for="@Model.SelectedCountries" asp-items="@Model.Countries" />
+            </div>
+            <div class="col-sm">
+            Periods
+            </div>
+          </div>
+        </div>
+    </abp-card-header>
+    <abp-card-body>
+        <abp-table striped-rows="true" id="PeriodReportsTable"></abp-table>
+    </abp-card-body>
+</abp-card>

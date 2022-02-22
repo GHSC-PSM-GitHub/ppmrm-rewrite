@@ -38,6 +38,9 @@ namespace PPMRm.PeriodReports
             var countries = await CountryRepository.GetQueryableAsync();
             var periods = await PeriodRepository.GetQueryableAsync();
 
+
+            queryable = queryable.Where(r => input.Countries.Contains(r.CountryId));
+
             var query = from r in queryable
                         join c in countries on r.CountryId equals c.Id
                         join p in periods on r.PeriodId equals p.Id
@@ -51,6 +54,8 @@ namespace PPMRm.PeriodReports
                             ShipmentsCount = r.ProductShipments.Count,
                             ProductsCount = r.ProductStocks.Count
                         };
+            // Filter
+
             var totalCount = query.Count();
             var results = await AsyncExecuter.ToListAsync(query.OrderBy(r => r.Country.Name).ThenByDescending(r => r.Period.Id).Skip(input.SkipCount).Take(input.MaxResultCount));
             return new PagedResultDto<PeriodReportDto>(totalCount, results);
