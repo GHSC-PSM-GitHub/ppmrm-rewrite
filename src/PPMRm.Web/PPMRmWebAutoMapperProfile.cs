@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using PPMRm.PeriodReports;
+using PPMRm.Web.Pages.PeriodReports;
 
 namespace PPMRm.Web
 {
@@ -6,6 +8,7 @@ namespace PPMRm.Web
     {
         public PPMRmWebAutoMapperProfile()
         {
+            CreateMap<CommoditySecurityUpdatesDto, CSUpdateViewModel>().ReverseMap();
             //Define your AutoMapper configuration here for the Web project.
         }
     }

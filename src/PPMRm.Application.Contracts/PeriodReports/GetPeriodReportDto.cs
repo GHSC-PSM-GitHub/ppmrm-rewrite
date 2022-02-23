@@ -8,5 +8,7 @@ namespace PPMRm.PeriodReports
     public class GetPeriodReportDto : PagedResultRequestDto
     {
         public List<string> Countries { get; set; } = new();
+        public int? Year { get; set; }
+        public int? Month { get; set; }
     }
 }

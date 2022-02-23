@@ -19,6 +19,11 @@
     "Menu:Resources": "Resources",
     "Permissions:Core": "PPMRm",
     "Permissions:DataReviewer": "Data Reviewer",
-    "Permissions:DataProvider": "Data Provider"
+    "Permissions:DataProvider": "Data Provider",
+    "Enum:PeriodReportStatus:0": "Initialized",
+    "Enum:PeriodReportStatus:1": "Open",
+    "Enum:PeriodReportStatus:2": "Marked as Final",
+    "Enum:PeriodReportStatus:3": "Closed",
+    "Enum:PeriodReportStatus:4": "Re-Opened"
   }
 }

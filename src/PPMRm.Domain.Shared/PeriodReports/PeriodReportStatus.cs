@@ -8,6 +8,7 @@ namespace PPMRm.PeriodReports
     {
         Initialized,
         Open,
+        Final,
         Closed,
         Reopened
     }

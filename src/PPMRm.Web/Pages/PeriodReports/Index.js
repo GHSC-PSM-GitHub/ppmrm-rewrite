@@ -2,9 +2,13 @@
 
 $(document).ready(function () {
 
+    var l = abp.localization.getResource('PPMRm');
+
     var inputAction = function (requestData, dataTableSettings) {
         return {
-            countries: $("#SelectedCountries").val()
+            countries: $("#SelectedCountries").val(),
+            year: $("#SelectedYear").val(),
+            month: $("#SelectedMonth").val()
         };
     };
 
@@ -36,11 +40,31 @@ $(document).ready(function () {
                 },
                 {
                     title: "Shipments",
-                    data: "shipmentsCount"
+                    data: "reportStatus",
+                    render: function (data) {
+                        return l('Enum:PeriodReportStatus:' + data);
+                    }
                 },
                 {
-                    title: "SOH Information Count",
-                    data: "productsCount"
+                    title:"CS Updates",
+                    rowAction: {
+                        items:
+                            [
+                                {
+                                    text: "CS Updates",
+                                    action: function (data) {
+                                        csUpdatesModal.open({ id: data.record.id });
+                                    }
+                                }
+                            ]
+                    }
+                },
+                {
+                    "title": "Enter/View Product Info",
+                    "data": "id",
+                    "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+                        $(nTd).html("<a class='btn btn-primary' role='button' href='/periodreports/details/" + oData.id + "'>View/Edit</a>");
+                    }
                 }
             ]
         })
@@ -57,6 +81,20 @@ $(document).ready(function () {
 
 
     $('#SelectedCountries').on('change', function () {
+        dataTable.ajax.reload();
+    });
+
+    $('#SelectedYear').on('change', function () {
+        dataTable.ajax.reload();
+    });
+
+    $('#SelectedMonth').on('change', function () {
+        dataTable.ajax.reload();
+    });
+
+    var csUpdatesModal = new abp.ModalManager(abp.appPath + 'PeriodReports/CSUpdatesModal');
+
+    csUpdatesModal.onResult(function () {
         dataTable.ajax.reload();
     });
 });

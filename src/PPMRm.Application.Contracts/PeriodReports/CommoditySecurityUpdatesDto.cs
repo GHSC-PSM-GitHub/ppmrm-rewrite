@@ -6,6 +6,7 @@ namespace PPMRm.PeriodReports
 {
     public class CommoditySecurityUpdatesDto
     {
+        public string Name { get; set; }
         public string ForecastingAndSupplyPlanning { get; set; }
         public string ProcurementProductInformationAndRegistration { get; set; }
         public string WarehousingAndDistribution { get; set; }

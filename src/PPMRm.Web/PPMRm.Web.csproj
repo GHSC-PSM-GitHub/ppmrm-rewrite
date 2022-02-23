@@ -34,6 +34,7 @@
     <None Include="wwwroot\**">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Content Remove="Pages\PeriodReports\CSUpdatesModal.cshtml" />
     <None Update="Pages\**\*.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -79,10 +80,12 @@
 
   <ItemGroup>
     <_ContentIncludedByDefault Remove="Pages\Items\Index.cshtml" />
+    <_ContentIncludedByDefault Remove="Pages\PeriodReports\CSUpdatesModal.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="Pages\Items\Index.cshtml" />
+    <None Include="Pages\PeriodReports\CSUpdatesModal.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -102,5 +105,9 @@
     <Content Update="wwwroot\js\bootstrap-multiselect.min.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Pages\PeriodReports\CSUpdatesModal.cshtml" />
   </ItemGroup>
 </Project>

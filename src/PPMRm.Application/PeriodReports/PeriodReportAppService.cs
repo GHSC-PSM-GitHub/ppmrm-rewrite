@@ -2,6 +2,7 @@
 using PPMRm.Products;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,6 +23,7 @@ namespace PPMRm.PeriodReports
         IRepository<Country, string> CountryRepository { get; }
         public PeriodReportAppService(IRepository<PeriodReport, string> repository, IRepository<Program,int> programRepository, IRepository<Country, string> countryRepository, IRepository<Period, int> periodRepository, IRepository<Product, string> productRepository) : base(repository)
         {
+            PeriodReportRepository = repository;
             ProductRepository = productRepository;
             ProgramRepository = programRepository;
             PeriodRepository = periodRepository;
@@ -42,8 +44,10 @@ namespace PPMRm.PeriodReports
             queryable = queryable.Where(r => input.Countries.Contains(r.CountryId));
 
             var query = from r in queryable
-                        join c in countries on r.CountryId equals c.Id
-                        join p in periods on r.PeriodId equals p.Id
+                        join c in countries
+                        on r.CountryId equals c.Id
+                        join p in periods.Where(period => period.Year == input.Year.GetValueOrDefault() && period.Month == input.Month)
+                        on r.PeriodId equals p.Id
                         select new PeriodReportDto
                         {
                             Id = r.Id,
@@ -66,6 +70,30 @@ namespace PPMRm.PeriodReports
             var queryable = await Repository.WithDetailsAsync(r => r.ProductStocks, r => r.ProductShipments);
             var periodReport = await AsyncExecuter.FirstOrDefaultAsync(queryable.Where(r => r.Id == id));
             return await base.GetAsync(id);
+        }
+
+        async public Task UpdateCSUpdatesAsync(string id, CommoditySecurityUpdatesDto input)
+        {
+            var queryable = await Repository.WithDetailsAsync(r => r.CommoditySecurityUpdates);
+            var periodReport = await AsyncExecuter.SingleAsync(queryable.Where(r => r.Id == id));
+            var csUpdates = ObjectMapper.Map<CommoditySecurityUpdatesDto, CommoditySecurityUpdates>(input);
+            periodReport.SetCSUpdates(ObjectMapper.Map<CommoditySecurityUpdatesDto, CommoditySecurityUpdates>(input));
+            await PeriodReportRepository.UpdateAsync(periodReport);
+        }
+
+        async public Task<CommoditySecurityUpdatesDto> GetCSUpdatesAsync(string id)
+        {
+            var queryable = await Repository.WithDetailsAsync(r => r.CommoditySecurityUpdates);
+            var countries = await CountryRepository.GetQueryableAsync();
+            var periods = await PeriodRepository.GetQueryableAsync();
+            var reports = from r in queryable.Where(r => r.Id == id)
+                               join c in countries on r.CountryId equals c.Id
+                               join p in periods on r.PeriodId equals p.Id
+                               select new { PeriodReport = r, Country = c, Period = p };
+            var periodReport = await AsyncExecuter.SingleAsync(reports);
+            var csUpdatesDto = ObjectMapper.Map<CommoditySecurityUpdates, CommoditySecurityUpdatesDto>(periodReport.PeriodReport.CommoditySecurityUpdates ?? new CommoditySecurityUpdates());
+            csUpdatesDto.Name = $"{periodReport.Country.Name} - {DateTimeFormatInfo.CurrentInfo.GetMonthName(periodReport.Period.Month)} {periodReport.Period.Year}";
+            return csUpdatesDto;
         }
     }
 }

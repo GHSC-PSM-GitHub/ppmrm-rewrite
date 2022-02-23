@@ -17,7 +17,7 @@ namespace PPMRm
             CreateMap<ARTMIS.Orders.OrderLine, Orders.OrderLineDto>();
             CreateMap<PeriodReport, PeriodReportDto>();
             CreateMap<PeriodReport, PeriodReportDetailDto>();
-            CreateMap<CommoditySecurityUpdates, CommoditySecurityUpdatesDto>();
+            CreateMap<CommoditySecurityUpdates, CommoditySecurityUpdatesDto>().ReverseMap();
         }
     }
 }

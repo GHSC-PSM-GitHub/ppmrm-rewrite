@@ -1,0 +1,79 @@
+﻿@page
+@using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Modal
+@model PPMRm.Web.Pages.PeriodReports.CSUpdatesModalModel
+@{
+}
+
+
+<abp-dynamic-form abp-model="CSUpdates" asp-page="/PeriodReports/CSUpdatesModal">
+    <abp-modal  centered="true" scrollable="true" size="Large">
+        <abp-modal-header title="Commodity Security Updates - (@Model.Title)"></abp-modal-header>
+        <abp-modal-body>
+            <abp-input asp-for="Id" />
+            <div class="form-row">
+                <div class="col-sm-4">
+                    <label asp-for="@Model.CSUpdates.ForecastingAndSupplyPlanning"></label>
+                </div>
+                <div class="col-sm-8">
+                    <abp-input asp-for="@Model.CSUpdates.ForecastingAndSupplyPlanning" suppress-label="true" />    
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col-sm-4">
+                    <label asp-for="@Model.CSUpdates.ProcurementProductInformationAndRegistration"></label>
+                </div>
+                <div class="col-sm-8">
+                    <abp-input asp-for="@Model.CSUpdates.ProcurementProductInformationAndRegistration" suppress-label="true" />    
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col-sm-4">
+                    <label asp-for="@Model.CSUpdates.WarehousingAndDistribution"></label>
+                </div>
+                <div class="col-sm-8">
+                    <abp-input asp-for="@Model.CSUpdates.WarehousingAndDistribution" suppress-label="true" />    
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col-sm-4">
+                    <label asp-for="@Model.CSUpdates.LogisticsManagementInformationSystem"></label>
+                </div>
+                <div class="col-sm-8">
+                    <abp-input asp-for="@Model.CSUpdates.LogisticsManagementInformationSystem" suppress-label="true" />    
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col-sm-4">
+                    <label asp-for="@Model.CSUpdates.GovernanceAndFinancing"></label>
+                </div>
+                <div class="col-sm-8">
+                    <abp-input asp-for="@Model.CSUpdates.GovernanceAndFinancing" suppress-label="true" />    
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col-sm-4">
+                    <label asp-for="@Model.CSUpdates.HumanResourcesCapacityDevelopmentAndTraining"></label>
+                </div>
+                <div class="col-sm-8">
+                    <abp-input asp-for="@Model.CSUpdates.HumanResourcesCapacityDevelopmentAndTraining" suppress-label="true" />    
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col-sm-4">
+                    <label asp-for="@Model.CSUpdates.SupplyChainCommitteePolicyAndDonorCoordination"></label>
+                </div>
+                <div class="col-sm-8">
+                    <abp-input asp-for="@Model.CSUpdates.SupplyChainCommitteePolicyAndDonorCoordination" suppress-label="true" />    
+                </div>
+            </div><div class="form-row">
+                <div class="col-sm-4">
+                    <label asp-for="@Model.CSUpdates.ProductStockLevelsInformation"></label>
+                </div>
+                <div class="col-sm-8">
+                    <abp-input asp-for="@Model.CSUpdates.ProductStockLevelsInformation" suppress-label="true" />    
+                </div>
+            </div>
+        </abp-modal-body>
+        <abp-modal-footer buttons="@(AbpModalButtons.Cancel|AbpModalButtons.Save)"></abp-modal-footer>
+    </abp-modal>
+</abp-dynamic-form>
