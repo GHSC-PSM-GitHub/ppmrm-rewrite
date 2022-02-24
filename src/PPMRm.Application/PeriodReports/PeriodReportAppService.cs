@@ -131,7 +131,7 @@ namespace PPMRm.PeriodReports
                     PeriodReportId = periodReport.Id,
                     ProgramId = i,
                     Program = ObjectMapper.Map<Program, ProgramDto>(programs.Single(p => p.Id == i)),
-                    Products = productStockShipments.Where(s => s.Program.Id == i).ToList()
+                    Products = productStockShipments.Where(s => s.Program.Id == i).OrderBy(p => p.Product.Name).ToList()
                 }).ToList()
             };
 

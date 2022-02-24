@@ -49,7 +49,7 @@
                             </abp-row>
                         </abp-card-header>
                         <abp-card-body>                
-                            <abp-table striped-rows="true" class="table-program" data-id="@program.PeriodReportId" data-program-id="@program.Program.Id">
+                            <abp-table class="table-program" data-id="@program.PeriodReportId" data-program-id="@program.Program.Id">
                                 <thead>
                                     <tr>
                                         <th>Product</th>
@@ -60,8 +60,8 @@
                                         <th>Source of Consumption</th>
                                         <th>Action Recommended</th>
                                         <th>Action needed by</th>
-                                        <th>Shipments</th>
                                         <th>Actions</th>
+                                        <th>Shipments</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -76,13 +76,52 @@
                                         <td></td>
                                         <td></td>
                                         <td></td>
-                                        <td>@p.Shipments?.Count</td>
                                         <td>
                                             <abp-button data-id="@p.Product.Id" data-program-id="@p.Program.Id" data-period-report-id="@Model.Id"
                                                     class="btn-edit-product"
                                                     text="Edit"
-                                                    button-type="Warning"/>
+                                                    button-type="Primary"/>
                                         </td>
+                                        <td class="accordion-toggle" data-toggle="collapse" data-target="#@p.Product.Id-@p.Program.Id">
+                                             <abp-button  class="accordion-toggle" data-toggle="collapse" data-target="#@p.Product.Id-@p.Program.Id"
+                                                    text="(@(p.Shipments?.Count ?? 0))"
+                                                    button-type="Link" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                      <td class="accordion-body collapse text-right" id="@p.Product.Id-@p.Program.Id" colspan="10">
+                                        <table class="table">
+                                          <thead>
+                                          <tr>
+                                           <th>Supplier</th>
+                                            <th>Next Shipment Date</th>
+                                            <th>Quantity</th>
+                                            <th>Shipment MOS</th>
+                                            <th>Data Source</th>
+                                            <th></th>
+                                          </tr>
+                                          </thead>
+                                          <tbody>
+                                            @foreach(var s in p.Shipments)
+                                            {
+                                                <tr>
+                                                    <td>@s.Supplier</td>
+                                                    <td>@s.ShipmentDate?.ToString("yyyy-MM-dd") @s.ShipmentDateType</td>
+                                                    <td>@s.Quantity</td>
+                                                    <td>@s.MOS</td>
+                                                    <td>@s.DataSource</td>
+                                                    <td>
+                                                        <abp-button data-id="@s.Id" data-product-id="@s.ProductId" data-program-id="@p.Program.Id" data-period-report-id="@Model.Id"
+                                                                    class="btn-remove-shipment"
+                                                                    icon="minus"
+                                                                    text=""
+                                                                    button-type="Danger"/>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                        </table>
+                                      </td>
                                     </tr>
                                 }
                             </tbody>
