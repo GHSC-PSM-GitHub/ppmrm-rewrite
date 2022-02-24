@@ -8,12 +8,11 @@
     <abp-script src="/js/dataTables.buttons.min.js" />
 }
 @{
-    <input type="hidden" id="Id" value="@Model.Id" />
     <abp-card>
         <abp-card-header>
             <abp-row>
                 <abp-column size-md="_6">
-                    <abp-card-title>@Model.PeriodReport.Country.Name - @Model.PeriodReport.Period.Name</abp-card-title>
+                    <abp-card-title class="">Status: @Model.PeriodReport.ReportStatus</abp-card-title>
                 </abp-column>
                 <abp-column size-md="_6" class="text-right">
                     <abp-button id="edit-cs-updates"
@@ -26,10 +25,14 @@
                 </abp-column>
             </abp-row>
         </abp-card-header>
-        <abp-card-body>                
-                
-        </abp-card-body>
     </abp-card>
+    <div class="jumbotron jumbotron-fluid">
+  <div class="container">
+    <h1 class="display-4">@Model.PeriodReport.Country.Name</h1>
+    <p class="lead">@Model.PeriodReport.Period.Name</p>
+  </div>
+</div>
+    <input type="hidden" id="Id" value="@Model.Id" />
     @foreach(var program in Model.PeriodReport.Programs)
                 {
                     <abp-card>
@@ -49,7 +52,7 @@
                             </abp-row>
                         </abp-card-header>
                         <abp-card-body>                
-                            <abp-table class="table-program" data-id="@program.PeriodReportId" data-program-id="@program.Program.Id">
+                            <abp-table class="table-striped" data-id="@program.PeriodReportId" data-program-id="@program.Program.Id">
                                 <thead>
                                     <tr>
                                         <th>Product</th>
@@ -60,8 +63,8 @@
                                         <th>Source of Consumption</th>
                                         <th>Action Recommended</th>
                                         <th>Action needed by</th>
-                                        <th>Actions</th>
                                         <th>Shipments</th>
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -77,16 +80,17 @@
                                         <td></td>
                                         <td></td>
                                         <td>
+                                             <abp-button  class="accordion-toggle" data-toggle="collapse" data-target="#@p.Product.Id-@p.Program.Id"
+                                                    text="(@(p.Shipments?.Count ?? 0))"
+                                                    button-type="Link" />
+                                        </td>
+                                        <td>
                                             <abp-button data-id="@p.Product.Id" data-program-id="@p.Program.Id" data-period-report-id="@Model.Id"
                                                     class="btn-edit-product"
                                                     text="Edit"
                                                     button-type="Primary"/>
                                         </td>
-                                        <td class="accordion-toggle" data-toggle="collapse" data-target="#@p.Product.Id-@p.Program.Id">
-                                             <abp-button  class="accordion-toggle" data-toggle="collapse" data-target="#@p.Product.Id-@p.Program.Id"
-                                                    text="(@(p.Shipments?.Count ?? 0))"
-                                                    button-type="Link" />
-                                        </td>
+                                        
                                     </tr>
                                     <tr>
                                       <td class="accordion-body collapse text-right" id="@p.Product.Id-@p.Program.Id" colspan="10">
@@ -128,7 +132,7 @@
                             </abp-table>
                         </abp-card-body>
                     </abp-card>
-                    <hr />
+                    <hr class="my-4" />
                 }
     
 }
