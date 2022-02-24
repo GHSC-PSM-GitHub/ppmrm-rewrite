@@ -11,5 +11,7 @@ namespace PPMRm.PeriodReports
         //Task<PeriodReportDetailDto> GetAsync(string countryId, int period);
         Task<CommoditySecurityUpdatesDto> GetCSUpdatesAsync(string id);
         Task UpdateCSUpdatesAsync(string id, CommoditySecurityUpdatesDto csUpdates);
+
+        Task<List<ProgramProductDto>> GetDetailsAsync(string id, int programId);
     }
 }

@@ -20,7 +20,7 @@ namespace PPMRm.PeriodReports
         public ProductDto Product { get; set; }
         public decimal? SOH { get; set; }
         public decimal? AMC { get; set; }
-        public decimal? MOS { get; set; }
+        public decimal? MOS => SOH != null && AMC != null && AMC.Value > 0 ? SOH / AMC : null;
         public DateTime? DateOfSOH { get; set; }
         public List<ProductShipmentDto> Shipments { get; set; }
 
@@ -33,7 +33,7 @@ namespace PPMRm.PeriodReports
         public Supplier Supplier { get; set; }
         public decimal Quantity { get; set; }
         public decimal? AMC { get; set; }
-        public decimal? MOS { get; }
+        public decimal? MOS => AMC != null && AMC.Value > 0 ? Quantity / AMC : null;
         public DateTime? ShipmentDate { get; set; }
         public ShipmentDateType ShipmentDateType { get; set; }
         public ShipmentDataSource DataSource { get; set; }

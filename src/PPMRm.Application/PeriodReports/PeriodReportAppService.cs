@@ -84,7 +84,7 @@ namespace PPMRm.PeriodReports
                          };
             var result = await AsyncExecuter.SingleAsync(query);
             var periodReport = result.PeriodReport;
-            var programs = await AsyncExecuter.ToListAsync(programsQueryable.Where(p => periodReport.GetDefaultProgramIds().Contains(p.Id)));
+            var programs = await ProgramRepository.ToListAsync();
 
             var programProductIds = periodReport.ProductShipments.GroupBy(s => new { s.ProgramId, s.ProductId }).Select(i => (i.Key.ProgramId, i.Key.ProductId))
                                                .Concat(periodReport.ProductStocks.Select(x => (x.ProgramId, x.ProductId)))
@@ -138,7 +138,7 @@ namespace PPMRm.PeriodReports
             return response;
         }
 
-        public async Task<ProgramPeriodDto> GetDetailsAsync(string id, int programId)
+        public async Task<List<ProgramProductDto>> GetDetailsAsync(string id, int programId)
         {
             var queryable = await Repository.WithDetailsAsync(r => r.ProductStocks, r => r.ProductShipments);
             var countries = await CountryRepository.GetQueryableAsync();
@@ -192,14 +192,8 @@ namespace PPMRm.PeriodReports
                                                              Supplier = s.Supplier
                                                          }).ToList()
                                         };
-            
-            return new ProgramPeriodDto
-            {
-                PeriodReportId = periodReport.Id,
-                ProgramId = programId,
-                Program = ObjectMapper.Map<Program, ProgramDto>(programs.Single(p => p.Id == programId)),
-                Products = productStockShipments.Where(s => s.Program.Id == programId).ToList()
-            };
+
+            return productStockShipments.Where(s => s.Program.Id == programId).ToList();
         }
 
         async public Task UpdateCSUpdatesAsync(string id, CommoditySecurityUpdatesDto input)
