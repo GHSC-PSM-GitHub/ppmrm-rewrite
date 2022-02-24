@@ -45,12 +45,6 @@ namespace PPMRm.Web.Menus
                         icon: "fa fa-order"
                         ).AddItem(
                             new ApplicationMenuItem(
-                                "CSUpdates",
-                                "Enter CS Updates",
-                                url: "/periodreports/csupdates"
-                            )
-                        ).AddItem(
-                            new ApplicationMenuItem(
                                 "ProductData",
                                 "Enter/View Period Reports",
                                 url: "/periodreports"

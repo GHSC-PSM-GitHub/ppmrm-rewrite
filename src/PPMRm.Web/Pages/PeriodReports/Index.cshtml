@@ -29,7 +29,7 @@
             </div>
             <div class="col">
                 <div class="row">
-                    <div class="col-sm-4 right"><label>Year</label></div>
+                    <div class="col-sm-4 right"><label asp-for="@Model.SelectedYear"></label></div>
                     <div class="col-sm-8">
                         <abp-select suppress-label="true" asp-for="@Model.SelectedYear" asp-items="@Model.Years" />
                     </div>
@@ -37,7 +37,7 @@
             </div>
             <div class="col">
                 <div class="row">
-                    <label class="col-sm-4 right">Period</label>
+                    <label class="col-sm-4 right" asp-for="@Model.SelectedMonth">Period</label>
                      <div class="col-sm-8">
                     <abp-select suppress-label="true" asp-for="@Model.SelectedMonth" asp-items="@Model.Months" class="col-sm-8" />
                     </div>

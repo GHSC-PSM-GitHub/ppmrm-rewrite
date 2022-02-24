@@ -39,7 +39,7 @@ $(document).ready(function () {
                     data: "period.name"
                 },
                 {
-                    title: "Shipments",
+                    title: "Status",
                     data: "reportStatus",
                     render: function (data) {
                         return l('Enum:PeriodReportStatus:' + data);
@@ -63,7 +63,7 @@ $(document).ready(function () {
                     "title": "Enter/View Product Info",
                     "data": "id",
                     "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
-                        $(nTd).html("<a class='btn btn-primary' role='button' href='/periodreports/details/" + oData.id + "'>View/Edit</a>");
+                        $(nTd).html("<a class='btn btn-primary' role='button' href='/periodreports/edit/" + oData.id + "'>View/Edit</a>");
                     }
                 }
             ]
