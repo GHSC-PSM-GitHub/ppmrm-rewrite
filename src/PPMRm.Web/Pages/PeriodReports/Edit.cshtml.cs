@@ -11,6 +11,7 @@ namespace PPMRm.Web.Pages.PeriodReports
         [BindProperty(SupportsGet = true)]
         public string Id { get; set; }
 
+        [BindProperty]
         public PeriodReportDetailDto PeriodReport { get; set; }
         IPeriodReportAppService AppService { get; }
         public EditModel(IPeriodReportAppService periodReportAppService)

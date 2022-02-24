@@ -6,5 +6,6 @@ namespace PPMRm.PeriodReports
 {
     public class PeriodReportDetailDto : PeriodReportDto
     {
+        public List<ProgramPeriodDto> Programs { get; set; } = new();
     }
 }

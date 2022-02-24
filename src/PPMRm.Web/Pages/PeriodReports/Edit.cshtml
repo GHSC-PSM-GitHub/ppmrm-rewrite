@@ -1,4 +1,33 @@
 ﻿@page "{id}"
 @model PPMRm.Web.Pages.PeriodReports.EditModel
 @{
+    foreach(var program in Model.PeriodReport.Programs)
+    {
+        <abp-card>
+            <abp-card-header>
+                <abp-row>
+                    <abp-column size-md="_6">
+                        <abp-card-title>@program.Program.Name</abp-card-title>
+                    </abp-column>
+                    <abp-column size-md="_6" class="text-right">
+                        <abp-button class="add-program-product"
+                                    data-id="@program.PeriodReportId"
+                                    data-program-id="@program.Program.Id"
+                                    text="Add Product"
+                                    icon="plus"
+                                    button-type="Primary"/>
+                    </abp-column>
+                </abp-row>
+            </abp-card-header>
+            <abp-card-body>
+                <ul>
+                    @foreach(var product in program.Products)
+                    {
+                        <li>@product.Product.Name</li>
+                    }
+                </ul>
+            </abp-card-body>
+        </abp-card>
+    }
 }
+

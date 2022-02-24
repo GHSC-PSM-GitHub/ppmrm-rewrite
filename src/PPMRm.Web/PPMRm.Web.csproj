@@ -32,7 +32,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="wwwroot\**">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <Content Remove="Pages\PeriodReports\CSUpdatesModal.cshtml" />
     <None Update="Pages\**\*.css">
