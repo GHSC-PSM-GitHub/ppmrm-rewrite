@@ -53,7 +53,8 @@ $(document).ready(function () {
                                 {
                                     text: "CS Updates",
                                     action: function (data) {
-                                        csUpdatesModal.open({ id: data.record.id });
+                                        //csUpdatesModal.open({ id: data.record.id });
+                                        csModal.open({ id: data.record.id });
                                     }
                                 }
                             ]
@@ -92,9 +93,9 @@ $(document).ready(function () {
         dataTable.ajax.reload();
     });
 
-    var csUpdatesModal = new abp.ModalManager(abp.appPath + 'PeriodReports/CSUpdatesModal');
+    var csModal = new abp.ModalManager(abp.appPath + 'PeriodReports/CSModal');
 
-    csUpdatesModal.onResult(function () {
+    csModal.onResult(function () {
         dataTable.ajax.reload();
     });
 });

@@ -34,7 +34,7 @@
     <None Include="wwwroot\**">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <Content Remove="Pages\PeriodReports\CSUpdatesModal.cshtml" />
+    <Content Remove="Pages\PeriodReports\AddProductModal.cshtml" />
     <None Update="Pages\**\*.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -80,12 +80,12 @@
 
   <ItemGroup>
     <_ContentIncludedByDefault Remove="Pages\Items\Index.cshtml" />
-    <_ContentIncludedByDefault Remove="Pages\PeriodReports\CSUpdatesModal.cshtml" />
+    <_ContentIncludedByDefault Remove="Pages\PeriodReports\AddProductModal.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="Pages\Items\Index.cshtml" />
-    <None Include="Pages\PeriodReports\CSUpdatesModal.cshtml" />
+    <None Include="Pages\PeriodReports\AddProductModal.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -108,6 +108,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <UpToDateCheckInput Remove="Pages\PeriodReports\CSUpdatesModal.cshtml" />
+    <UpToDateCheckInput Remove="Pages\PeriodReports\AddProductModal.cshtml" />
   </ItemGroup>
 </Project>

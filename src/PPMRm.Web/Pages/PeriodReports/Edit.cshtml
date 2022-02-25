@@ -15,7 +15,7 @@
                     <abp-card-title class="">Status: @Model.PeriodReport.ReportStatus</abp-card-title>
                 </abp-column>
                 <abp-column size-md="_6" class="text-right">
-                    <abp-button id="edit-cs-updates"
+                    <abp-button id="edit-cs-updates" data-id="@Model.Id"
                                 text="View/Edit CS Updates"
                                 button-type="Primary"/>
                     <abp-button id="close-period"
@@ -32,7 +32,7 @@
     <p class="lead">@Model.PeriodReport.Period.Name</p>
   </div>
 </div>
-    <input type="hidden" id="Id" value="@Model.Id" />
+            <abp-input asp-for="Id" />
     @foreach(var program in Model.PeriodReport.Programs)
                 {
                     <abp-card>
@@ -52,7 +52,7 @@
                             </abp-row>
                         </abp-card-header>
                         <abp-card-body>                
-                            <abp-table class="table-striped" data-id="@program.PeriodReportId" data-program-id="@program.Program.Id">
+                            <abp-table class="table-striped table-bordered" data-id="@program.PeriodReportId" data-program-id="@program.Program.Id">
                                 <thead>
                                     <tr>
                                         <th>Product</th>
@@ -119,16 +119,32 @@
                                                                     class="btn-remove-shipment"
                                                                     icon="minus"
                                                                     text=""
+                                                                    disabled="true"
                                                                     button-type="Danger"/>
                                                     </td>
                                                 </tr>
                                             }
+                                            <tr>
+                                                <td class="text-right" colspan="6">
+                                                    <abp-button data-product-id="@p.Product.Id" data-program-id="@p.Program.Id" data-period-report-id="@Model.Id"
+                                                                    class="btn-add-shipment"
+                                                                    icon="plus"
+                                                                    text="Add Shipment"
+                                                                    button-type="Success"/>
+                                                    </td>
+                                            </tr>
                                         </tbody>
                                         </table>
                                       </td>
                                     </tr>
                                 }
-                            </tbody>
+                                @if(program.Products.Count == 0)
+                        {
+                            <tr>
+                            <td class="text-center" colspan="10">No reports have been submitted for this program</td>
+                            </tr>
+                        }
+                    </tbody>
                             </abp-table>
                         </abp-card-body>
                     </abp-card>

@@ -8,27 +8,27 @@ using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Form;
 
 namespace PPMRm.Web.Pages.PeriodReports
 {
-    public class CSUpdatesModalModel : PPMRmPageModel
+    public class CSModalModel : PPMRmPageModel
     {
         [HiddenInput]
         [BindProperty(SupportsGet = true)]
         public string Id { get; set; }
         [BindProperty]
         public string Title { get; set; }
-
         [BindProperty]
-        public CSUpdateViewModel CSUpdates { get; set; }
-        IPeriodReportAppService AppService { get; }
-        public CSUpdatesModalModel(IPeriodReportAppService periodReportAppService)
-        {
-            AppService = periodReportAppService;
-        }
+        public CSUpdateViewModel CSUpdates { get; set; } = new();
 
-        public async void OnGetAsync()
+        IPeriodReportAppService AppService { get; }
+
+        public CSModalModel(IPeriodReportAppService appService)
         {
-            var csUpdates = await AppService.GetCSUpdatesAsync(Id);
-            CSUpdates = ObjectMapper.Map<CommoditySecurityUpdatesDto, CSUpdateViewModel>(csUpdates);
-            Title = csUpdates.Name;
+            AppService = appService;
+        }
+        public async void OnGet(string id)
+        {
+            var csUpdatesDto = await AppService.GetCSUpdatesAsync(id);
+            Title = csUpdatesDto.Name;
+            CSUpdates = ObjectMapper.Map<CommoditySecurityUpdatesDto, CSUpdateViewModel>(csUpdatesDto);
         }
 
         public async Task<IActionResult> OnPostAsync()
@@ -41,18 +41,6 @@ namespace PPMRm.Web.Pages.PeriodReports
 
     public class CSUpdateViewModel
     {
-        [DisplayName("Forecasting and Supply Planning")]
-        [TextArea()]
-        [StringLength(1000)]
-        public string ForecastingAndSupplyPlanning { get; set; }
-        [DisplayName("Procurement Product Information And Registration")]
-        [TextArea]
-        [StringLength(1000)]
-        public string ProcurementProductInformationAndRegistration { get; set; }
-        [DisplayName("Warehousing And Distribution")]
-        [TextArea]
-        [StringLength(1000)]
-        public string WarehousingAndDistribution { get; set; }
         [DisplayName("Logistics Management Information System (LMIS)")]
         [TextArea]
         [StringLength(1000)]
