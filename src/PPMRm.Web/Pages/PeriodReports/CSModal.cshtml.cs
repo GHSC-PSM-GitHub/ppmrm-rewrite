@@ -24,9 +24,9 @@ namespace PPMRm.Web.Pages.PeriodReports
         {
             AppService = appService;
         }
-        public async void OnGet(string id)
+        public async void OnGet()
         {
-            var csUpdatesDto = await AppService.GetCSUpdatesAsync(id);
+            var csUpdatesDto = await AppService.GetCSUpdatesAsync(Id);
             Title = csUpdatesDto.Name;
             CSUpdates = ObjectMapper.Map<CommoditySecurityUpdatesDto, CSUpdateViewModel>(csUpdatesDto);
         }

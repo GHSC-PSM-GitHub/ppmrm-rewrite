@@ -34,7 +34,6 @@
     <None Include="wwwroot\**">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <Content Remove="Pages\PeriodReports\AddProductModal.cshtml" />
     <None Update="Pages\**\*.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -71,22 +70,10 @@
     <Folder Include="Pages\Programs\" />
     <Folder Include="Pages\Shipments\" />
     <Folder Include="Pages\CountryPeriods\" />
+    <Folder Include="Pages\PeriodReports" />
     <Folder Include="Pages\CountryPeriods\ViewModels\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <UpToDateCheckInput Remove="Pages\Items\Index.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="Pages\Items\Index.cshtml" />
-    <_ContentIncludedByDefault Remove="Pages\PeriodReports\AddProductModal.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Pages\Items\Index.cshtml" />
-    <None Include="Pages\PeriodReports\AddProductModal.cshtml" />
-  </ItemGroup>
 
   <ItemGroup>
     <Resource Include="tempkey.jwk" />
@@ -105,9 +92,5 @@
     <Content Update="wwwroot\js\bootstrap-multiselect.min.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <UpToDateCheckInput Remove="Pages\PeriodReports\AddProductModal.cshtml" />
   </ItemGroup>
 </Project>

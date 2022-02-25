@@ -5,15 +5,12 @@
     Layout = null;
 }
 <abp-dynamic-form abp-model="Product" asp-page="/PeriodReports/EditProductModal">
-    <abp-modal>
-        <abp-modal-header title="Edit Product"></abp-modal-header>
+    <abp-modal scrollable="true" size="Large">
+        <abp-modal-header title="Edit Product - (@Model.PeriodReportId)"></abp-modal-header>
         <abp-modal-body>
+            <abp-select asp-for="@Model.ProgramId" asp-items="@Model.Programs" disabled="true" />
+            <abp-select asp-for="@Model.Id" asp-items="@Model.Products" disabled="true" />
             <abp-form-content />
-            <ul>
-                <li>@Model.PeriodReportId</li>
-                <li>@Model.ProgramId</li>
-                <li>@Model.Id</li>
-            </ul>
         </abp-modal-body>
         <abp-modal-footer buttons="@(AbpModalButtons.Cancel|AbpModalButtons.Save)"></abp-modal-footer>
     </abp-modal>

@@ -14,7 +14,6 @@
             periodReportId: $(this).data('period-report-id'),
             programId: $(this).data('program-id')
         };
-        alert(JSON.stringify(params));
         addShipmentModal.open(params);
     });
 
@@ -50,17 +49,7 @@
         };
     };
 
-    $(".btn-edit-product").click(function (e) {
-        e.preventDefault();
-        alert(JSON.stringify({
-            periodReportId: $(this).data('period-report-id'),
-            programId: $(this).data('program-id'),
-            productId: $(this).data('id')
-        }));
-        //e.preventDefault();
-        //var reportId = $("#Id").val();
-        //csUpdatesModal.open({ id: reportId });
-    });
+    addProductModal.onResult()
 
 
 });
