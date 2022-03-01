@@ -51,12 +51,16 @@
                                 </abp-column>
                             </abp-row>
                         </abp-card-header>
-                        <abp-card-body>                
-                            <abp-table class="table-striped table-bordered" data-id="@program.PeriodReportId" data-program-id="@program.Program.Id">
+                       
+                    </abp-card>
+                    <abp-table class="table-striped table-bordered" data-id="@program.PeriodReportId" data-program-id="@program.Program.Id">
                                 <thead>
                                     <tr>
                                         <th>Product</th>
+                                        <th>Min</th>
+                                        <th>Max</th>
                                         <th>MOS</th>
+                                        <th>Status</th>
                                         <th>Stock on Hand</th>
                                         <th>Date of SOH</th>
                                         <th>AMC</th>
@@ -72,7 +76,10 @@
                                 {
                                     <tr>
                                         <td>@p.Product.Name</td>
+                                        <td>6</td>
+                                        <td>12</td>
                                         <td>@p.MOS</td>
+                                        <td></td>
                                         <td>@p.SOH</td>
                                         <td>@p.DateOfSOH</td>
                                         <td>@p.AMC</td>
@@ -93,7 +100,7 @@
                                         
                                     </tr>
                                     <tr>
-                                      <td class="accordion-body collapse text-right" id="@p.Product.Id-@p.Program.Id" colspan="10">
+                                      <td class="accordion-body collapse text-right" id="@p.Product.Id-@p.Program.Id" colspan="13">
                                         <table class="table">
                                           <thead>
                                           <tr>
@@ -141,13 +148,11 @@
                                 @if(program.Products.Count == 0)
                         {
                             <tr>
-                            <td class="text-center" colspan="10">No reports have been submitted for this program</td>
+                            <td class="text-center" colspan="13">No reports have been submitted for this program</td>
                             </tr>
                         }
                     </tbody>
                             </abp-table>
-                        </abp-card-body>
-                    </abp-card>
                     <hr class="my-4" />
                 }
     
