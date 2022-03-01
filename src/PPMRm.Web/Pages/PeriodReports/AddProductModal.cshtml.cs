@@ -60,6 +60,7 @@ namespace PPMRm.Web.Pages.PeriodReports
         [Required]
         public decimal SOH { get; set; }
         [DisplayName( "Date of SOH")]
+        [BindProperty, DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime? DateOfSOH { get; set; }
         [DisplayName( "Average Monthly Consumption")]
         public decimal AMC { get; set; }
@@ -69,6 +70,7 @@ namespace PPMRm.Web.Pages.PeriodReports
         [TextArea()]
         public string ActionRecommended { get; set; }
         [DisplayName( "Date Action Needed By")]
+        [BindProperty, DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime? DateActionNeededBy { get; set; }
     }
 

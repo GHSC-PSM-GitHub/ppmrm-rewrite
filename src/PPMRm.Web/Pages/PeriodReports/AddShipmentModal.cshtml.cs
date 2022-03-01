@@ -6,6 +6,7 @@ using PPMRm.Products;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Volo.Abp.Domain.Repositories;
@@ -50,10 +51,13 @@ namespace PPMRm.Web.Pages.PeriodReports
     {
         public Supplier Supplier { get; set; }
         [DisplayName("Next Shipment Date")]
+        [BindProperty, DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime? ShipmentDate { get; set; }
         [DisplayName("Shipment Date Type")]
         public ShipmentDateType ShipmentDateType { get; set; }
         public decimal Quantity { get; set; }
+        [DisplayName("Shipment Date Source")]
+        public ShipmentDataSource DataSource { get; set; }
 
     }
 }
