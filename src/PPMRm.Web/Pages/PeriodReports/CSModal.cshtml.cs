@@ -61,5 +61,17 @@ namespace PPMRm.Web.Pages.PeriodReports
         [TextArea]
         [StringLength(1000)]
         public string ProductStockLevelsInformation { get; set; }
+        [DisplayName("Forecasting and SupplyPlanning")]
+        [TextArea]
+        [StringLength(1000)]
+        public string ForecastingAndSupplyPlanning { get; set; }
+        [DisplayName("Procurement Product Information & Registration")]
+        [TextArea]
+        [StringLength(1000)]
+        public string ProcurementProductInformationAndRegistration { get; set; }
+        [DisplayName("Warehousing and Distribution")]
+        [TextArea]
+        [StringLength(1000)]
+        public string WarehousingAndDistribution { get; set; }
     }
 }
