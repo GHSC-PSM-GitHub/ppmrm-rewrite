@@ -75,6 +75,7 @@
             //     }
 
             // }
+            await SeedOrders(args);
 
             Console.ReadLine();
 
@@ -94,8 +95,16 @@
                 
                 try
                 {
-                    
-                    session.Events.StartStream<ARTMIS.OrderLines.OrderLine>(c.Key, c.Value.OrderBy(e => e.EventTimestamp));
+                    var state = await session.Events.FetchStreamStateAsync(c.Key);
+                    //var existing = await session.LoadAsync<ARTMIS.OrderLines.OrderLine>(c.Key);
+                    if(state == null)
+                    {
+                        session.Events.StartStream<ARTMIS.OrderLines.OrderLine>(c.Key, c.Value.OrderBy(e => e.EventTimestamp));
+                    }
+                    else
+                    {
+                        session.Events.Append(c.Key, c.Value.OrderBy(e => e.EventTimestamp));
+                    }
                 }
                 catch (Exception)
                 {
@@ -144,7 +153,7 @@
         private static void DefineProcess(ISingleStream<string> contextStream)
         {
             var orderStream = contextStream
-                .CrossApplyFolderFiles("list all required files", "2021*.tar.gz", true)
+                .CrossApplyFolderFiles("list all required files", "202202*.tar.gz", true)
                 .CrossApplyGZipFiles("extract files from zip", "*order*.txt")
                 .CrossApplyTextFile("parse file", 
                     FlatFileDefinition.Create(i => new OrderEto
