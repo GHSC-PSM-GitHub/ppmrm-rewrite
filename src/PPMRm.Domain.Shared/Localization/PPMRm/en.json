@@ -24,6 +24,20 @@
     "Enum:PeriodReportStatus:1": "Open",
     "Enum:PeriodReportStatus:2": "Marked as Final",
     "Enum:PeriodReportStatus:3": "Closed",
-    "Enum:PeriodReportStatus:4": "Re-Opened"
+    "Enum:PeriodReportStatus:4": "Re-Opened",
+    "Enum:SOHLevel:1": "Central Warehouse",
+    "Enum:SOHLevel:2": "Zonal Warehouse",
+    "Enum:SOHLevel:3": "Regional Warehouse",
+    "Enum:SOHLevel:4": "Provincial Warehouse",
+    "Enum:SOHLevel:5": "State Warehouse",
+    "Enum:SOHLevel:6": "LGA Warehouse",
+    "Enum:SOHLevel:7": "Intermediate Warehouse",
+    "Enum:SOHLevel:8": "District Warehouse",
+    "Enum:SOHLevel:9": "County Warehouse",
+    "Enum:SOHLevel:10": "Municipal Warehouse",
+    "Enum:SOHLevel:11": "SubCountry Warehouse",
+    "Enum:SOHLevel:12": "Sub District Warehouse",
+    "Enum:SOHLevel:13": "Service Delivery Points",
+    "Enum:SOHLevel:14": "Joint Medical Store"
   }
 }

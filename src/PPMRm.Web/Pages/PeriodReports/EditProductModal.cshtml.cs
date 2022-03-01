@@ -30,6 +30,8 @@ namespace PPMRm.Web.Pages.PeriodReports
 
         public List<SelectListItem> Programs { get; set; }
         public List<SelectListItem> SOHLevelOptions { get; set; }
+        [DisplayName("SOH Levels")]
+        [BindProperty]
         public List<string> SOHLevels { get; set; } = new();
         public CreateUpdateProgramProductViewModel Product { get; set; } = new();
 
@@ -43,7 +45,7 @@ namespace PPMRm.Web.Pages.PeriodReports
         {
             Products = (await ProductRepository.ToListAsync()).Select(p => new SelectListItem { Value = p.Id, Text = p.Name}).ToList();
             Programs = (await ProgramRepository.ToListAsync()).Select(p => new SelectListItem { Value = $"{p.Id}", Text = p.Name }).ToList();
-            SOHLevelOptions = Enum.GetValues<SOHLevel>().Select(l => new SelectListItem { Value = $"{(int)l}", Text = l.ToString() }).ToList();
+            SOHLevelOptions = Enum.GetValues<SOHLevel>().Select(l => new SelectListItem { Value = $"{(int)l}", Text = L[$"Enum:SOHLevel:{(int)l}"] }).ToList();
         }
 
         public async Task<IActionResult> OnPostAsync()
