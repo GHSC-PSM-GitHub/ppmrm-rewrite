@@ -88,7 +88,7 @@
                                         <td></td>
                                         <td>
                                              <abp-button  class="accordion-toggle" data-toggle="collapse" data-target="#@p.Product.Id-@p.Program.Id"
-                                                    text="(@(p.Shipments?.Count ?? 0))"
+                                                    text="View (@(p.Shipments?.Count ?? 0))"
                                                     button-type="Link" />
                                         </td>
                                         <td>
@@ -113,7 +113,7 @@
                                           </tr>
                                           </thead>
                                           <tbody>
-                                            @foreach(var s in p.Shipments)
+                                            @foreach(var s in p.Shipments.OrderBy(l => l.ShipmentDate))
                                             {
                                                 <tr>
                                                     <td>@s.Supplier</td>
