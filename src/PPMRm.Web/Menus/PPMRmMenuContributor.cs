@@ -73,7 +73,7 @@ namespace PPMRm.Web.Menus
                             new ApplicationMenuItem(
                                 "Orders",
                                 "Orders",
-                                url: "/orders"
+                                url: "/artmis/orderlines"
                             )
                         )
                 );
