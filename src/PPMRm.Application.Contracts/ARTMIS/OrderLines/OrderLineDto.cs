@@ -41,6 +41,7 @@ namespace PPMRm.ARTMIS.OrderLines
 
         public DateTime? ShipmentDate { get; set; }
         public string ShipmentDateType { get; set; }
+        public string ShipmentDateFormatted => ShipmentDate?.ToString("yyyy-MM-dd");
         public decimal? TotalQuantity => OrderedQuantity * (Item?.BaseUnitMultiplier ?? 1);
     }
 }
