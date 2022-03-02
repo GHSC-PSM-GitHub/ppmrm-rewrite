@@ -24,23 +24,25 @@ namespace PPMRm.Web.Pages.PeriodReports
         {
             AppService = appService;
         }
-        public async void OnGet()
+        public async Task OnGetAsync()
         {
             var csUpdatesDto = await AppService.GetCSUpdatesAsync(Id);
-            Title = csUpdatesDto.Name;
+            Title = csUpdatesDto.Title;
             CSUpdates = ObjectMapper.Map<CommoditySecurityUpdatesDto, CSUpdateViewModel>(csUpdatesDto);
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
             var csUpdatesDto = ObjectMapper.Map<CSUpdateViewModel, CommoditySecurityUpdatesDto>(CSUpdates);
-            await AppService.UpdateCSUpdatesAsync(Id, csUpdatesDto);
+            await AppService.UpdateCSUpdatesAsync(csUpdatesDto.PeriodReportId, csUpdatesDto);
             return NoContent();
         }
     }
 
     public class CSUpdateViewModel
     {
+        [HiddenInput]
+        public string PeriodReportId { get; set; }
         [DisplayName("Logistics Management Information System (LMIS)")]
         [TextArea]
         [StringLength(1000)]
@@ -61,7 +63,7 @@ namespace PPMRm.Web.Pages.PeriodReports
         [TextArea]
         [StringLength(1000)]
         public string ProductStockLevelsInformation { get; set; }
-        [DisplayName("Forecasting and SupplyPlanning")]
+        [DisplayName("Forecasting and Supply Planning")]
         [TextArea]
         [StringLength(1000)]
         public string ForecastingAndSupplyPlanning { get; set; }

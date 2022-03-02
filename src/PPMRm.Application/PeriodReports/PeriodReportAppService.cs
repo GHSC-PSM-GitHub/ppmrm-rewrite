@@ -215,8 +215,15 @@ namespace PPMRm.PeriodReports
                                join p in periods on r.PeriodId equals p.Id
                                select new { PeriodReport = r, Country = c, Period = p };
             var periodReport = await AsyncExecuter.SingleAsync(reports);
-            var csUpdatesDto = ObjectMapper.Map<CommoditySecurityUpdates, CommoditySecurityUpdatesDto>(periodReport.PeriodReport.CommoditySecurityUpdates ?? new CommoditySecurityUpdates());
-            csUpdatesDto.Name = $"{periodReport.Country.Name} - {DateTimeFormatInfo.CurrentInfo.GetMonthName(periodReport.Period.Month)} {periodReport.Period.Year}";
+            var title = $"{periodReport.Country.Name} - {DateTimeFormatInfo.CurrentInfo.GetMonthName(periodReport.Period.Month)} {periodReport.Period.Year}";
+            CommoditySecurityUpdatesDto csUpdatesDto;
+            if (periodReport.PeriodReport.CommoditySecurityUpdates != null)
+                csUpdatesDto = ObjectMapper.Map<CommoditySecurityUpdates, CommoditySecurityUpdatesDto>(periodReport.PeriodReport.CommoditySecurityUpdates);
+            else
+                csUpdatesDto = new CommoditySecurityUpdatesDto();
+
+            csUpdatesDto.PeriodReportId = id;
+            csUpdatesDto.Title = title;
             return csUpdatesDto;
         }
     }
