@@ -1,8 +1,43 @@
 {
  "culture": "fr",
- "texts": {
-  "Menu:Home": "Accueil",
-  "Welcome": "Bienvenue",
-  "LongWelcomeMessage": "Bienvenue dans l'application. Il s'agit d'un projet de démarrage basé sur le framework ABP. Pour plus d'informations, visitez abp.io."
- }
+  "texts": {
+    "Menu:Home": "Accueil",
+    "Welcome": "Bienvenue",
+    "LongWelcomeMessage": "Bienvenue dans l'application. Il s'agit d'un projet de démarrage basé sur le framework ABP. Pour plus d'informations, visitez abp.io.",
+    "Menu:DataManagement": "Core Data Management",
+    "Menu:DataEntry": "Data Entry and View",
+    "Menu:Products": "Products",
+    "Menu:Countries": "Countries",
+    "Menu:Programs": "Programs",
+    "Menu:Periods": "Periods",
+    "Menu:ARTMIS": "ARTMIS",
+    "Menu:Orders": "Orders",
+    "Menu:Shipments": "Shipments",
+    "Menu:Reports": "Reports",
+    "Menu:Graphs": "Graphs",
+    "Menu:Help": "Help",
+    "Menu:Resources": "Resources",
+    "Permissions:Core": "PPMRm",
+    "Permissions:DataReviewer": "Data Reviewer",
+    "Permissions:DataProvider": "Data Provider",
+    "Enum:PeriodReportStatus:0": "Initialized",
+    "Enum:PeriodReportStatus:1": "Open",
+    "Enum:PeriodReportStatus:2": "Marked as Final",
+    "Enum:PeriodReportStatus:3": "Closed",
+    "Enum:PeriodReportStatus:4": "Re-Opened",
+    "Enum:SOHLevel:1": "Central Warehouse",
+    "Enum:SOHLevel:2": "Zonal Warehouse",
+    "Enum:SOHLevel:3": "Regional Warehouse",
+    "Enum:SOHLevel:4": "Provincial Warehouse",
+    "Enum:SOHLevel:5": "State Warehouse",
+    "Enum:SOHLevel:6": "LGA Warehouse",
+    "Enum:SOHLevel:7": "Intermediate Warehouse",
+    "Enum:SOHLevel:8": "District Warehouse",
+    "Enum:SOHLevel:9": "County Warehouse",
+    "Enum:SOHLevel:10": "Municipal Warehouse",
+    "Enum:SOHLevel:11": "Sub-country Warehouse",
+    "Enum:SOHLevel:12": "Sub-district Warehouse",
+    "Enum:SOHLevel:13": "Service Delivery Points",
+    "Enum:SOHLevel:14": "Joint Medical Store"
+  }
 }

@@ -7,7 +7,7 @@ namespace PPMRm.PeriodReports
     public enum SOHLevel
     {
         CentralWarehouse = 1,
-        //ZonalWarehouse = 2,
+        ZonalWarehouse = 2,
         RegionalWarehouse=3,
         ProvincialWarehouse=4,
         StateWarehouse=5,
@@ -19,6 +19,6 @@ namespace PPMRm.PeriodReports
         SubCountryWarehouse=11,
         SubDistrictWarehouse=12,
         ServiceDeliveryPoints=13,
-        JointMedicalStore=14
+        //JointMedicalStore=14
     }
 }

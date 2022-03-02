@@ -35,8 +35,8 @@
     "Enum:SOHLevel:8": "District Warehouse",
     "Enum:SOHLevel:9": "County Warehouse",
     "Enum:SOHLevel:10": "Municipal Warehouse",
-    "Enum:SOHLevel:11": "SubCountry Warehouse",
-    "Enum:SOHLevel:12": "Sub District Warehouse",
+    "Enum:SOHLevel:11": "Sub-country Warehouse",
+    "Enum:SOHLevel:12": "Sub-district Warehouse",
     "Enum:SOHLevel:13": "Service Delivery Points",
     "Enum:SOHLevel:14": "Joint Medical Store"
   }
