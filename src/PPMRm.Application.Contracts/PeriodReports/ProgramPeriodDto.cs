@@ -22,6 +22,8 @@ namespace PPMRm.PeriodReports
         public decimal? AMC { get; set; }
         public decimal? MOS => SOH != null && AMC != null && AMC.Value > 0 ? SOH / AMC : null;
         public DateTime? DateOfSOH { get; set; }
+        public string ActionRecommended { get; set; }
+        public DateTime? DateActionNeededBy { get; set; }
         public List<ProductShipmentDto> Shipments { get; set; }
 
     }

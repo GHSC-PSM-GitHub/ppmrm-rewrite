@@ -53,7 +53,7 @@
                         </abp-card-header>
                        
                     </abp-card>
-                    <abp-table class="table-striped table-bordered" data-id="@program.PeriodReportId" data-program-id="@program.Program.Id">
+                    <abp-table class="table-striped table-bordered .w-auto small" data-id="@program.PeriodReportId" data-program-id="@program.Program.Id">
                                 <thead>
                                     <tr>
                                         <th>Product</th>
@@ -61,11 +61,11 @@
                                         <th>Max</th>
                                         <th>MOS</th>
                                         <th>Status</th>
-                                        <th>Stock on Hand</th>
-                                        <th>Date of SOH</th>
+                                        <th>SoH</th>
+                                        <th>SoH Date</th>
                                         <th>AMC</th>
-                                        <th>Source of Consumption</th>
-                                        <th>Action Recommended</th>
+                                        <th class"th-sm">Source of Consumption</th>
+                                        <th class="th-lg">Action Recommended</th>
                                         <th>Action needed by</th>
                                         <th>Shipments</th>
                                         <th>Actions</th>
@@ -75,14 +75,14 @@
                                     @foreach(var p in program.Products)
                                 {
                                     <tr>
-                                        <td>@p.Product.Name</td>
+                                        <td scope="row">@p.Product.Name</td>
                                         <td>6</td>
                                         <td>12</td>
                                         <td>@p.MOS</td>
                                         <td></td>
-                                        <td>@p.SOH</td>
-                                        <td>@p.DateOfSOH</td>
-                                        <td>@p.AMC</td>
+                                        <td>@p.SOH?.ToString("N0")</td>
+                                        <td>@p.DateOfSOH?.ToString("dd MMM yyyy")</td>
+                                        <td>@p.AMC?.ToString("N2")</td>
                                         <td></td>
                                         <td></td>
                                         <td></td>
@@ -100,7 +100,7 @@
                                         
                                     </tr>
                                     <tr>
-                                      <td class="accordion-body collapse text-right" id="@p.Product.Id-@p.Program.Id" colspan="13">
+                                      <td scope="row" class="accordion-body collapse text-right" id="@p.Product.Id-@p.Program.Id" colspan="13">
                                         <table class="table">
                                           <thead>
                                           <tr>
@@ -117,7 +117,7 @@
                                             {
                                                 <tr>
                                                     <td>@s.Supplier</td>
-                                                    <td>@s.ShipmentDate?.ToString("MM-dd-yyyy") @s.ShipmentDateType</td>
+                                                    <td>@s.ShipmentDate?.ToString("dd MMM yyyy") @s.ShipmentDateType</td>
                                                     <td>@s.Quantity.ToString("N0")</td>
                                                     <td>@s.MOS</td>
                                                     <td>@s.DataSource</td>
