@@ -27,8 +27,11 @@ $(document).ready(function () {
             ajax: abp.libs.datatables.createAjax(pPMRm.periodReports.periodReport.getList, inputAction),
             columnDefs: [
                 {
-                    title: "Id",
-                    data: "id"
+                    title: "Report ID",
+                    data: "id",
+                    "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+                        $(nTd).html("<a href='/periodreports/edit/" + oData.id + "'>"+oData.id+"</a>");
+                    }
                 },
                 {
                     title: "Country",
