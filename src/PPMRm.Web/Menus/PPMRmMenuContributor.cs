@@ -36,7 +36,7 @@ namespace PPMRm.Web.Menus
                 )
             );
 
-            if (await context.IsGrantedAsync(PPMRmConsts.Permissions.DataReviewer))
+            if (await context.IsGrantedAsync(PPMRmConsts.Permissions.DataReviewer) || await context.IsGrantedAsync(PPMRmConsts.Permissions.DataProvider))
             {
                 context.Menu.AddItem(
                     new ApplicationMenuItem(
@@ -58,6 +58,12 @@ namespace PPMRm.Web.Menus
                         )
                 );
 
+                
+
+                
+            }
+            if(await context.IsGrantedAsync(PPMRmConsts.Permissions.DataReviewer))
+            {
                 context.Menu.AddItem(
                     new ApplicationMenuItem(
                         "ARTMIS",
@@ -77,8 +83,6 @@ namespace PPMRm.Web.Menus
                             )
                         )
                 );
-
-                
             }
             //    context.Menu.GetAdministration().AddItem(
             //    new ApplicationMenuItem(

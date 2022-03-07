@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -6,28 +7,29 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using Volo.Abp.Domain.Repositories;
 
 namespace PPMRm.Web.Pages.PeriodReports
 {
+    [Authorize]
     public class IndexModel : PageModel
     {
-        IRepository<Country, string> CountryRepository { get; }
-        public IndexModel(IRepository<Country, string> countryRepository)
+        ICountryRepository CountryRepository { get; }
+        public IndexModel(ICountryRepository countryRepository)
         {
             CountryRepository = countryRepository;
+        }
 
-            var allCountries = CountryRepository.OrderBy(c => c.Name).ToList();
-            Countries = allCountries.Select(c => new SelectListItem { Value = c.Id, Text = c.Name }).ToList();
+        public async Task OnGetAsync()
+        {
+            var allCountries = await CountryRepository.GetUserCountriesAsync();
+            Countries = allCountries.OrderBy(c => c.Name).Select(c => new SelectListItem { Value = c.Id, Text = c.Name }).ToList();
             SelectedCountries = Countries.Select(c => c.Value).ToList();
             Months = Enumerable.Range(1, 12).Select(i => new SelectListItem { Value = $"{i}", Text = DateTimeFormatInfo.CurrentInfo.GetMonthName(i) }).ToList();
             SelectedMonth = 2; // TODO: Get latest month from period repo
-            Years = Enumerable.Range(2021,2).Select(i => new SelectListItem { Value = $"{i}", Text = $"{i}" }).ToList();
+            Years = Enumerable.Range(2021, 2).Select(i => new SelectListItem { Value = $"{i}", Text = $"{i}" }).ToList();
             SelectedYear = 2022; // TODO: Get latest year from period repo
-            
-        }
-        public void OnGet()
-        {
         }
 
         public List<SelectListItem> Countries { get; set; } = new();

@@ -12,9 +12,11 @@ using Volo.Abp.Domain.Repositories;
 using System.Linq;
 using System;
 using PPMRm.ARTMIS;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PPMRm.Web.Pages.ARTMIS.OrderLines
 {
+    [Authorize(PPMRmConsts.Permissions.DataReviewer)]
     public class IndexModel : PageModel
     {
         IRepository<Product, string> ProductRepository { get; }
