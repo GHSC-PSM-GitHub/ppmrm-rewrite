@@ -49,30 +49,34 @@ $(document).ready(function () {
                     }
                 },
                 {
-                    title:"CS Updates",
-                    rowAction: {
-                        items:
-                            [
-                                {
-                                    text: "CS Updates",
-                                    action: function (data) {
-                                        //csUpdatesModal.open({ id: data.record.id });
-                                        csModal.open({ id: data.record.id });
-                                    }
-                                }
-                            ]
+                    "title": "CS Updates",
+                    "data": "id",
+                    "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+                        $(nTd).html("<button type='button' class='btn btn-primary btn-sm btn-cs-updates' data-id='"+ oData.id +"'>CS Updates</button>");
                     }
                 },
                 {
                     "title": "Enter/View Product Info",
                     "data": "id",
                     "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
-                        $(nTd).html("<a class='btn btn-primary' role='button' href='/periodreports/edit/" + oData.id + "'>View/Edit</a>");
+                        $(nTd).html("<a class='btn btn-primary btn-sm' role='button' href='/periodreports/edit/" + oData.id + "'>View/Edit</a>");
                     }
                 }
             ]
         })
     );
+
+    var csModal = new abp.ModalManager(abp.appPath + 'PeriodReports/CSModal');
+
+    csModal.onResult(function () {
+        dataTable.ajax.reload();
+    });
+
+    $('#PeriodReportsTable tbody').on('click', 'button', function (e) {
+        e.preventDefault();
+        var params = { id: $(this).data('id') };
+        csModal.open(params);
+    });
 
     $("#SelectedCountries").multiselect({
         selectAllValue: 'multiselect-all',
@@ -96,9 +100,5 @@ $(document).ready(function () {
         dataTable.ajax.reload();
     });
 
-    var csModal = new abp.ModalManager(abp.appPath + 'PeriodReports/CSModal');
-
-    csModal.onResult(function () {
-        dataTable.ajax.reload();
-    });
+   
 });
