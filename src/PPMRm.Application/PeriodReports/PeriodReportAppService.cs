@@ -226,5 +226,50 @@ namespace PPMRm.PeriodReports
             csUpdatesDto.Title = title;
             return csUpdatesDto;
         }
+
+        public Task<ProgramProductDto> GetProgramProductAsync(string id, int programId, string productId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task AddOrUpdateProgramProductAsync(string id, int programId, string productId, CreateUpdateProgramProductDto productInfo)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DeleteShipmentAsync(string id, Guid shipmentId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task AddShipmentAsync(string id, int programId, string productId, CreateUpdateShipmentDto shipment)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UpdateShipmentAsync(string id, Guid shipmentId, CreateUpdateShipmentDto shipment)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task OpenAsync(string id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task MarkAsFinalAsync(string id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ReopenAsync(string id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task CloseAsync(string id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

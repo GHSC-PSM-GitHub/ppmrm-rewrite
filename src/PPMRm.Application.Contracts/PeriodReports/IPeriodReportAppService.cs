@@ -13,5 +13,18 @@ namespace PPMRm.PeriodReports
         Task UpdateCSUpdatesAsync(string id, CommoditySecurityUpdatesDto csUpdates);
 
         Task<List<ProgramProductDto>> GetDetailsAsync(string id, int programId);
+
+        Task<ProgramProductDto> GetProgramProductAsync(string id, int programId, string productId);
+        Task AddOrUpdateProgramProductAsync(string id, int programId, string productId, CreateUpdateProgramProductDto productInfo);
+
+        Task DeleteShipmentAsync(string id, Guid shipmentId);
+        Task AddShipmentAsync(string id, int programId, string productId, CreateUpdateShipmentDto shipment);
+
+        Task UpdateShipmentAsync(string id, Guid shipmentId, CreateUpdateShipmentDto shipment);
+
+        Task OpenAsync(string id);
+        Task MarkAsFinalAsync(string id);
+        Task ReopenAsync(string id);
+        Task CloseAsync(string id);
     }
 }
