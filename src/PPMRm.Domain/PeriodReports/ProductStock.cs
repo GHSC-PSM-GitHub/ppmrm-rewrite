@@ -35,13 +35,14 @@ namespace PPMRm.PeriodReports
         public string ActionRecommended { get; protected set; }
         public DateTime? DateActionNeededBy { get; protected set; }
 
-        internal void Update(decimal soh, DateTime? dateOfSoh, decimal? amc, string actionRecommended, DateTime? dateActionNeededBy)
+        internal void Update(List<SOHLevel> sohLevels, decimal soh, DateTime? sohDate, decimal amc, SourceOfConsumption sourceOfConsumption, string actionRecommended, DateTime? actionNeededBy)
         {
             SOH = soh;
-            DateOfSOH = dateOfSoh;
+            DateOfSOH = sohDate;
             AMC = amc;
             ActionRecommended = actionRecommended;
-            DateActionNeededBy = dateActionNeededBy;
+            DateActionNeededBy = actionNeededBy;
+            //TODO: Add SoHLevels and sourceOfConsumtion
         }
         public override object[] GetKeys()
         {

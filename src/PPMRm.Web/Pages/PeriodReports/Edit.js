@@ -49,14 +49,16 @@
         editProductModal.open(params);
     });
 
+    addProductModal.onResult(function () {
+        location.reload();
+    });
+
     var inputAction = function (requestData, dataTableSettings) {
         return {
             id: "AGO-202112",
             programId: "4"
         };
     };
-
-    addProductModal.onResult()
 
 
 });

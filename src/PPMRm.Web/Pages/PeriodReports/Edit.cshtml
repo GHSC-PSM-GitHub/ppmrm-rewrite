@@ -78,7 +78,7 @@
                                         <td scope="row">@p.Product.Name</td>
                                         <td>6</td>
                                         <td>12</td>
-                                        <td>@p.MOS</td>
+                                        <td>@p.MOS?.ToString("N2")</td>
                                         <td></td>
                                         <td>@p.SOH?.ToString("N0")</td>
                                         <td>@p.DateOfSOH?.ToString("dd MMM yyyy")</td>
@@ -119,7 +119,7 @@
                                                     <td>@s.Supplier</td>
                                                     <td>@s.ShipmentDate?.ToString("dd MMM yyyy") @s.ShipmentDateType</td>
                                                     <td>@s.Quantity.ToString("N0")</td>
-                                                    <td>@s.MOS</td>
+                                                    <td>@s.MOS?.ToString("N2")</td>
                                                     <td>@s.DataSource</td>
                                                     <td>
                                                         <abp-button data-id="@s.Id" data-product-id="@s.ProductId" data-program-id="@p.Program.Id" data-period-report-id="@Model.Id"

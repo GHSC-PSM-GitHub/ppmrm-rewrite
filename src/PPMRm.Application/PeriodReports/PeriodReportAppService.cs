@@ -232,9 +232,12 @@ namespace PPMRm.PeriodReports
             throw new NotImplementedException();
         }
 
-        public Task AddOrUpdateProgramProductAsync(string id, int programId, string productId, CreateUpdateProgramProductDto productInfo)
+        public async Task AddOrUpdateProgramProductAsync(string id, int programId, string productId, CreateUpdateProgramProductDto productInfo)
         {
-            throw new NotImplementedException();
+            var queryable = await PeriodReportRepository.WithDetailsAsync(r => r.ProductStocks);
+            var periodReport = await AsyncExecuter.SingleAsync(queryable.Where(p => p.Id == id));
+            periodReport.AddOrUpdateProgramProduct(programId, productId, productInfo.SOHLevels, productInfo.SOH, productInfo.DateOfSOH, productInfo.AMC, productInfo.SourceOfConsumption, productInfo.ActionRecommended, productInfo.DateActionNeededBy);
+            await PeriodReportRepository.UpdateAsync(periodReport);
         }
 
         public Task DeleteShipmentAsync(string id, Guid shipmentId)

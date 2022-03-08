@@ -39,6 +39,15 @@ namespace PPMRm.PeriodReports
         {
             CommoditySecurityUpdates = Check.NotNull(csUpdates, nameof(csUpdates));
         }
+
+        public void AddOrUpdateProgramProduct(int programId, string productId, List<SOHLevel> sohLevels, decimal soh, DateTime? sohDate, decimal amc, SourceOfConsumption sourceOfConsumption, string actionRecommended, DateTime? actionNeededBy)
+        {
+            if (!ProductStocks.Any(p => p.ProgramId == programId && p.ProductId == productId))
+                ProductStocks.Add(new ProductStock(Id, programId, productId));
+            var existing = ProductStocks.SingleOrDefault(p => p.ProgramId == programId && p.ProductId == productId);
+            existing.Update(sohLevels, soh, sohDate, amc, sourceOfConsumption, actionRecommended, actionNeededBy);
+        }
+
         /// <summary>
         /// TO DO, Move this logic to CountryAggregate
         /// </summary>
