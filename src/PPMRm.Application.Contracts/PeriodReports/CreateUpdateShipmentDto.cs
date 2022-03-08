@@ -13,7 +13,7 @@ namespace PPMRm.PeriodReports
         public bool? IsTBD { get; set; }
         public DateTime? ShipmentDate { get; set; }
         public ShipmentDateType ShipmentDateType { get; set; }
-        public ShipmentDataSource DataSource { get; set; }
+        public ShipmentDataSource? DataSource { get; set; }
 
     }
 }

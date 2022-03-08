@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
@@ -252,19 +253,31 @@ namespace PPMRm.PeriodReports
             await PeriodReportRepository.UpdateAsync(periodReport);
         }
 
-        public Task DeleteShipmentAsync(string id, Guid shipmentId)
+        public async Task DeleteShipmentAsync(string id, Guid shipmentId)
         {
-            throw new NotImplementedException();
+            var periodReport = (await PeriodReportRepository.WithDetailsAsync(r => r.ProductShipments)).Single(r => r.Id == id);
+            var productShipment = periodReport.ProductShipments.SingleOrDefault(s => s.Id == shipmentId);
+            if (productShipment == null) throw new BusinessException("The specified shipment was not found!");
+            periodReport.RemoveShipment(shipmentId);
+            await PeriodReportRepository.UpdateAsync(periodReport);
         }
 
-        public Task AddShipmentAsync(string id, int programId, string productId, CreateUpdateShipmentDto shipment)
+        public async Task AddShipmentAsync(string id, int programId, string productId, CreateUpdateShipmentDto shipment)
         {
-            throw new NotImplementedException();
+            var periodReport = (await PeriodReportRepository.WithDetailsAsync(r => r.ProductShipments)).Single(r => r.Id == id);
+            periodReport.AddOrUpdateShipment(GuidGenerator.Create(), programId, productId, shipment.Supplier, shipment.ShipmentDate, shipment.ShipmentDateType, shipment.Quantity, shipment.DataSource);
+            await PeriodReportRepository.UpdateAsync(periodReport);
+
         }
 
-        public Task UpdateShipmentAsync(string id, Guid shipmentId, CreateUpdateShipmentDto shipment)
+        public async Task UpdateShipmentAsync(string id, Guid shipmentId, CreateUpdateShipmentDto shipment)
         {
-            throw new NotImplementedException();
+            var periodReport = (await PeriodReportRepository.WithDetailsAsync(r => r.ProductShipments)).Single(r => r.Id == id);
+            var productShipment = periodReport.ProductShipments.SingleOrDefault(s => s.Id == shipmentId);
+            if (productShipment == null) throw new BusinessException("The specified shipment was not found!");
+
+            periodReport.AddOrUpdateShipment(productShipment.Id, productShipment.ProgramId, productShipment.ProductId, shipment.Supplier, shipment.ShipmentDate, shipment.ShipmentDateType, shipment.Quantity, shipment.DataSource);
+            await PeriodReportRepository.UpdateAsync(periodReport);
         }
 
         public Task OpenAsync(string id)

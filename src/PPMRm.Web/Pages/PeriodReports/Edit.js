@@ -57,6 +57,10 @@
         location.reload();
     });
 
+    addShipmentModal.onResult(function () {
+        location.reload();
+    });
+
     var inputAction = function (requestData, dataTableSettings) {
         return {
             id: "AGO-202112",
