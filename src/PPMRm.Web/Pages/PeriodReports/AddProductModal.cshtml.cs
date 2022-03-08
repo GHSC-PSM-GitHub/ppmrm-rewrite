@@ -16,6 +16,7 @@ namespace PPMRm.Web.Pages.PeriodReports
 {
     public class AddProductModalModel : PPMRmPageModel
     {
+        public string ProgramName { get; set; }
         IPeriodReportAppService AppService { get; }
         IRepository<Product, string> ProductRepository { get; }
         IRepository<Core.Program, int> ProgramRepository { get; }
@@ -41,6 +42,7 @@ namespace PPMRm.Web.Pages.PeriodReports
             Products = (await ProductRepository.ToListAsync()).OrderBy(p => p.Name).Select(p => new SelectListItem { Value = p.Id, Text = p.Name }).ToList();
             Programs = (await ProgramRepository.ToListAsync()).Select(p => new SelectListItem { Value = $"{p.Id}", Text = p.Name }).ToList();
             SOHLevelOptions = Enum.GetValues<SOHLevel>().Select(l => new SelectListItem { Value = $"{(int)l}", Text = L[$"Enum:SOHLevel:{(int)l}"]}).ToList();
+            ProgramName = Programs.SingleOrDefault(p => p.Value == $"{programId}")?.Text;
             Product = new CreateUpdateProgramProductViewModel
             {
                 PeriodReportId = periodReportId,
@@ -69,17 +71,14 @@ namespace PPMRm.Web.Pages.PeriodReports
 
     public class CreateUpdateProgramProductViewModel
     {
-        
+
 
         [HiddenInput]
-        [SelectItems("Programs")]
-        [DisplayName("Program")]
         [BindProperty(SupportsGet = true)]
-        [DisabledInput]
         public int ProgramId { get; set; }
-        [SelectItems("Products")]
-        [DisplayName("Product")]
         [BindProperty(SupportsGet = true)]
+        [DisplayName("Product")]
+        [SelectItems("Products")]
         public string ProductId { get; set; }
         [BindProperty(SupportsGet = true)]
         [HiddenInput]
@@ -90,12 +89,15 @@ namespace PPMRm.Web.Pages.PeriodReports
         public List<string> SOHLevels { get; set; } = new();
         [DisplayName("Stock on Hand (SOH)")]
         [Required]
-        public decimal SOH { get; set; }
+        public int SOH { get; set; }
         [DisplayName("Date of SOH")]
         [BindProperty, DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime? DateOfSOH { get; set; }
         [DisplayName("Average Monthly Consumption")]
-        public decimal AMC { get; set; }
+        public int AMC { get; set; }
+        [DisplayName("MOS")]
+        [DisabledInput]
+        public decimal MOS { get; set; }
         [DisplayName("Source Of Consumption")]
         public SourceOfConsumption SourceOfConsumption { get; set; }
         [DisplayName("Action Recommended")]

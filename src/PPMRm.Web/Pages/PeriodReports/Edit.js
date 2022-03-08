@@ -53,6 +53,10 @@
         location.reload();
     });
 
+    editProductModal.onResult(function () {
+        location.reload();
+    });
+
     var inputAction = function (requestData, dataTableSettings) {
         return {
             id: "AGO-202112",
@@ -65,11 +69,24 @@
 
 abp.modals.ProductInfo = function () {
 
+    function compute() {
+        var soh = $("#Product_SOH").val();
+        var amc = $("#Product_AMC").val();
+        if (amc != 0) {
+            var mos = soh / amc;
+            $('#Product_MOS').val(mos.toFixed(2));
+        }
+        else
+            $("#Product_MOS").val(0);
+    }
+
+    $("#Product_SOH").change(compute);
+    $("#Product_AMC").change(compute);
     function initModal(modalManager, args) {
         var $modal = modalManager.getModal();
         var $form = modalManager.getForm();
-
-        $modal.find("#SOHLevels").multiselect({
+        compute();
+        $modal.find("#Product_SOHLevels").multiselect({
             selectAllValue: 'multiselect-all',
             includeSelectAllOption: true,
             enableFiltering: true,
@@ -77,6 +94,7 @@ abp.modals.ProductInfo = function () {
             maxHeight: 200,
             buttonWidth: '450px'
         });
+        
     };
 
     return {

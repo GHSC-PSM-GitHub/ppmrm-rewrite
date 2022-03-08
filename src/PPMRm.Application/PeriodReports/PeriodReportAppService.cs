@@ -179,6 +179,8 @@ namespace PPMRm.PeriodReports
                                             AMC = stock?.AMC,
                                             DateOfSOH = stock?.DateOfSOH,
                                             SOH = stock?.SOH,
+                                            ActionRecommended = stock?.ActionRecommended,
+                                            DateActionNeededBy = stock?.DateActionNeededBy,
                                             Shipments = periodReport.ProductShipments.Where(s => s.ProgramId == pp.ProgramId && s.ProductId == pp.ProductId)
                                                          .Select(s => new ProductShipmentDto
                                                          {
@@ -227,9 +229,19 @@ namespace PPMRm.PeriodReports
             return csUpdatesDto;
         }
 
-        public Task<ProgramProductDto> GetProgramProductAsync(string id, int programId, string productId)
+        public async Task<ProgramProductDto> GetProgramProductAsync(string id, int programId, string productId)
         {
-            throw new NotImplementedException();
+            var queryable = await PeriodReportRepository.WithDetailsAsync(r => r.ProductStocks);
+            var periodReport = await AsyncExecuter.SingleAsync(queryable.Where(p => p.Id == id));
+            var programProduct = periodReport.ProductStocks.SingleOrDefault(p => p.ProductId == productId && p.ProgramId == programId);
+            return new ProgramProductDto
+            {
+                SOH = programProduct?.SOH,
+                AMC = programProduct?.AMC,
+                ActionRecommended = programProduct?.ActionRecommended,
+                DateActionNeededBy = programProduct?.DateActionNeededBy,
+                DateOfSOH = programProduct?.DateOfSOH,
+            };
         }
 
         public async Task AddOrUpdateProgramProductAsync(string id, int programId, string productId, CreateUpdateProgramProductDto productInfo)

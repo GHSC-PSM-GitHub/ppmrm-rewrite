@@ -82,10 +82,10 @@
                                         <td></td>
                                         <td>@p.SOH?.ToString("N0")</td>
                                         <td>@p.DateOfSOH?.ToString("dd MMM yyyy")</td>
-                                        <td>@p.AMC?.ToString("N2")</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td>@p.AMC?.ToString("N0")</td>
+                                        <td>Forecasted</td>
+                                        <td>@p.ActionRecommended</td>
+                                        <td>@p.DateActionNeededBy?.ToString("dd MMM yyyy")</td>
                                         <td>
                                              <abp-button  class="accordion-toggle" data-toggle="collapse" data-target="#@p.Product.Id-@p.Program.Id"
                                                     text="View (@(p.Shipments?.Count ?? 0))"
