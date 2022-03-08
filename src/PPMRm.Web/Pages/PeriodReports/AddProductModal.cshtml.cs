@@ -69,16 +69,18 @@ namespace PPMRm.Web.Pages.PeriodReports
 
     public class CreateUpdateProgramProductViewModel
     {
-        [SelectItems("Products")]
-        [DisplayName("Product")]
-        [BindProperty(SupportsGet = true)]
-        public string ProductId { get; set; }
+        
 
         [HiddenInput]
         [SelectItems("Programs")]
         [DisplayName("Program")]
         [BindProperty(SupportsGet = true)]
+        [DisabledInput]
         public int ProgramId { get; set; }
+        [SelectItems("Products")]
+        [DisplayName("Product")]
+        [BindProperty(SupportsGet = true)]
+        public string ProductId { get; set; }
         [BindProperty(SupportsGet = true)]
         [HiddenInput]
         public string PeriodReportId { get; set; }
