@@ -84,7 +84,7 @@ namespace PPMRm.Web.Pages.PeriodReports
         public DateTime? ShipmentDate { get; set; }
         [DisplayName("Shipment Date Type")]
         public ShipmentDateType ShipmentDateType { get; set; }
-        public decimal Quantity { get; set; }
+        public int Quantity { get; set; }
         [DisplayName("Shipment Date Source")]
         public ShipmentDataSource DataSource { get; set; }
 

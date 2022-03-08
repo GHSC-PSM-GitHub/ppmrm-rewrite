@@ -61,6 +61,21 @@
         location.reload();
     });
 
+    $(".btn-remove-shipment").click(function (e) {
+        e.preventDefault();
+        var shipmentId = $(this).data('id');
+        var id = $(this).data('period-report-id');
+        abp.message.confirm('Are you sure to delete this Shipment? This action is irreversible.')
+            .then(function (confirmed) {
+                pPMRm.periodReports.periodReport.deleteShipment(id,shipmentId)
+                    .then(function () {
+                        abp.message.success('Shipment successfully deleted!').then(function () {
+                            location.reload();
+                        });
+                    });
+            });
+    });
+
     var inputAction = function (requestData, dataTableSettings) {
         return {
             id: "AGO-202112",
