@@ -102,6 +102,7 @@ namespace PPMRm.Web.Pages.PeriodReports
         public SourceOfConsumption SourceOfConsumption { get; set; }
         [DisplayName("Action Recommended")]
         [TextArea()]
+        [StringLength(PeriodReportConsts.DataValidation.ActionRecommendedMaxLength)]
         public string ActionRecommended { get; set; }
         [DisplayName("Date Action Needed By")]
         [BindProperty, DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]

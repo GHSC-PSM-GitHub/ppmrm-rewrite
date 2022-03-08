@@ -45,35 +45,35 @@ namespace PPMRm.Web.Pages.PeriodReports
         public string PeriodReportId { get; set; }
         [DisplayName("Logistics Management Information System (LMIS)")]
         [TextArea]
-        [StringLength(1000)]
+        [StringLength(PeriodReportConsts.DataValidation.CSUpdatesMaxLength)]
         public string LogisticsManagementInformationSystem { get; set; }
         [DisplayName("Governance And Financing")]
         [TextArea]
-        [StringLength(1000)]
+        [StringLength(PeriodReportConsts.DataValidation.CSUpdatesMaxLength)]
         public string GovernanceAndFinancing { get; set; }
         [DisplayName("Human Resources Capacity Development And Training")]
         [TextArea]
-        [StringLength(1000)]
+        [StringLength(PeriodReportConsts.DataValidation.CSUpdatesMaxLength)]
         public string HumanResourcesCapacityDevelopmentAndTraining { get; set; }
         [DisplayName("Supply Chain Committee Policy And Donor Coordination")]
         [TextArea]
-        [StringLength(1000)]
+        [StringLength(PeriodReportConsts.DataValidation.CSUpdatesMaxLength)]
         public string SupplyChainCommitteePolicyAndDonorCoordination { get; set; }
         [DisplayName("Product Stock Levels Information")]
         [TextArea]
-        [StringLength(1000)]
+        [StringLength(PeriodReportConsts.DataValidation.CSUpdatesMaxLength)]
         public string ProductStockLevelsInformation { get; set; }
         [DisplayName("Forecasting and Supply Planning")]
         [TextArea]
-        [StringLength(1000)]
+        [StringLength(PeriodReportConsts.DataValidation.CSUpdatesMaxLength)]
         public string ForecastingAndSupplyPlanning { get; set; }
         [DisplayName("Procurement Product Information & Registration")]
         [TextArea]
-        [StringLength(1000)]
+        [StringLength(PeriodReportConsts.DataValidation.CSUpdatesMaxLength)]
         public string ProcurementProductInformationAndRegistration { get; set; }
         [DisplayName("Warehousing and Distribution")]
         [TextArea]
-        [StringLength(1000)]
+        [StringLength(PeriodReportConsts.DataValidation.CSUpdatesMaxLength)]
         public string WarehousingAndDistribution { get; set; }
     }
 }
