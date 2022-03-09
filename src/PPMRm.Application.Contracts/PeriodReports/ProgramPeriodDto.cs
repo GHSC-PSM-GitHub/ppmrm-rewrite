@@ -21,6 +21,13 @@ namespace PPMRm.PeriodReports
         public decimal? SOH { get; set; }
         public decimal? AMC { get; set; }
         public decimal? MOS => SOH != null && AMC != null && AMC.Value > 0 ? SOH / AMC : null;
+        public MOSStatus? MOSStatus => !MOS.HasValue ? null :
+                                        MOS == 0 ? PeriodReports.MOSStatus.StockedOut :
+                                        MOS < PeriodReportConsts.MOS.Min ? PeriodReports.MOSStatus.BelowMin :
+                                        MOS >= PeriodReportConsts.MOS.Min && MOS <= PeriodReportConsts.MOS.Max ? PeriodReports.MOSStatus.MinToMax :
+                                        PeriodReports.MOSStatus.OverStocked;
+
+        public SourceOfConsumption? SourceOfConsumption => SOH.HasValue ? PeriodReports.SourceOfConsumption.Forecasted : null;
         public DateTime? DateOfSOH { get; set; }
         public string ActionRecommended { get; set; }
         public DateTime? DateActionNeededBy { get; set; }

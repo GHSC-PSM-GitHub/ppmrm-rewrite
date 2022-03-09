@@ -19,5 +19,11 @@ namespace PPMRm.PeriodReports
             public const string SOH_AMC_Format = "N0";
             public const string MOS_Format = "N2";
         }
+
+        public static class MOS
+        {
+            public const int Min = 6;
+            public const int Max = 12;
+        }
     }
 }
