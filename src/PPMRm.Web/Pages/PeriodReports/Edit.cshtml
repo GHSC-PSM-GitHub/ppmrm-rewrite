@@ -100,7 +100,7 @@
                                         <td><small>@p.ActionRecommended</small></td>
                                         <td>@p.DateActionNeededBy?.ToString(PeriodReportConsts.DataFormatting.DateFormat)</td>
                                         <td>
-                                             <abp-button  class="accordion-toggle" data-toggle="collapse" data-target="#@p.Product.Id-@p.Program.Id"
+                                             <abp-button  class="accordion-toggle btn-sm" data-toggle="collapse" data-target="#@p.Product.Id-@p.Program.Id"
                                                     text="View (@(p.Shipments?.Count ?? 0))"
                                                     button-type="Link" />
                                         </td>
