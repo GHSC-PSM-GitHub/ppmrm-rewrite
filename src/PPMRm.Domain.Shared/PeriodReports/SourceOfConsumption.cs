@@ -6,7 +6,7 @@ namespace PPMRm.PeriodReports
 {
     public enum SourceOfConsumption
     {
-        Forecasted,
+        Forecasted = 1,
         LMIS,
         Combined,
         AMD,

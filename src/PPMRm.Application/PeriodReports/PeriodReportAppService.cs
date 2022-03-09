@@ -107,6 +107,8 @@ namespace PPMRm.PeriodReports
                                        AMC = stock?.AMC,
                                        DateOfSOH = stock?.DateOfSOH,
                                        SOH = stock?.SOH,
+                                       ActionRecommended = stock?.ActionRecommended,
+                                       DateActionNeededBy = stock?.DateActionNeededBy,
                                        Shipments = periodReport.ProductShipments.Where(s => s.ProgramId == pp.ProgramId && s.ProductId == pp.ProductId)
                                                     .Select(s => new ProductShipmentDto
                                                     {

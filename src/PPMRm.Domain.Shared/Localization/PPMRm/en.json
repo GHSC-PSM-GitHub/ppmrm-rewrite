@@ -38,6 +38,15 @@
     "Enum:SOHLevel:11": "Sub-country Warehouse",
     "Enum:SOHLevel:12": "Sub-district Warehouse",
     "Enum:SOHLevel:13": "Service Delivery Points",
-    "Enum:SOHLevel:14": "Joint Medical Store"
+    "Enum:SOHLevel:14": "Joint Medical Store",
+    "Enum:MOSStatus:1": "Stocked Out",
+    "Enum:MOSStatus:2": "Below Min",
+    "Enum:MOSStatus:3": "Min to Max",
+    "Enum:MOSStatus:4": "Overstocked",
+    "Enum:SourceOfConsumption:1": "Forecasted",
+    "Enum:SourceOfConsumption:2": "LMIS",
+    "Enum:SourceOfConsumption:3": "Combined",
+    "Enum:SourceOfConsumption:4": "AMD",
+    "Enum:SourceOfConsumption:5": "Other"
   }
 }
