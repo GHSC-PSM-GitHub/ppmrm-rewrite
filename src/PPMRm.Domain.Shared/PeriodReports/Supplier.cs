@@ -8,17 +8,14 @@ namespace PPMRm.PeriodReports
     {
         GlobalFund,
         PMI,
-        UNICEF,
-        KFW,
-        MSI,
         MOH,
-        UNFPA,
         USAID,
         WorldBank,
-        PSI,
-        BasketFund,
-        DFID,
-        WAHO,
-
+        WHO,
+        UNICEF,
+        HostGovernment,
+        UNDP,
+        NMCP,
+        CHAZ
     }
 }
