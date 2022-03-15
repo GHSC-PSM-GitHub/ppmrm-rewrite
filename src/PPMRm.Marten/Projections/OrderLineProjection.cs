@@ -49,10 +49,15 @@ namespace PPMRm.Projections
             orderLine.StatusSequence = @event.StatusSequence;
 
             // Set PPMRM Shipment Display Date
-            orderLine.ShipmentDate = @event.ActualDeliveryDate ?? @event.LatestEstimatedDeliveryDate ?? @event.RevisedAgreedDeliveryDate ?? @event.EstimatedDeliveryDate ?? @event.RequestedDeliveryDate;
+            // Initial logic that checks LEDD and RaDD
+            // orderLine.ShipmentDate = @event.ActualDeliveryDate ?? @event.LatestEstimatedDeliveryDate ?? @event.RevisedAgreedDeliveryDate ?? @event.EstimatedDeliveryDate ?? @event.RequestedDeliveryDate;
+            //orderLine.ShipmentDateType = @event.ActualDeliveryDate != null ? ARTMISConsts.OrderDeliveryDateTypes.ActualDeliveryDate :
+            //                    @event.LatestEstimatedDeliveryDate != null ? ARTMISConsts.OrderDeliveryDateTypes.EstimatedDeliveryDate :
+            //                    @event.RevisedAgreedDeliveryDate != null ? ARTMISConsts.OrderDeliveryDateTypes.EstimatedDeliveryDate :
+            //                    @event.EstimatedDeliveryDate != null ? ARTMISConsts.OrderDeliveryDateTypes.EstimatedDeliveryDate :
+            //                    @event.RequestedDeliveryDate != null ? ARTMISConsts.OrderDeliveryDateTypes.RequestedDeliveryDate : null;
+            orderLine.ShipmentDate = @event.ActualDeliveryDate ?? @event.EstimatedDeliveryDate ?? @event.RequestedDeliveryDate;
             orderLine.ShipmentDateType = @event.ActualDeliveryDate != null ? ARTMISConsts.OrderDeliveryDateTypes.ActualDeliveryDate :
-                                @event.LatestEstimatedDeliveryDate != null ? ARTMISConsts.OrderDeliveryDateTypes.EstimatedDeliveryDate :
-                                @event.RevisedAgreedDeliveryDate != null ? ARTMISConsts.OrderDeliveryDateTypes.EstimatedDeliveryDate :
                                 @event.EstimatedDeliveryDate != null ? ARTMISConsts.OrderDeliveryDateTypes.EstimatedDeliveryDate :
                                 @event.RequestedDeliveryDate != null ? ARTMISConsts.OrderDeliveryDateTypes.RequestedDeliveryDate : null;
         }
