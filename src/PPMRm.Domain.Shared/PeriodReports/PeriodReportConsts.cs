@@ -17,7 +17,7 @@ namespace PPMRm.PeriodReports
         {
             public const string DateFormat = "dd MMM yyyy";
             public const string SOH_AMC_Format = "N0";
-            public const string MOS_Format = "N2";
+            public const string MOS_Format = "N1";
         }
 
         public static class MOS

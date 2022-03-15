@@ -81,16 +81,16 @@
                                         <td scope="row">@p.Product.Name</td>
                                         <td>@PeriodReportConsts.MOS.Min</td>
                                         <td>@PeriodReportConsts.MOS.Max</td>
-                                        <td>@p.MOS?.ToString("N2")</td>
+                                        <td>@p.MOS?.ToString(PeriodReportConsts.DataFormatting.MOS_Format)</td>
                                         <td>
                                             @if(p.MOSStatus.HasValue)
                                             {
                                                 @Localizer[$"Enum:MOSStatus:{(int)p.MOSStatus}"]
                                             }
                                         </td>
-                                        <td>@p.SOH?.ToString("N0")</td>
+                                        <td>@p.SOH?.ToString(PeriodReportConsts.DataFormatting.SOH_AMC_Format)</td>
                                         <td>@p.DateOfSOH?.ToString(PeriodReportConsts.DataFormatting.DateFormat)</td>
-                                        <td>@p.AMC?.ToString("N0")</td>
+                                        <td>@p.AMC?.ToString(PeriodReportConsts.DataFormatting.SOH_AMC_Format)</td>
                                         <td>
                                             @if(p.SourceOfConsumption.HasValue)
                                             {
@@ -131,8 +131,8 @@
                                                 <tr>
                                                     <td>@s.Supplier</td>
                                                     <td>@s.ShipmentDate?.ToString(PeriodReportConsts.DataFormatting.DateFormat) @s.ShipmentDateType</td>
-                                                    <td>@s.Quantity.ToString("N0")</td>
-                                                    <td>@s.MOS?.ToString("N2")</td>
+                                                    <td>@s.Quantity.ToString(PeriodReportConsts.DataFormatting.SOH_AMC_Format)</td>
+                                                    <td>@s.MOS?.ToString(PeriodReportConsts.DataFormatting.MOS_Format)</td>
                                                     <td>@s.DataSource</td>
                                                     <td>
                                                         <abp-button data-id="@s.Id" data-product-id="@s.ProductId" data-program-id="@p.Program.Id" data-period-report-id="@Model.Id"
