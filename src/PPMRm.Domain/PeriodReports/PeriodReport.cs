@@ -40,7 +40,7 @@ namespace PPMRm.PeriodReports
             CommoditySecurityUpdates = Check.NotNull(csUpdates, nameof(csUpdates));
         }
 
-        public void AddOrUpdateProgramProduct(int programId, string productId, List<SOHLevel> sohLevels, decimal soh, DateTime? sohDate, decimal amc, SourceOfConsumption sourceOfConsumption, string actionRecommended, DateTime? actionNeededBy)
+        public void AddOrUpdateProgramProduct(int programId, string productId, List<SOHLevel> sohLevels, decimal soh, DateTime? sohDate, decimal amc, SourceOfConsumption sourceOfConsumption, string actionRecommended, DateTime? actionNeededBy, string otherSourceOfConsumption = null)
         {
             if (!ProductStocks.Any(p => p.ProgramId == programId && p.ProductId == productId))
                 ProductStocks.Add(new ProductStock(Id, programId, productId));
@@ -104,7 +104,8 @@ namespace PPMRm.PeriodReports
         /// <param name="quantity"></param>
         public async void AddOrUpdateShipment(Guid id, int programId, string productId, Supplier supplier, DateTime? shipmentDate, ShipmentDateType shipmentDateType, decimal quantity, ShipmentDataSource? dataSource = ShipmentDataSource.CountryTeam)
         {
-            var shipment = new ProductShipment(id, Id, programId, productId, supplier, shipmentDate, shipmentDateType, quantity, dataSource ?? ShipmentDataSource.CountryTeam);
+            var nextShipmentDate = shipmentDateType != ShipmentDateType.TBD ? shipmentDate : null;
+            var shipment = new ProductShipment(id, Id, programId, productId, supplier, nextShipmentDate, shipmentDateType, quantity, dataSource ?? ShipmentDataSource.CountryTeam);
             ProductShipments.RemoveAll(s => s.Id == id);
             ProductShipments.Add(shipment);
         }

@@ -99,12 +99,27 @@ abp.modals.ProductInfo = function () {
             $("#Product_MOS").val(0);
     }
 
+    function toggleSourceOfConsumption() {
+        var source = $("#Product_SourceOfConsumption").val();
+        if (source == "Other") {
+            $("#Product_OtherSourceOfConsumption").parents('.form-group').show();
+            console.log("show text box");
+        }
+        else {
+            $("#Product_OtherSourceOfConsumption").val("");
+            $("#Product_OtherSourceOfConsumption").parents('.form-group').hide();
+            console.log("clear and hide");
+        }
+    }
+
     $("#Product_SOH").change(compute);
     $("#Product_AMC").change(compute);
+    $("#Product_SourceOfConsumption").change(toggleSourceOfConsumption);
     function initModal(modalManager, args) {
         var $modal = modalManager.getModal();
         var $form = modalManager.getForm();
         compute();
+        toggleSourceOfConsumption();
         $modal.find("#Product_SOHLevels").multiselect({
             selectAllValue: 'multiselect-all',
             includeSelectAllOption: true,

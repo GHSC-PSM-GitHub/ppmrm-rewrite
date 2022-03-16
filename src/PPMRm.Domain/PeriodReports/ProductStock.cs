@@ -35,7 +35,7 @@ namespace PPMRm.PeriodReports
         public string ActionRecommended { get; protected set; }
         public DateTime? DateActionNeededBy { get; protected set; }
 
-        internal void Update(List<SOHLevel> sohLevels, decimal soh, DateTime? sohDate, decimal amc, SourceOfConsumption sourceOfConsumption, string actionRecommended, DateTime? actionNeededBy)
+        internal void Update(List<SOHLevel> sohLevels, decimal soh, DateTime? sohDate, decimal amc, SourceOfConsumption sourceOfConsumption, string actionRecommended, DateTime? actionNeededBy, string otherSourceOfConsumption = null)
         {
             SOH = soh;
             DateOfSOH = sohDate;

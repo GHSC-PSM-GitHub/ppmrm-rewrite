@@ -106,6 +106,8 @@ namespace PPMRm.Web.Pages.PeriodReports
         public decimal MOS { get; set; }
         [DisplayName("Source Of Consumption")]
         public SourceOfConsumption SourceOfConsumption { get; set; }
+        [DisplayName("Other: Please specify")]
+        public string OtherSourceOfConsumption { get; set; }
         [DisplayName("Action Recommended")]
         [TextArea()]
         [StringLength(PeriodReportConsts.DataValidation.ActionRecommendedMaxLength)]
