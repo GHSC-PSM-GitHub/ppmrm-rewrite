@@ -34,7 +34,7 @@ namespace PPMRm.Core
 
             var dbContext = await GetDbContextAsync();
             if (result.Succeeded) // Data Reviewer / Admin
-                return await dbContext.Set<Country>().ToListAsync();
+                return await dbContext.Set<Country>().OrderBy(c => c.Name).ToListAsync();
 
             var user = await UserRepository.GetAsync(CurrentUser.Id.Value);
             if (user.GetUserType() != Identity.UserType.DataProvider)

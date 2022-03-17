@@ -7,5 +7,8 @@ namespace PPMRm.Core
     {
         public string Name { get; set; }
         public string ARTMISName { get; set; }
+
+        public int MinStock => 6;
+        public int MaxStock => 12;
     }
 }

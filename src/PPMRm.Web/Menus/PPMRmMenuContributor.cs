@@ -55,6 +55,12 @@ namespace PPMRm.Web.Menus
                                 "Download Data Entry Form",
                                 url: "/periodreports"
                             )
+                        ).AddItem(
+                            new ApplicationMenuItem(
+                                "CountrySettings",
+                                "Country Settings",
+                                url: "/countries"
+                            )
                         )
                 );
 
