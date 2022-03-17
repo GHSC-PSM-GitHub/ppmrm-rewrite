@@ -301,5 +301,13 @@ namespace PPMRm.PeriodReports
         {
             throw new NotImplementedException();
         }
+
+        public async Task<CreateUpdateShipmentDto> GetShipmentAsync(string id, Guid shipmentId)
+        {
+            var periodReport = (await PeriodReportRepository.WithDetailsAsync(r => r.ProductShipments)).Single(r => r.Id == id);
+            var productShipment = periodReport.ProductShipments.SingleOrDefault(s => s.Id == shipmentId);
+            if (productShipment == null) throw new BusinessException("The specified shipment was not found!");
+            return ObjectMapper.Map<ProductShipment, CreateUpdateShipmentDto>(productShipment);
+        }
     }
 }

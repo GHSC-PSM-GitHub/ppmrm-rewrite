@@ -19,6 +19,7 @@ namespace PPMRm.PeriodReports
 
         Task DeleteShipmentAsync(string id, Guid shipmentId);
         Task AddShipmentAsync(string id, int programId, string productId, CreateUpdateShipmentDto shipment);
+        Task<CreateUpdateShipmentDto> GetShipmentAsync(string id, Guid shipmentId);
 
         Task UpdateShipmentAsync(string id, Guid shipmentId, CreateUpdateShipmentDto shipment);
 

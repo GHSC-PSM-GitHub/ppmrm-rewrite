@@ -6,14 +6,13 @@ using PPMRm.Products;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Volo.Abp.Domain.Repositories;
 
 namespace PPMRm.Web.Pages.PeriodReports
 {
-    public class AddShipmentModalModel : PPMRmPageModel
+    public class EditShipmentModalModel : PPMRmPageModel
     {
         [DisplayName("Product")]
         [BindProperty(SupportsGet = true)]
@@ -36,22 +35,31 @@ namespace PPMRm.Web.Pages.PeriodReports
 
         public List<SelectListItem> Suppliers { get; set; }
         public int Supplier { get; set; }
-        public AddShipmentModalModel(IPeriodReportAppService appService, IRepository<Product, string> productRepository, IRepository<Core.Program, int> programRepository)
+
+        public EditShipmentModalModel(IPeriodReportAppService appService, IRepository<Product, string> productRepository, IRepository<Core.Program, int> programRepository)
         {
             AppService = appService;
             ProductRepository = productRepository;
             ProgramRepository = programRepository;
         }
-        public async Task OnGetAsync(string periodReportId, int programId, string id)
+        public async Task OnGetAsync(string periodReportId, int programId, string id, Guid shipmentId)
         {
             Suppliers = Enum.GetValues<Supplier>().Select(s => new SelectListItem { Value = $"{(int)s}", Text = s.ToString() }).ToList();
             Products = (await ProductRepository.ToListAsync()).OrderBy(p => p.Name).Select(p => new SelectListItem { Value = p.Id, Text = p.Name }).ToList();
             Programs = (await ProgramRepository.ToListAsync()).Select(p => new SelectListItem { Value = $"{p.Id}", Text = p.Name }).ToList();
+            var existing = await AppService.GetShipmentAsync(periodReportId, shipmentId);
+            
             Shipment = new AddShipmentViewModel
             {
                 ProgramId = programId,
                 PeriodReportId = periodReportId,
-                Productid = id
+                Productid = id,
+                ShipmentId = shipmentId,
+                DataSource = existing.DataSource ?? ShipmentDataSource.CountryTeam,
+                Quantity= (int)existing.Quantity,
+                ShipmentDate = existing.ShipmentDate,
+                ShipmentDateType = existing.ShipmentDateType,
+                Supplier = existing.Supplier
             };
         }
 
@@ -59,36 +67,15 @@ namespace PPMRm.Web.Pages.PeriodReports
         {
             var shipmentDto = new CreateUpdateShipmentDto
             {
+                Id = Shipment.ShipmentId,
                 Supplier = Shipment.Supplier,
                 ShipmentDate = Shipment.ShipmentDate,
                 ShipmentDateType = Shipment.ShipmentDateType,
                 Quantity = Shipment.Quantity,
                 DataSource = Shipment.DataSource
             };
-            await AppService.AddShipmentAsync(Shipment.PeriodReportId, Shipment.ProgramId, Shipment.Productid, shipmentDto);
+            await AppService.UpdateShipmentAsync(Shipment.PeriodReportId, Shipment.ShipmentId.Value, shipmentDto);
             return NoContent();
         }
-    }
-
-    public class AddShipmentViewModel
-    {
-        [HiddenInput]
-        public Guid? ShipmentId { get; set; }
-        [HiddenInput]
-        public string PeriodReportId { get; set; }
-        [HiddenInput]
-        public int ProgramId { get; set; }
-        [HiddenInput]
-        public string Productid { get; set; }
-        public Supplier Supplier { get; set; }
-        [DisplayName("Next Shipment Date")]
-        [BindProperty, DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        public DateTime? ShipmentDate { get; set; }
-        [DisplayName("Shipment Date Type")]
-        public ShipmentDateType ShipmentDateType { get; set; }
-        public int Quantity { get; set; }
-        [DisplayName("Shipment Date Source")]
-        public ShipmentDataSource DataSource { get; set; }
-
     }
 }
