@@ -32,5 +32,12 @@ namespace PPMRm.Core
             var results = ObjectMapper.Map<List<Country>, List<CountryDto>>(countries.Skip(input.SkipCount).Take(input.MaxResultCount).ToList());
             return new PagedResultDto<CountryDto>(countries.Count, results);
         }
+
+        public async Task UpdateAsync(string id, UpdateCountryDto countryDto)
+        {
+            var country = await CountryRepository.GetAsync(id);
+            //country.UpdateMinMax();
+            
+        }
     }
 }

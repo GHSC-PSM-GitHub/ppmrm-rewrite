@@ -12,5 +12,7 @@ namespace PPMRm.Core
             CountryDto>
     {
         Task<PagedResultDto<CountryDto>> GetUserCountryListAsync(PagedAndSortedResultRequestDto input);
+
+        Task UpdateAsync(string id, UpdateCountryDto countryDto);
     }
 }

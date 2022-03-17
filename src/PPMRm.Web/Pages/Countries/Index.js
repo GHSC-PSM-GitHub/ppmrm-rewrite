@@ -1,6 +1,6 @@
 ﻿$(function () {
 
-
+    var editModal = new abp.ModalManager(abp.appPath + 'Countries/EditModal');
     var dataTable = $('#CountryTable').DataTable(
         abp.libs.datatables.normalizeConfiguration({
             serverSide: true,
@@ -34,7 +34,8 @@
                                 {
                                     text: 'Edit',
                                     action: function (data) {
-                                        //
+                                        console.log("Editing country: " + data.record.id);
+                                        editModal.open({ id: data.record.id });
                                     }
                                 }
                             ]
