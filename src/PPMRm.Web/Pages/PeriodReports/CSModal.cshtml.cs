@@ -18,6 +18,7 @@ namespace PPMRm.Web.Pages.PeriodReports
         [BindProperty]
         public CSUpdateViewModel CSUpdates { get; set; } = new();
 
+        public bool IsReadonly { get; set; }
         IPeriodReportAppService AppService { get; }
 
         public CSModalModel(IPeriodReportAppService appService)
@@ -26,9 +27,10 @@ namespace PPMRm.Web.Pages.PeriodReports
         }
         public async Task OnGetAsync()
         {
-            var csUpdatesDto = await AppService.GetCSUpdatesAsync(Id);
-            Title = csUpdatesDto.Title;
-            CSUpdates = ObjectMapper.Map<CommoditySecurityUpdatesDto, CSUpdateViewModel>(csUpdatesDto);
+            var periodReport = await AppService.GetAsync(Id);
+            CSUpdates = ObjectMapper.Map<CommoditySecurityUpdatesDto, CSUpdateViewModel>(periodReport.CommoditySecurityUpdates);
+            Title = $"{periodReport.Country.Name} - {periodReport.Period.ShortName}";
+            IsReadonly = periodReport.ReportStatus != PeriodReportStatus.Open && periodReport.ReportStatus != PeriodReportStatus.Reopened;
         }
 
         public async Task<IActionResult> OnPostAsync()

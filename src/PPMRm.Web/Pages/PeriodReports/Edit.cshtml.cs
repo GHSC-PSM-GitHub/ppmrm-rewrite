@@ -13,6 +13,9 @@ namespace PPMRm.Web.Pages.PeriodReports
 
         [BindProperty]
         public PeriodReportDetailDto PeriodReport { get; set; }
+
+        [BindProperty]
+        public bool IsReadonly => PeriodReport.ReportStatus != PeriodReportStatus.Open && PeriodReport.ReportStatus != PeriodReportStatus.Reopened;
         IPeriodReportAppService AppService { get; }
         public EditModel(IPeriodReportAppService periodReportAppService)
         {

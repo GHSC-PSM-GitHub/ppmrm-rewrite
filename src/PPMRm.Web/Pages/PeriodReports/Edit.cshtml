@@ -19,7 +19,7 @@
                 </abp-column>
                 <abp-column size-md="_6" class="text-right">
                     <abp-button id="edit-cs-updates" data-id="@Model.Id"
-                                text="View/Edit CS Updates"
+                                text="@(Model.IsReadonly ? "View CS Updates" : "View/Edit CS Updates")"
                                 button-type="Primary"/>
                     <div class="btn-group mr-2" role="group" aria-label="Second group">
                         <div class="btn-group" role="group">
@@ -67,17 +67,21 @@
                                     <abp-card-title>@program.Program.Name</abp-card-title>
                                 </abp-column>
                                 <abp-column size-md="_6" class="text-right">
-                                    <abp-button class="btn-add-program-product btn-sm"
+                                @if(!Model.IsReadonly)
+                        {
+                        <abp-button class="btn-add-program-product btn-sm @(Model.IsReadonly ? "disabled" : "")"
                                                 data-period-report-id="@program.PeriodReportId"
                                                 data-program-id="@program.Program.Id"
                                                 text="Add Product"
                                                 icon="plus"
-                                                button-type="Success"/>
+                                                button-type="Success"
+                                                />
                                     <abp-button data-product-id="" data-program-id="@program.ProgramId" data-period-report-id="@program.PeriodReportId"
-                                                                    class="btn-add-shipment btn-sm"
+                                                                    class="btn-add-shipment btn-sm @(Model.IsReadonly ? "disabled" : "")"
                                                                     icon="plus"
                                                                     text="Add Shipment"
-                                                                    button-type="Success"/>
+                                                                    button-type="Success"/>   
+                        }
                                 </abp-column>
                             </abp-row>
                         </abp-card-header>
@@ -134,7 +138,7 @@
                                         <td>
                                             <abp-button data-id="@p.Product.Id" data-program-id="@p.Program.Id" data-period-report-id="@Model.Id"
                                                     class="btn-edit-product btn-sm"
-                                                    text="Edit"
+                                                    text="@(Model.IsReadonly ? "View" : "Edit")"
                                                     button-type="Primary"/>
                                         </td>
                                         
@@ -167,16 +171,19 @@
                                                         
                                                         </abp-column>
                                                         <abp-column size-md="_6">
+                                                        @if(!Model.IsReadonly)
+                                                        {
                                                         <abp-button data-id="@s.Id" data-product-id="@s.ProductId" data-program-id="@p.Program.Id" data-period-report-id="@Model.Id" data-shipment-id="@s.Id"
-                                                                    class="btn-edit-shipment btn-sm"
+                                                                    class="btn-edit-shipment btn-sm @(Model.IsReadonly ? "disabled" : "")"
                                                                     icon="pencil"
                                                                     text=""
                                                                     button-type="Warning"/>
                                                         <abp-button data-id="@s.Id" data-product-id="@s.ProductId" data-program-id="@p.Program.Id" data-period-report-id="@Model.Id"
-                                                                    class="btn-remove-shipment btn-sm"
+                                                                    class="btn-remove-shipment btn-sm @(Model.IsReadonly ? "disabled" : "")"
                                                                     icon="minus"
                                                                     text=""
                                                                     button-type="Danger"/>
+                                                        }
                                                         </abp-column>
                                                     </abp-row>
                                                     </td>
@@ -184,11 +191,14 @@
                                             }
                                             <tr>
                                                 <td class="text-right" colspan="6">
-                                                    <abp-button data-product-id="@p.Product.Id" data-program-id="@p.Program.Id" data-period-report-id="@Model.Id"
-                                                                    class="btn-add-shipment btn-sm"
+                                                @if(!Model.IsReadonly)
+                                            {
+                                            <abp-button data-product-id="@p.Product.Id" data-program-id="@p.Program.Id" data-period-report-id="@Model.Id"
+                                                                    class="btn-add-shipment btn-sm @(Model.IsReadonly ? "disabled" : "")"
                                                                     icon="plus"
                                                                     text="Add Shipment"
                                                                     button-type="Success"/>
+                                            }
                                                     </td>
                                             </tr>
                                         </tbody>
