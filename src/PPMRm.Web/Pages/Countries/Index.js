@@ -1,6 +1,9 @@
 ﻿$(function () {
 
     var editModal = new abp.ModalManager(abp.appPath + 'Countries/EditModal');
+    editModal.onResult(function () {
+        dataTable.ajax.reload();
+    });
     var dataTable = $('#CountryTable').DataTable(
         abp.libs.datatables.normalizeConfiguration({
             serverSide: true,

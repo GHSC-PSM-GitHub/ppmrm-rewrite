@@ -36,6 +36,8 @@ namespace PPMRm.Core
         public async Task UpdateAsync(string id, UpdateCountryDto countryDto)
         {
             var country = await CountryRepository.GetAsync(id);
+            country.UpdateMinMax(countryDto.MinStock, countryDto.MaxStock);
+            await CountryRepository.UpdateAsync(country);
             //country.UpdateMinMax();
             
         }

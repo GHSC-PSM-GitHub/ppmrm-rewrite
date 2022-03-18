@@ -58,7 +58,7 @@ namespace PPMRm.Core
         {
             if (!Programs.Any(p => p.ProgramId == programId)) Programs.Add(new CountryProgram(countryId: Id, programId: programId));
         }
-        public void UpdateMinMax(int minStock, int maxStock)
+        public void UpdateMinMax(decimal minStock, decimal maxStock)
         {
             MinStock = minStock;
             MaxStock = maxStock;
