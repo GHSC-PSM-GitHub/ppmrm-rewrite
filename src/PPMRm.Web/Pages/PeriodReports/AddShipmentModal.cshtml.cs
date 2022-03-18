@@ -9,6 +9,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Form;
 using Volo.Abp.Domain.Repositories;
 
 namespace PPMRm.Web.Pages.PeriodReports
@@ -78,7 +79,9 @@ namespace PPMRm.Web.Pages.PeriodReports
         public string PeriodReportId { get; set; }
         [HiddenInput]
         public int ProgramId { get; set; }
-        [HiddenInput]
+        [SelectItems("Products")]
+        [DisplayName("Product")]
+        [BindProperty]
         public string Productid { get; set; }
         public Supplier Supplier { get; set; }
         [DisplayName("Next Shipment Date")]

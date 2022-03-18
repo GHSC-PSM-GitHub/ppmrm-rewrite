@@ -45,12 +45,17 @@
                                     <abp-card-title>@program.Program.Name</abp-card-title>
                                 </abp-column>
                                 <abp-column size-md="_6" class="text-right">
-                                    <abp-button class="btn-add-program-product"
+                                    <abp-button class="btn-add-program-product btn-sm"
                                                 data-period-report-id="@program.PeriodReportId"
                                                 data-program-id="@program.Program.Id"
                                                 text="Add Product"
                                                 icon="plus"
                                                 button-type="Success"/>
+                                    <abp-button data-product-id="" data-program-id="@program.ProgramId" data-period-report-id="@program.PeriodReportId"
+                                                                    class="btn-add-shipment btn-sm"
+                                                                    icon="plus"
+                                                                    text="Add Shipment"
+                                                                    button-type="Success"/>
                                 </abp-column>
                             </abp-row>
                         </abp-card-header>
