@@ -282,24 +282,32 @@ namespace PPMRm.PeriodReports
             await PeriodReportRepository.UpdateAsync(periodReport);
         }
 
-        public Task OpenAsync(string id)
+        public async Task OpenAsync(string id)
         {
-            throw new NotImplementedException();
+            var periodReport = (await PeriodReportRepository.WithDetailsAsync(r => r.ProductShipments)).Single(r => r.Id == id);
+            periodReport.Open();
+            await PeriodReportRepository.UpdateAsync(periodReport);
         }
 
-        public Task MarkAsFinalAsync(string id)
+        public async Task MarkAsFinalAsync(string id)
         {
-            throw new NotImplementedException();
+            var periodReport = (await PeriodReportRepository.WithDetailsAsync(r => r.ProductShipments)).Single(r => r.Id == id);
+            periodReport.MarkAsFinal();
+            await PeriodReportRepository.UpdateAsync(periodReport);
         }
 
-        public Task ReopenAsync(string id)
+        public async Task ReopenAsync(string id)
         {
-            throw new NotImplementedException();
+            var periodReport = (await PeriodReportRepository.WithDetailsAsync(r => r.ProductShipments)).Single(r => r.Id == id);
+            periodReport.Reopen();
+            await PeriodReportRepository.UpdateAsync(periodReport);
         }
 
-        public Task CloseAsync(string id)
+        public async Task CloseAsync(string id)
         {
-            throw new NotImplementedException();
+            var periodReport = (await PeriodReportRepository.WithDetailsAsync(r => r.ProductShipments)).Single(r => r.Id == id);
+            periodReport.Close();
+            await PeriodReportRepository.UpdateAsync(periodReport);
         }
 
         public async Task<CreateUpdateShipmentDto> GetShipmentAsync(string id, Guid shipmentId)

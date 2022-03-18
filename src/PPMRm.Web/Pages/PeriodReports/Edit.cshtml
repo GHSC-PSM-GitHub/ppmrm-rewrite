@@ -27,10 +27,23 @@
                               Actions
                             </button>
                             <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                              <a id="btn-open" class="dropdown-item" href="#">Open</a>
-                              <a id="btn-mark-as-final" class="dropdown-item" href="#">Mark as Final</a>
-                              <a id="btn-reopen" class="dropdown-item" href="#">Reopen</a>
-                              <a id="btn-close" class="dropdown-item" href="#">Close</a>
+                                @if(Model.PeriodReport.ReportStatus == PeriodReportStatus.Initialized)
+                                {
+                                    <a id="btn-open" class="dropdown-item btn-report-status" data-action="open">Open</a>
+                                }
+                                else if(Model.PeriodReport.ReportStatus == PeriodReportStatus.Open || Model.PeriodReport.ReportStatus == PeriodReportStatus.Reopened)
+                                {
+                                    <a id="btn-mark-as-final" class="dropdown-item btn-report-status" data-action="finalize">Mark as Final</a>
+                                }
+                                else if(Model.PeriodReport.ReportStatus == PeriodReportStatus.Final)
+                                {
+                                    <a id="btn-reopen" class="dropdown-item btn-report-status" data-action="reopen">Reopen</a>
+                                    <a id="btn-close" class="dropdown-item btn-report-status" data-action="close">Close</a>
+                                }
+                                else
+                                {
+                                    <a id="btn-close" class="dropdown-item btn-report-status" data-action="close" disabled="disabled">Closed</a>
+                                }
                             </div>
                         </div>
                       </div>
@@ -120,7 +133,7 @@
                                         </td>
                                         <td>
                                             <abp-button data-id="@p.Product.Id" data-program-id="@p.Program.Id" data-period-report-id="@Model.Id"
-                                                    class="btn-edit-product"
+                                                    class="btn-edit-product btn-sm"
                                                     text="Edit"
                                                     button-type="Primary"/>
                                         </td>

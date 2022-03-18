@@ -113,6 +113,7 @@ namespace PPMRm.PeriodReports
         public void RemoveShipment(Guid id) => ProductShipments.RemoveAll(s => s.Id == id);
 
         public void Open() => ReportStatus = PeriodReportStatus.Open;
+        public void MarkAsFinal() => ReportStatus = PeriodReportStatus.Final;
         public void Close() => ReportStatus = PeriodReportStatus.Closed;
         public void Reopen() => ReportStatus = PeriodReportStatus.Reopened;
 
