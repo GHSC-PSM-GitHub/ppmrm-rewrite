@@ -26,7 +26,7 @@ namespace PPMRm.PeriodReports
                                         MOS < MinStock ? PeriodReports.MOSStatus.BelowMin :
                                         MOS >= MinStock && MOS <= MaxStock ? PeriodReports.MOSStatus.MinToMax :
                                         PeriodReports.MOSStatus.OverStocked;
-
+        public List<string> SOHLevels { get; set; }
         public SourceOfConsumption? SourceOfConsumption { get; set; }
         public string OtherSourceOfConsumption { get; set; }
         public DateTime? DateOfSOH { get; set; }

@@ -56,8 +56,9 @@ namespace PPMRm.Web.Pages.PeriodReports
                 ActionRecommended = programProduct?.ActionRecommended,
                 DateActionNeededBy = programProduct?.DateActionNeededBy,
                 DateOfSOH = programProduct?.DateOfSOH,
-                SOHLevels = new List<string>(),
-                SourceOfConsumption = SourceOfConsumption.Forecasted // TODO: Fix hard-code
+                SOHLevels = programProduct?.SOHLevels,
+                SourceOfConsumption = programProduct?.SourceOfConsumption ?? SourceOfConsumption.Forecasted,
+                OtherSourceOfConsumption = programProduct?.OtherSourceOfConsumption
             };
         }
 
@@ -70,6 +71,7 @@ namespace PPMRm.Web.Pages.PeriodReports
                 DateOfSOH = Product.DateOfSOH,
                 AMC = Product.AMC,
                 SourceOfConsumption = Product.SourceOfConsumption,
+                OtherSourceOfConsumption = Product.OtherSourceOfConsumption,
                 ActionRecommended = Product.ActionRecommended,
                 DateActionNeededBy = Product.DateActionNeededBy
             };

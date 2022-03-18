@@ -45,7 +45,7 @@ namespace PPMRm.PeriodReports
             if (!ProductStocks.Any(p => p.ProgramId == programId && p.ProductId == productId))
                 ProductStocks.Add(new ProductStock(Id, programId, productId));
             var existing = ProductStocks.SingleOrDefault(p => p.ProgramId == programId && p.ProductId == productId);
-            existing.Update(sohLevels, soh, sohDate, amc, sourceOfConsumption, actionRecommended, actionNeededBy);
+            existing.Update(sohLevels, soh, sohDate, amc, sourceOfConsumption, actionRecommended, actionNeededBy, otherSourceOfConsumption);
         }
 
         /// <summary>

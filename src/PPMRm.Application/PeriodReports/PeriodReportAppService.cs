@@ -188,6 +188,9 @@ namespace PPMRm.PeriodReports
                                             SOH = stock?.SOH,
                                             ActionRecommended = stock?.ActionRecommended,
                                             DateActionNeededBy = stock?.DateActionNeededBy,
+                                            SOHLevels = stock?.GetSOHLevelsList().Select(l => l.ToString()).ToList(),
+                                            SourceOfConsumption = stock?.SourceOfConsumption,
+                                            OtherSourceOfConsumption = stock?.OtherSourceOfConsumption,
                                             Shipments = periodReport.ProductShipments.Where(s => s.ProgramId == pp.ProgramId && s.ProductId == pp.ProductId)
                                                          .Select(s => new ProductShipmentDto
                                                          {
@@ -248,6 +251,9 @@ namespace PPMRm.PeriodReports
                 ActionRecommended = programProduct?.ActionRecommended,
                 DateActionNeededBy = programProduct?.DateActionNeededBy,
                 DateOfSOH = programProduct?.DateOfSOH,
+                SOHLevels = programProduct?.GetSOHLevelsList().Select(l => $"{(int)l}").ToList(),
+                SourceOfConsumption = programProduct.SourceOfConsumption,
+                OtherSourceOfConsumption = programProduct.OtherSourceOfConsumption
             };
         }
 
@@ -255,7 +261,7 @@ namespace PPMRm.PeriodReports
         {
             var queryable = await PeriodReportRepository.WithDetailsAsync(r => r.ProductStocks);
             var periodReport = await AsyncExecuter.SingleAsync(queryable.Where(p => p.Id == id));
-            periodReport.AddOrUpdateProgramProduct(programId, productId, productInfo.SOHLevels, productInfo.SOH, productInfo.DateOfSOH, productInfo.AMC, productInfo.SourceOfConsumption, productInfo.ActionRecommended, productInfo.DateActionNeededBy);
+            periodReport.AddOrUpdateProgramProduct(programId, productId, productInfo.SOHLevels, productInfo.SOH, productInfo.DateOfSOH, productInfo.AMC, productInfo.SourceOfConsumption, productInfo.ActionRecommended, productInfo.DateActionNeededBy, productInfo.OtherSourceOfConsumption);
             await PeriodReportRepository.UpdateAsync(periodReport);
         }
 

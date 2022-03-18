@@ -11,6 +11,7 @@ namespace PPMRm.PeriodReports
         public decimal AMC { get; set; }
         public decimal? MOS => SOH != 0 && AMC != 0 && AMC > 0 ? SOH / AMC : null;
         public SourceOfConsumption SourceOfConsumption { get; set; }
+        public string OtherSourceOfConsumption { get; set; }
         public DateTime? DateOfSOH { get; set; }
         public string ActionRecommended { get; set; }
         public DateTime? DateActionNeededBy { get; set; }
