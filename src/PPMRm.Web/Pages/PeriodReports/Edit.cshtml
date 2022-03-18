@@ -125,7 +125,15 @@
                                         <td>
                                             @if(p.SourceOfConsumption.HasValue)
                                             {
-                                                @Localizer[$"Enum:SourceOfConsumption:{(int)p.SourceOfConsumption}"]
+                                                
+                                                @if(p.SourceOfConsumption == SourceOfConsumption.Other)
+                                                {
+                                                    @("Other:" + p.OtherSourceOfConsumption);
+                                                }
+                                                else
+                                                {
+                                                    @Localizer[$"Enum:SourceOfConsumption:{(int)p.SourceOfConsumption}"]
+                                                }
                                             }
                                         </td>
                                         <td><small>@p.ActionRecommended</small></td>
