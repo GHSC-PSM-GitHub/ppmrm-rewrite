@@ -12,6 +12,7 @@
         modalClass: 'ProductInfo' //Matches to the abp.modals.ProductInfo
     });
     var addShipmentModal = new abp.ModalManager(abp.appPath + 'PeriodReports/AddShipmentModal');
+    var editShipmentModal = new abp.ModalManager(abp.appPath + 'PeriodReports/EditShipmentModal');
     var csModal = new abp.ModalManager(abp.appPath + 'PeriodReports/CSModal');
 
     $('.btn-add-shipment').click(function (e) {
@@ -22,6 +23,17 @@
             programId: $(this).data('program-id')
         };
         addShipmentModal.open(params);
+    });
+
+    $('.btn-edit-shipment').click(function (e) {
+        e.preventDefault();
+        var params = {
+            id: $(this).data('product-id'),
+            periodReportId: $(this).data('period-report-id'),
+            programId: $(this).data('program-id'),
+            shipmentId: $(this).data('shipment-id')
+        };
+        editShipmentModal.open(params);
     });
 
     $("#edit-cs-updates").click(function (e) {
@@ -58,6 +70,10 @@
     });
 
     addShipmentModal.onResult(function () {
+        location.reload();
+    });
+
+    editShipmentModal.onResult(function () {
         location.reload();
     });
 

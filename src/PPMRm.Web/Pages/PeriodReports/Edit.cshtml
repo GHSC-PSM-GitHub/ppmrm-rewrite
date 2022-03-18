@@ -135,11 +135,23 @@
                                                     <td>@s.MOS?.ToString(PeriodReportConsts.DataFormatting.MOS_Format)</td>
                                                     <td>@s.DataSource</td>
                                                     <td>
+                                                    <abp-row>
+                                                        <abp-column size-md="_6">
+                                                        
+                                                        </abp-column>
+                                                        <abp-column size-md="_6">
+                                                        <abp-button data-id="@s.Id" data-product-id="@s.ProductId" data-program-id="@p.Program.Id" data-period-report-id="@Model.Id" data-shipment-id="@s.Id"
+                                                                    class="btn-edit-shipment btn-sm"
+                                                                    icon="pencil"
+                                                                    text=""
+                                                                    button-type="Warning"/>
                                                         <abp-button data-id="@s.Id" data-product-id="@s.ProductId" data-program-id="@p.Program.Id" data-period-report-id="@Model.Id"
                                                                     class="btn-remove-shipment btn-sm"
                                                                     icon="minus"
                                                                     text=""
                                                                     button-type="Danger"/>
+                                                        </abp-column>
+                                                    </abp-row>
                                                     </td>
                                                 </tr>
                                             }
