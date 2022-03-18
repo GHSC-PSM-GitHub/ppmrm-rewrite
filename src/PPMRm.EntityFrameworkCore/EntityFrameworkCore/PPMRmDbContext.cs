@@ -18,6 +18,8 @@ using PPMRm.Core;
 using Volo.Abp.EntityFrameworkCore.Modeling;
 using PPMRm.Products;
 using PPMRm.PeriodReports;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+
 namespace PPMRm.EntityFrameworkCore
 {
     [ReplaceDbContext(typeof(IIdentityDbContext))]
@@ -98,6 +100,9 @@ namespace PPMRm.EntityFrameworkCore
             //    b.ConfigureByConvention(); //auto configure for the base class props
             //    //...
             //});
+            
+            // Bitwise converter to convert SOHLevelValues
+            var sohLevelConverter = new EnumToNumberConverter<SOHLevel, int>();
             builder.Entity<Product>(b =>
             {
                 b.ToTable("Products",
@@ -115,6 +120,30 @@ namespace PPMRm.EntityFrameworkCore
                 b.HasIndex(x => x.Name).IsUnique();
                 b.Property(x => x.ARTMISName).IsRequired().HasMaxLength(128);
                 b.HasIndex(x => x.ARTMISName).IsUnique();
+                b.HasOne<Program>().WithMany().HasForeignKey(x => x.DefaultProgramId).IsRequired();
+                b.HasMany(x => x.Products).WithOne().HasForeignKey(x => x.CountryId).IsRequired();
+                b.HasMany(x => x.Programs).WithOne().HasForeignKey(x => x.CountryId).IsRequired();
+
+            });
+
+            builder.Entity<CountryProduct>(b =>
+            {
+                b.ToTable(PPMRmConsts.DbTablePrefix + "CountryProducs", PPMRmConsts.DbSchema);
+                b.ConfigureByConvention();
+                ;// ADD THE MAPPING FOR THE RELATION
+                b.HasOne<Product>().WithMany().HasForeignKey(x => x.ProductId).IsRequired();
+                b.HasKey(x => new{ x.CountryId, x.ProductId });
+                b.HasIndex(x => new { x.CountryId, x.ProductId});
+            });
+
+            builder.Entity<CountryProgram>(b =>
+            {
+                b.ToTable(PPMRmConsts.DbTablePrefix + "CountryPrograms", PPMRmConsts.DbSchema);
+                b.ConfigureByConvention();
+                ;// ADD THE MAPPING FOR THE RELATION
+                b.HasOne<Program>().WithMany().HasForeignKey(x => x.ProgramId).IsRequired();
+                b.HasKey(x => new { x.CountryId, x.ProgramId });
+                b.HasIndex(x => new { x.CountryId, x.ProgramId });
             });
 
             builder.Entity<Program>(b =>
@@ -154,6 +183,8 @@ namespace PPMRm.EntityFrameworkCore
                 b.HasKey(x => new { x.PeriodReportId, x.ProgramId, x.ProductId });
                 b.HasOne<Program>().WithMany().HasForeignKey(x => x.ProgramId).IsRequired();
                 b.HasOne<Product>().WithMany().HasForeignKey(x => x.ProductId).IsRequired();
+                b.Property(e => e.SOHLevels)
+                    .HasConversion(sohLevelConverter);
             });
 
             builder.Entity<ProductShipment>(b =>
@@ -164,6 +195,8 @@ namespace PPMRm.EntityFrameworkCore
                 b.HasOne<Program>().WithMany().HasForeignKey(x => x.ProgramId).IsRequired();
                 b.HasOne<Product>().WithMany().HasForeignKey(x => x.ProductId).IsRequired();
             });
+
+            
         }
     }
 }

@@ -34,14 +34,36 @@ namespace PPMRm.PeriodReports
         public decimal? AMC { get; protected set; }
         public string ActionRecommended { get; protected set; }
         public DateTime? DateActionNeededBy { get; protected set; }
+        public SourceOfConsumption SourceOfConsumption { get; protected set; }
+        public string OtherSourceOfConsumption { get; protected set; }
+        /// <summary>
+        /// Flag Enum that uses bitwise values and operators
+        /// </summary>
+        public SOHLevel? SOHLevels { get; protected set; }
 
+        public List<SOHLevel> GetSOHLevelsList() => SOHLevels
+            .ToString() // Convert the enum to string
+            .Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries) // Converts the string to Enumerable of string
+            .Select(//converts each element of the list to an enum, and makes an Enumerable out of the newly-converted items
+                strenum =>
+                {
+                    SOHLevel outenum;
+                    Enum.TryParse(strenum, out outenum);
+                    return outenum;
+                })
+            .ToList();
         internal void Update(List<SOHLevel> sohLevels, decimal soh, DateTime? sohDate, decimal amc, SourceOfConsumption sourceOfConsumption, string actionRecommended, DateTime? actionNeededBy, string otherSourceOfConsumption = null)
         {
+            var selectedSohLevels = sohLevels?.Distinct() ?? default;
+            
+            SOHLevels = selectedSohLevels.Any() ? selectedSohLevels.Aggregate((prev, next) => prev | next) : null;
             SOH = soh;
             DateOfSOH = sohDate;
             AMC = amc;
             ActionRecommended = actionRecommended;
             DateActionNeededBy = actionNeededBy;
+            SourceOfConsumption = sourceOfConsumption;
+            OtherSourceOfConsumption = sourceOfConsumption == SourceOfConsumption.Other ? otherSourceOfConsumption : null;
             //TODO: Add SoHLevels and sourceOfConsumtion
         }
         public override object[] GetKeys()

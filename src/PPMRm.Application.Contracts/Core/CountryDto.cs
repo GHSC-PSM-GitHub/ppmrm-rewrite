@@ -9,8 +9,8 @@ namespace PPMRm.Core
         public string Name { get; set; }
         public string ARTMISName { get; set; }
 
-        public int MinStock { get; set; }
-        public int MaxStock { get; set; }
+        public decimal MinStock { get; set; }
+        public decimal MaxStock { get; set; }
     }
 
     public class UpdateCountryDto : CountryDto
