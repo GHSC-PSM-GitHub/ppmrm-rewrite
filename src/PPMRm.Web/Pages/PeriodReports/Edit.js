@@ -77,18 +77,82 @@
         location.reload();
     });
 
+    $(".btn-report-status").click(function (e) {
+        e.preventDefault();
+        var action = $(this).data('action');
+        var id = $(this).data('id');
+        abp.message.confirm('Are you sure you would like to ' + action + ' this report?')
+            .then(function (confirmed) {
+                if (confirmed) {
+                    switch (action) {
+                        case 'open':
+                            console.log("opening report" + id);
+                            pPMRm.periodReports.periodReport.open(id)
+                                .then(function () {
+                                    abp.message.success('Period report successfully opened!').then(function () {
+                                        location.reload();
+                                    });
+                                });
+                            break;
+                        case 'reopen':
+                            console.log("Re-opening report");
+                            pPMRm.periodReports.periodReport.reopen(id)
+                                .then(function () {
+                                    abp.message.success('Period report successfully reopened!').then(function () {
+                                        location.reload();
+                                    });
+                                });
+                            break;
+                        case 'finalize':
+                            console.log("Finalizing report");
+                            pPMRm.periodReports.periodReport.markAsFinal(id)
+                                .then(function () {
+                                    abp.message.success('Period report successfully marked as Final!').then(function () {
+                                        location.reload();
+                                    });
+                                });
+                            break;
+                        case 'close':
+                            console.log("Closing report");
+                            pPMRm.periodReports.periodReport.close(id)
+                                .then(function () {
+                                    abp.message.success('Period report successfully closed!').then(function () {
+                                        location.reload();
+                                    });
+                                });
+                            break;
+                        default:
+                            console.log("Other action: ERROR!");
+                            abp.message.error('Unknown action');
+                            break;
+                    }
+                }
+                else {
+                    console.log("canceled");
+                }
+                //pPMRm.periodReports.periodReport.deleteShipment(id, shipmentId)
+                //    .then(function () {
+                //        abp.message.success('Shipment successfully deleted!').then(function () {
+                //            location.reload();
+                //        });
+                //    });
+            });
+    });
+
     $(".btn-remove-shipment").click(function (e) {
         e.preventDefault();
         var shipmentId = $(this).data('id');
         var id = $(this).data('period-report-id');
         abp.message.confirm('Are you sure to delete this Shipment? This action is irreversible.')
             .then(function (confirmed) {
-                pPMRm.periodReports.periodReport.deleteShipment(id,shipmentId)
-                    .then(function () {
-                        abp.message.success('Shipment successfully deleted!').then(function () {
-                            location.reload();
+                if (confirmed) {
+                    pPMRm.periodReports.periodReport.deleteShipment(id, shipmentId)
+                        .then(function () {
+                            abp.message.success('Shipment successfully deleted!').then(function () {
+                                location.reload();
+                            });
                         });
-                    });
+                }
             });
     });
 
