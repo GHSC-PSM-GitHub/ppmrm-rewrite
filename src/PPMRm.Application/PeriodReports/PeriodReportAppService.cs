@@ -120,7 +120,9 @@ namespace PPMRm.PeriodReports
                                                         DataSource = s.DataSource,
                                                         ShipmentDateType = s.ShipmentDateType,
                                                         Supplier = s.Supplier
-                                                    }).ToList()
+                                                    }).ToList(),
+                                       MinStock = result.Country.MinStock,
+                                       MaxStock = result.Country.MaxStock
                                    };
             var response = new PeriodReportDetailDto
             {

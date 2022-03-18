@@ -23,8 +23,8 @@ namespace PPMRm.PeriodReports
         public decimal? MOS => SOH != null && AMC != null && AMC.Value > 0 ? SOH / AMC : null;
         public MOSStatus? MOSStatus => !MOS.HasValue ? null :
                                         MOS == 0 ? PeriodReports.MOSStatus.StockedOut :
-                                        MOS < PeriodReportConsts.MOS.Min ? PeriodReports.MOSStatus.BelowMin :
-                                        MOS >= PeriodReportConsts.MOS.Min && MOS <= PeriodReportConsts.MOS.Max ? PeriodReports.MOSStatus.MinToMax :
+                                        MOS < MinStock ? PeriodReports.MOSStatus.BelowMin :
+                                        MOS >= MinStock && MOS <= MaxStock ? PeriodReports.MOSStatus.MinToMax :
                                         PeriodReports.MOSStatus.OverStocked;
 
         public SourceOfConsumption? SourceOfConsumption => SOH.HasValue ? PeriodReports.SourceOfConsumption.Forecasted : null;
@@ -32,6 +32,8 @@ namespace PPMRm.PeriodReports
         public string ActionRecommended { get; set; }
         public DateTime? DateActionNeededBy { get; set; }
         public List<ProductShipmentDto> Shipments { get; set; }
+        public decimal MinStock { get; set; }
+        public decimal MaxStock { get; set; }
 
     }
 

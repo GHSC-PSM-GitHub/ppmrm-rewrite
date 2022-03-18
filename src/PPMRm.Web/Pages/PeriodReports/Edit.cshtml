@@ -106,8 +106,8 @@
                                 {
                                     <tr>
                                         <td scope="row">@p.Product.Name</td>
-                                        <td>@PeriodReportConsts.MOS.Min</td>
-                                        <td>@PeriodReportConsts.MOS.Max</td>
+                                        <td>@p.MinStock.ToString(PeriodReportConsts.DataFormatting.SOH_AMC_Format)</td>
+                                        <td>@p.MaxStock.ToString(PeriodReportConsts.DataFormatting.SOH_AMC_Format)</td>
                                         <td>@p.MOS?.ToString(PeriodReportConsts.DataFormatting.MOS_Format)</td>
                                         <td>
                                             @if(p.MOSStatus.HasValue)
