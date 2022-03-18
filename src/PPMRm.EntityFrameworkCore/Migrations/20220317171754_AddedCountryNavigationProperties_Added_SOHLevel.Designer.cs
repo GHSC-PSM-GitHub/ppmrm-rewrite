@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PPMRm.EntityFrameworkCore;
@@ -10,9 +11,10 @@ using Volo.Abp.EntityFrameworkCore;
 namespace PPMRm.Migrations
 {
     [DbContext(typeof(PPMRmDbContext))]
-    partial class PPMRmDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220317171754_AddedCountryNavigationProperties_Added_SOHLevel")]
+    partial class AddedCountryNavigationProperties_Added_SOHLevel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
