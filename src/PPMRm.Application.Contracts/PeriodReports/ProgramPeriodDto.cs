@@ -16,6 +16,7 @@ namespace PPMRm.PeriodReports
 
     public class ProgramProductDto
     {
+        public PeriodReportStatus ReportStatus { get; set; }
         public ProgramDto Program { get; set; }
         public ProductDto Product { get; set; }
         public decimal? SOH { get; set; }

@@ -31,6 +31,8 @@ namespace PPMRm.Web.Pages.PeriodReports
         [BindProperty]
         
         public UpdateProgramProductViewModel Product { get; set; } = new();
+        [BindProperty]
+        public bool IsReadonly { get; set; }
 
         public EditProductModalModel(IPeriodReportAppService appService, IRepository<Product, string> productRepository, IRepository<Core.Program, int> programRepository)
         {
@@ -46,6 +48,7 @@ namespace PPMRm.Web.Pages.PeriodReports
             ProductName = Products.SingleOrDefault(p => p.Value == $"{id}")?.Text;
             ProgramName = Programs.SingleOrDefault(p => p.Value == $"{programId}")?.Text;
             var programProduct = await AppService.GetProgramProductAsync(periodReportId, programId, id);
+            IsReadonly = programProduct.ReportStatus != PeriodReportStatus.Open && programProduct.ReportStatus != PeriodReportStatus.Reopened;
             Product = new UpdateProgramProductViewModel
             {
                 ProductId = id,

@@ -246,6 +246,7 @@ namespace PPMRm.PeriodReports
             var programProduct = periodReport.ProductStocks.SingleOrDefault(p => p.ProductId == productId && p.ProgramId == programId);
             return new ProgramProductDto
             {
+                ReportStatus = periodReport.ReportStatus.GetValueOrDefault(),
                 SOH = programProduct?.SOH,
                 AMC = programProduct?.AMC,
                 ActionRecommended = programProduct?.ActionRecommended,
