@@ -41,7 +41,7 @@ namespace PPMRm.Web.Pages.PeriodReports
         {
             Products = (await ProductRepository.ToListAsync()).OrderBy(p => p.Name).Select(p => new SelectListItem { Value = p.Id, Text = p.Name }).ToList();
             Programs = (await ProgramRepository.ToListAsync()).Select(p => new SelectListItem { Value = $"{p.Id}", Text = p.Name }).ToList();
-            SOHLevelOptions = Enum.GetValues<SOHLevel>().Select(l => new SelectListItem { Value = $"{(int)l}", Text = L[$"Enum:SOHLevel:{(int)l}"]}).ToList();
+            SOHLevelOptions = Enum.GetValues<SOHLevel>().Select(l => new SelectListItem { Value = $"{(int)l}", Text = L[$"Enum:SOHLevel:{l}"] }).ToList();
             ProgramName = Programs.SingleOrDefault(p => p.Value == $"{programId}")?.Text;
             Product = new CreateUpdateProgramProductViewModel
             {
