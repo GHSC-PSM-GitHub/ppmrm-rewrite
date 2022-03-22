@@ -24,16 +24,16 @@
                 <div class="btn-group">
                     @if(Model.PeriodReport.ReportStatus == PeriodReportStatus.Initialized)
                     {
-                        <button id="btn-open" class="btn-report-status btn btn-warning font-weight-bold" data-id="@Model.PeriodReport.Id" data-action="open">Open</button>
+                        <button id="btn-open" class="btn-report-status btn btn-warning" data-id="@Model.PeriodReport.Id" data-action="open"><i class="fa fa-folder-open-o" aria-hidden="true"></i> Open</button>
                     }
                     else if(Model.PeriodReport.ReportStatus == PeriodReportStatus.Open || Model.PeriodReport.ReportStatus == PeriodReportStatus.Reopened)
                     {
-                        <button id="btn-mark-as-final" class="btn-report-status btn btn-warning font-weight-bold" data-id="@Model.PeriodReport.Id" data-action="finalize">Mark as Final</button>
+                        <button id="btn-mark-as-final" class="btn-report-status btn btn-warning" data-id="@Model.PeriodReport.Id" data-action="finalize"><i class="fa fa-flag-checkered" aria-hidden="true"></i> Mark as Final</button>
                     }
                     else
                     {
                         //TODO: Remove Closed status on Enum
-                        <button id="btn-reopen" class="btn-report-status btn btn-warning font-weight-bold" data-id="@Model.PeriodReport.Id" data-action="reopen">Re-open</button>
+                        <button id="btn-reopen" class="btn-report-status btn btn-warning" data-id="@Model.PeriodReport.Id" data-action="reopen"><i class="fa fa-envelope-open" aria-hidden="true"></i> Re-open</button>
                     }
                 </div>
                 </abp-column>
