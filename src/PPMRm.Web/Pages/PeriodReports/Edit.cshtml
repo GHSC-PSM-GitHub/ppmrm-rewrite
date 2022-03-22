@@ -74,7 +74,9 @@
                                 </abp-column>
                             </abp-row>
                         </abp-card-header>
-                       
+                       <abp-card-body>
+                            <span class="font-weight-bold">SOH Levels: <small class="font-weight-light">@(program.SOHLevels != null? program.SOHLevels : "None")</small></span>
+                       </abp-card-body>
                     </abp-card>
                     <abp-table class="table-striped table-bordered .w-auto small" data-id="@program.PeriodReportId" data-program-id="@program.Program.Id">
                                 <thead>

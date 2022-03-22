@@ -2,12 +2,17 @@
 using PPMRm.Products;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace PPMRm.PeriodReports
 {
     public class ProgramPeriodDto
     {
+        public List<SOHLevel> ProductSOHLevels { get; set; }
+
+        public SOHLevel? SOHLevels => ProductSOHLevels != null && ProductSOHLevels.Any() ? ProductSOHLevels.Aggregate((prev, next) => prev | next) : null;
+
         public string PeriodReportId { get; set; }
         public int ProgramId { get; set; }
         public ProgramDto Program { get; set; }

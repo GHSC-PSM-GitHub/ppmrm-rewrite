@@ -135,6 +135,8 @@ namespace PPMRm.PeriodReports
                 ReportStatus = periodReport.ReportStatus,
                 Programs = periodReport.GetDefaultProgramIds().Select(i => new ProgramPeriodDto
                 {
+                    ProductSOHLevels = !periodReport.ProductStocks.Where(s => s.ProgramId == i && s.SOHLevels != null).Any() ? new List<SOHLevel>() :
+                                periodReport.ProductStocks.Where(s => s.ProgramId == i && s.SOHLevels != null).Select(s => s.SOHLevels.Value).Distinct().ToList(),
                     PeriodReportId = periodReport.Id,
                     ProgramId = i,
                     Program = ObjectMapper.Map<Program, ProgramDto>(programs.Single(p => p.Id == i)),
