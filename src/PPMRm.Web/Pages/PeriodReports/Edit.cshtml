@@ -18,35 +18,24 @@
                     <abp-card-title class="">Status: @Model.PeriodReport.ReportStatus</abp-card-title>
                 </abp-column>
                 <abp-column size-md="_6" class="text-right">
-                    <abp-button id="edit-cs-updates" data-id="@Model.Id"
+                <abp-button id="edit-cs-updates" data-id="@Model.Id"
                                 text="@(Model.IsReadonly ? "View CS Updates" : "View/Edit CS Updates")"
                                 button-type="Primary"/>
-                    <div class="btn-group mr-2" role="group" aria-label="Second group">
-                        <div class="btn-group" role="group">
-                            <button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              Change Report Status
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                @if(Model.PeriodReport.ReportStatus == PeriodReportStatus.Initialized)
-                                {
-                                    <a id="btn-open" class="dropdown-item btn-report-status" data-id="@Model.PeriodReport.Id" data-action="open">Open</a>
-                                }
-                                else if(Model.PeriodReport.ReportStatus == PeriodReportStatus.Open || Model.PeriodReport.ReportStatus == PeriodReportStatus.Reopened)
-                                {
-                                    <a id="btn-mark-as-final" class="dropdown-item btn-report-status" data-id="@Model.PeriodReport.Id" data-action="finalize">Mark as Final</a>
-                                }
-                                else if(Model.PeriodReport.ReportStatus == PeriodReportStatus.Final)
-                                {
-                                    <a id="btn-reopen" class="dropdown-item btn-report-status" data-id="@Model.PeriodReport.Id" data-action="reopen">Reopen</a>
-                                    <a id="btn-close" class="dropdown-item btn-report-status" data-id="@Model.PeriodReport.Id" data-action="close">Close</a>
-                                }
-                                else
-                                {
-                                    <a id="btn-close" class="dropdown-item btn-report-status" data-id="@Model.PeriodReport.Id" data-action="close" disabled="disabled">Closed</a>
-                                }
-                            </div>
-                        </div>
-                      </div>
+                <div class="btn-group">
+                    @if(Model.PeriodReport.ReportStatus == PeriodReportStatus.Initialized)
+                    {
+                        <button id="btn-open" class="btn-report-status btn btn-warning font-weight-bold" data-id="@Model.PeriodReport.Id" data-action="open">Open</button>
+                    }
+                    else if(Model.PeriodReport.ReportStatus == PeriodReportStatus.Open || Model.PeriodReport.ReportStatus == PeriodReportStatus.Reopened)
+                    {
+                        <button id="btn-mark-as-final" class="btn-report-status btn btn-warning font-weight-bold" data-id="@Model.PeriodReport.Id" data-action="finalize">Mark as Final</button>
+                    }
+                    else
+                    {
+                        //TODO: Remove Closed status on Enum
+                        <button id="btn-reopen" class="btn-report-status btn btn-warning font-weight-bold" data-id="@Model.PeriodReport.Id" data-action="reopen">Re-open</button>
+                    }
+                </div>
                 </abp-column>
             </abp-row>
         </abp-card-header>
@@ -102,7 +91,7 @@
                                         <th class="th-lg">Action Recommended</th>
                                         <th>Action needed by</th>
                                         <th>Shipments</th>
-                                        <th>Product Data</th>
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
