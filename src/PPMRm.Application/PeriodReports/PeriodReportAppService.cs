@@ -241,9 +241,20 @@ namespace PPMRm.PeriodReports
 
         public async Task<ProgramProductDto> GetProgramProductAsync(string id, int programId, string productId)
         {
-            var queryable = await PeriodReportRepository.WithDetailsAsync(r => r.ProductStocks);
+            var queryable = await PeriodReportRepository.WithDetailsAsync(r => r.ProductStocks, r => r.ProductShipments);
             var periodReport = await AsyncExecuter.SingleAsync(queryable.Where(p => p.Id == id));
             var programProduct = periodReport.ProductStocks.SingleOrDefault(p => p.ProductId == productId && p.ProgramId == programId);
+            var productShipments = periodReport.ProductShipments.Where(p => p.ProductId == productId && p.ProgramId == programId).Select(s => new ProductShipmentDto
+            {
+                Id = s.Id,
+                AMC = programProduct?.AMC,
+                DataSource = s.DataSource,
+                ProductId = s.ProductId,
+                Quantity = s.Quantity,
+                ShipmentDate = s.ShipmentDate,
+                ShipmentDateType = s.ShipmentDateType,
+                Supplier = s.Supplier
+            }).ToList();
             return new ProgramProductDto
             {
                 ReportStatus = periodReport.ReportStatus.GetValueOrDefault(),
@@ -252,9 +263,10 @@ namespace PPMRm.PeriodReports
                 ActionRecommended = programProduct?.ActionRecommended,
                 DateActionNeededBy = programProduct?.DateActionNeededBy,
                 DateOfSOH = programProduct?.DateOfSOH,
-                SOHLevels = programProduct?.GetSOHLevelsList().Select(l => $"{(int)l}").ToList(),
-                SourceOfConsumption = programProduct.SourceOfConsumption,
-                OtherSourceOfConsumption = programProduct.OtherSourceOfConsumption
+                SOHLevels = programProduct?.GetSOHLevelsList().Select(l => $"{(int)l}").ToList() ?? new List<string>(),
+                SourceOfConsumption = programProduct?.SourceOfConsumption,
+                OtherSourceOfConsumption = programProduct?.OtherSourceOfConsumption,
+                Shipments = productShipments
             };
         }
 
