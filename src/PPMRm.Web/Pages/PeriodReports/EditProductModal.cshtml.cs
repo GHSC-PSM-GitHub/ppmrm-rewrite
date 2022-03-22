@@ -15,6 +15,12 @@ namespace PPMRm.Web.Pages.PeriodReports
 {
     public class EditProductModalModel : PPMRmPageModel
     {
+        [BindProperty(SupportsGet = true)]
+        public string Id { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public string ProgramId { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public string PeriodReportId { get; set; }
         [BindProperty]
         public string ProductName { get; set; }
         [BindProperty]
@@ -120,6 +126,8 @@ namespace PPMRm.Web.Pages.PeriodReports
         [DisplayName("Date Action Needed By")]
         [BindProperty, DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime? DateActionNeededBy { get; set; }
+        [BindProperty]
+        public List<ProductShipmentDto> Shipments { get; set; } = new();
     }
 
 
