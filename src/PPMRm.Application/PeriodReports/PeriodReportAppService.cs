@@ -69,7 +69,7 @@ namespace PPMRm.PeriodReports
         async public override Task<PeriodReportDetailDto> GetAsync(string id)
         {
             var queryable = await Repository.WithDetailsAsync(r => r.ProductStocks, r => r.ProductShipments);
-            var countries = await CountryRepository.GetQueryableAsync();
+            var countries = await CountryRepository.WithDetailsAsync(c => c.Products, c => c.Programs);
             var periods = await PeriodRepository.GetQueryableAsync();
             var programsQueryable = await ProgramRepository.GetQueryableAsync();
             var productsQueryable = await ProductRepository.GetQueryableAsync();
@@ -87,8 +87,10 @@ namespace PPMRm.PeriodReports
             var periodReport = result.PeriodReport;
             var programs = await ProgramRepository.ToListAsync();
 
+            var defaultProgramProductIds = result.Country.Products.Select(c => new { ProgramId = (int)Programs.NationalMalariaProgram, ProductId = c.ProductId });
             var programProductIds = periodReport.ProductShipments.GroupBy(s => new { s.ProgramId, s.ProductId }).Select(i => (i.Key.ProgramId, i.Key.ProductId))
                                                .Concat(periodReport.ProductStocks.Select(x => (x.ProgramId, x.ProductId)))
+                                               .Concat(defaultProgramProductIds.Select(x => (x.ProgramId, x.ProductId)))
                                                .GroupBy(i => new { i.ProgramId, i.ProductId }).Select(p => (p.Key.ProgramId, p.Key.ProductId));
             
             var products = await AsyncExecuter.ToListAsync(productsQueryable.Where(p => programProductIds.Select(i => i.ProductId).Distinct().Contains(p.Id)));
