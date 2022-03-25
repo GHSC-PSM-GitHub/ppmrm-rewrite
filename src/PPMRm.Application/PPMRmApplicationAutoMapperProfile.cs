@@ -10,6 +10,7 @@ namespace PPMRm
         public PPMRmApplicationAutoMapperProfile()
         {
             CreateMap<Country, CountryDto>();
+            CreateMap<Country, UpdateCountryDto>();
             CreateMap<Program, ProgramDto>();
             CreateMap<Period, PeriodDto>();
             CreateMap<Item, ItemDto>();

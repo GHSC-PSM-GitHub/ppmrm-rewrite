@@ -83,6 +83,13 @@ namespace PPMRm.Core
             Products.RemoveAll(x => !productIds.Contains(x.ProductId));
         }
 
+        public void UpdateProducts(List<string> productIds)
+        {
+            Check.NotNull(productIds, nameof(productIds));
+            var idsToAdd = productIds.Where(p => !Products.Any(cp => cp.ProductId == p)).ToList();
+            RemoveAllExceptGivenIds(productIds);
+            idsToAdd.ForEach(id => Products.Add(new CountryProduct(Id, id)));
+        }
         private bool HasProduct(string productId) => Products.Any(x => x.ProductId == productId);
         
     }

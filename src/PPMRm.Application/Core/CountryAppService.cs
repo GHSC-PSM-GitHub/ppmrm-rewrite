@@ -25,6 +25,16 @@ namespace PPMRm.Core
             UserRepository = userRepository;
         }
 
+        async public Task<UpdateCountryDto> GetDetailsAsync(string id)
+        {
+            var queryable = await CountryRepository.WithDetailsAsync(c => c.Products, c => c.Programs);
+            var country = await AsyncExecuter.SingleAsync(queryable.Where(c => c.Id == id));
+            var result = ObjectMapper.Map<Country, UpdateCountryDto>(country);
+            result.ProductIds = country.Products.Select(p => p.ProductId).ToList();
+            result.ProgramIds = country.Programs.Select(p => p.ProgramId).ToList();
+            return result;
+        }
+
         [Authorize]
         async public Task<PagedResultDto<CountryDto>> GetUserCountryListAsync(PagedAndSortedResultRequestDto input)
         {
@@ -35,8 +45,10 @@ namespace PPMRm.Core
 
         public async Task UpdateAsync(string id, UpdateCountryDto countryDto)
         {
-            var country = await CountryRepository.GetAsync(id);
+            var queryable = await CountryRepository.WithDetailsAsync(c => c.Products, c => c.Programs);
+            var country = await AsyncExecuter.SingleAsync(queryable.Where(c => c.Id == id));
             country.UpdateMinMax(countryDto.MinStock, countryDto.MaxStock);
+            country.UpdateProducts(countryDto.ProductIds ?? new List<string>());
             await CountryRepository.UpdateAsync(country);
             //country.UpdateMinMax();
             

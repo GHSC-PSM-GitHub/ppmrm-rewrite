@@ -16,6 +16,6 @@ namespace PPMRm.Core
     public class UpdateCountryDto : CountryDto
     {
         public List<string> ProductIds { get; set; } = new();
-        public List<string> ProgramIds { get; set; } = new();
+        public List<int> ProgramIds { get; set; } = new();
     }
 }

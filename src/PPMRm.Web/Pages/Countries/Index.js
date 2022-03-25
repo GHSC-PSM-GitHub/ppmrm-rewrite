@@ -1,6 +1,9 @@
 ﻿$(function () {
 
-    var editModal = new abp.ModalManager(abp.appPath + 'Countries/EditModal');
+    var editModal = new abp.ModalManager({
+        viewUrl: '/Countries/EditModal',
+        modalClass: 'CountryInfo' //Matches to the abp.modals.CountryInfo
+    });
     editModal.onResult(function () {
         dataTable.ajax.reload();
     });
@@ -48,3 +51,24 @@
         })
     );
 });
+
+abp.modals.CountryInfo = function () {
+    function initModal(modalManager, args) {
+        var $modal = modalManager.getModal();
+        var $form = modalManager.getForm();
+
+        $modal.find("#Country_ProductIds").multiselect({
+            selectAllValue: 'multiselect-all',
+            includeSelectAllOption: true,
+            enableFiltering: true,
+            enableCaseInsensitiveFiltering: true,
+            maxHeight: 200,
+            buttonWidth: '600px'
+        });
+
+    };
+
+    return {
+        initModal: initModal
+    };
+};
