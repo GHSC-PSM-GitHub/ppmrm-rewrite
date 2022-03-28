@@ -14,6 +14,13 @@
     <abp-script src="/js/dataTables.buttons.min.js" />
 }
 @{
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="/periodreports">Period Reports</a></li>
+        <li class="breadcrumb-item active" aria-current="page">@Model.PeriodReport.Country.Name - @Model.PeriodReport.Period.ShortName</li>
+      </ol>
+    </nav>
     <abp-card>
         <abp-card-header>
             <abp-row>

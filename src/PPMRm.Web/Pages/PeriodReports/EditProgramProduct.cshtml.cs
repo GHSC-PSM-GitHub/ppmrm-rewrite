@@ -13,6 +13,14 @@ namespace PPMRm.Web.Pages.PeriodReports
 {
     public class EditProgramProductModel : PPMRmPageModel
     {
+        [BindProperty(SupportsGet = true)]
+        public string Id { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public string ProgramId { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public string PeriodReportId { get; set; }
+        [BindProperty]
+        public PeriodReportDto PeriodReport { get; set; }
         [BindProperty]
         public string ProductName { get; set; }
         [BindProperty]
@@ -45,6 +53,7 @@ namespace PPMRm.Web.Pages.PeriodReports
             SOHLevelOptions = Enum.GetValues<SOHLevel>().Select(l => new SelectListItem { Value = $"{(int)l}", Text = L[$"Enum:SOHLevel:{l}"] }).ToList();
             ProductName = Products.SingleOrDefault(p => p.Value == $"{id}")?.Text;
             ProgramName = Programs.SingleOrDefault(p => p.Value == $"{programId}")?.Text;
+            PeriodReport = (await AppService.GetAsync(periodReportId));
             var programProduct = await AppService.GetProgramProductAsync(periodReportId, programId, id);
             IsReadonly = programProduct.ReportStatus != PeriodReportStatus.Open && programProduct.ReportStatus != PeriodReportStatus.Reopened;
             Product = new UpdateProgramProductViewModel

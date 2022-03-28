@@ -4,13 +4,25 @@
 @using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Modal
 @{
 }
-
-<abp-dynamic-form abp-model="Product" data-check-form-on-close="false">
+<nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="/periodreports">Period Reports</a></li>
+        <li class="breadcrumb-item"><a href="/periodreports/edit/@(Model.PeriodReportId)">@($"{Model.PeriodReport.Country.Name} - {Model.PeriodReport.Period.ShortName}")</a></li>
+        <li class="breadcrumb-item active" aria-current="page">@Model.ProgramName</li>
+      </ol>
+</nav>
+<abp-card>
+        <abp-card-header>
+            <abp-card-title>@Model.ProductName</abp-card-title>
+        </abp-card-header>
+        <abp-card-body>
+            <abp-dynamic-form abp-model="Product" data-check-form-on-close="false">
     <fieldset @(Model.IsReadonly ? "disabled" : "")>
         <abp-form-content />
     </fieldset>
 </abp-dynamic-form>
-<table class="table">
+<abp-table class="table table-sm">
     <thead>
     <tr>
     <th>Supplier</th>
@@ -72,4 +84,6 @@
         }
         
 </tbody>
-</table>
+</abp-table>
+        </abp-card-body>
+</abp-card>
