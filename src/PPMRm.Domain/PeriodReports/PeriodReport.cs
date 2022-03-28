@@ -110,6 +110,7 @@ namespace PPMRm.PeriodReports
             ProductShipments.Add(shipment);
         }
 
+        public void RemoveProgramProduct(int programId, string productId) => ProductStocks.RemoveAll(p => p.ProgramId == programId && p.ProductId == productId);
         public void RemoveShipment(Guid id) => ProductShipments.RemoveAll(s => s.Id == id);
 
         public void Open() => ReportStatus = PeriodReportStatus.Open;
