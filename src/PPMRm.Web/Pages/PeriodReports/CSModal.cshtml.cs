@@ -36,7 +36,7 @@ namespace PPMRm.Web.Pages.PeriodReports
         public async Task<IActionResult> OnPostAsync()
         {
             var csUpdatesDto = ObjectMapper.Map<CSUpdateViewModel, CommoditySecurityUpdatesDto>(CSUpdates);
-            await AppService.UpdateCSUpdatesAsync(csUpdatesDto.PeriodReportId, csUpdatesDto);
+            await AppService.UpdateCSUpdatesAsync(Id, csUpdatesDto);
             return NoContent();
         }
     }
