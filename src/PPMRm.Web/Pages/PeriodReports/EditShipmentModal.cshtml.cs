@@ -45,7 +45,7 @@ namespace PPMRm.Web.Pages.PeriodReports
         public async Task OnGetAsync(string periodReportId, int programId, string id, Guid shipmentId)
         {
             Suppliers = Enum.GetValues<Supplier>().Select(s => new SelectListItem { Value = $"{(int)s}", Text = s.ToString() }).ToList();
-            Products = (await ProductRepository.ToListAsync()).OrderBy(p => p.Name).Select(p => new SelectListItem { Value = p.Id, Text = p.Name }).ToList();
+            Products = (await ProductRepository.ToListAsync()).Where(p => id == null || p.Id == id).OrderBy(p => p.Name).Select(p => new SelectListItem { Value = p.Id, Text = p.Name }).ToList();
             Programs = (await ProgramRepository.ToListAsync()).Select(p => new SelectListItem { Value = $"{p.Id}", Text = p.Name }).ToList();
             var existing = await AppService.GetShipmentAsync(periodReportId, shipmentId);
             

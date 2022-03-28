@@ -126,7 +126,7 @@ namespace PPMRm.Web.Pages.PeriodReports
         [DisplayName("Date Action Needed By")]
         [BindProperty, DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime? DateActionNeededBy { get; set; }
-        [BindProperty]
+        [DynamicFormIgnore]
         public List<ProductShipmentDto> Shipments { get; set; } = new();
     }
 
