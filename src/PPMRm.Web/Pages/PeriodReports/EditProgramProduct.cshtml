@@ -4,6 +4,12 @@
 @using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Modal
 @{
 }
+@section scripts
+{
+    <abp-script src="/Pages/PeriodReports/Edit.js" />
+    <abp-script src="/js/bootstrap-multiselect.min.js" />
+    <abp-script src="/js/dataTables.buttons.min.js" />
+}
 <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/">Home</a></li>
@@ -17,12 +23,26 @@
             <abp-card-title>@Model.ProductName</abp-card-title>
         </abp-card-header>
         <abp-card-body>
-            <abp-dynamic-form abp-model="Product" data-check-form-on-close="false">
+            <abp-dynamic-form abp-model="Product" submit-button="false"  data-check-form-on-close="false">
     <fieldset @(Model.IsReadonly ? "disabled" : "")>
         <abp-form-content />
     </fieldset>
+    @if(!Model.IsReadonly)
+    {
+    <div class="text-right">
+        <button type="submit" class="btn btn-primary" data-busy-text="Processing..."><span>Save</span></button>
+    </div>
+    }
 </abp-dynamic-form>
-<abp-table class="table table-sm">
+
+        </abp-card-body>
+</abp-card>
+<abp-card>
+    <abp-card-header>
+        <abp-card-title>Shipments</abp-card-title>
+    </abp-card-header>
+    <abp-card-body>
+        <abp-table class="table table-sm">
     <thead>
     <tr>
     <th>Supplier</th>
@@ -46,18 +66,21 @@
             <td>@s.DataSource</td>
             <td>
             <abp-row>
-                <abp-column size-md="_6">
-                                                        
-                </abp-column>
-                <abp-column size-md="_6">
-                @if(!Model.IsReadonly)
+                <abp-column size-md="_6"  class="text-right">
+                           @if(!Model.IsReadonly)
                 {
-                <abp-button data-id="@s.Id" data-product-id="@s.ProductId" data-program-id="@Model.Product.ProgramId" data-period-report-id="" data-shipment-id="@s.Id"
+                <abp-button data-id="@s.Id" data-product-id="@s.ProductId" data-program-id="@Model.Product.ProgramId" data-period-report-id="@Model.Product.PeriodReportId" data-shipment-id="@s.Id"
                             class="btn-edit-shipment btn-sm @(Model.IsReadonly ? "disabled" : "")"
                             icon="pencil"
                             text=""
                             button-type="Warning"/>
-                <abp-button data-id="@s.Id" data-product-id="@s.ProductId" data-program-id="@Model.Product.ProgramId" data-period-report-id=""
+
+                }                             
+                </abp-column>
+                <abp-column size-md="_6">
+                @if(!Model.IsReadonly)
+                {
+                <abp-button data-id="@s.Id" data-product-id="@s.ProductId" data-program-id="@Model.Product.ProgramId" data-period-report-id="@Model.Product.PeriodReportId"
                             class="btn-remove-shipment btn-sm @(Model.IsReadonly ? "disabled" : "")"
                             icon="minus"
                             text=""
@@ -68,11 +91,20 @@
             </td>
         </tr>
     }
-    <tr>
+    
+            
+        }
+        @if(Model.Product.Shipments != null && Model.Product.Shipments.Count() == 0)
+        {
+            <tr>
+            <td class="text-center" colspan="13">No shipments reported for this product.</td>
+            </tr>
+        }
+        <tr>
         <td class="text-right" colspan="6">
         @if(!Model.IsReadonly)
     {
-    <abp-button data-product-id="" data-program-id="" data-period-report-id=""
+    <abp-button data-product-id="@Model.Product.ProductId" data-program-id="@Model.Product.ProgramId" data-period-report-id="@Model.Product.PeriodReportId"
                             class="btn-add-shipment btn-sm @(Model.IsReadonly ? "disabled" : "")"
                             icon="plus"
                             text="Add Shipment"
@@ -80,10 +112,8 @@
     }
             </td>
     </tr>
-            
-        }
-        
 </tbody>
+
 </abp-table>
-        </abp-card-body>
+    </abp-card-body>
 </abp-card>

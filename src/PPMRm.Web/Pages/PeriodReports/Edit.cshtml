@@ -149,10 +149,23 @@
                                                     button-type="Link" />
                                         </td>
                                         <td>
+                                        <!--
                                             <abp-button data-id="@p.Product.Id" data-program-id="@p.Program.Id" data-period-report-id="@Model.Id"
                                                     class="btn-edit-product btn-sm"
                                                     text="@(Model.IsReadonly ? "View" : "Edit")"
                                                     button-type="Primary"/>
+                                                    -->
+
+                                            @{   
+                                                var editProgramProduct = new Dictionary<string, string>
+                                                    {
+                                                       { "periodReportId", @Model.Id },
+                                                       { "programId", $"{@p.Program.Id}" },
+                                                       { "id", @p.Product.Id }
+                                                    };
+                                            }
+                                            
+                                        <a class="btn btn-primary" href="/periodreports/edit/@Model.Id/programs/@p.Program.Id/products/@p.Product.Id">Edit</a>
                                         </td>
                                         
                                     </tr>

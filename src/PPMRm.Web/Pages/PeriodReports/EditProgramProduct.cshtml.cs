@@ -71,6 +71,24 @@ namespace PPMRm.Web.Pages.PeriodReports
                 OtherSourceOfConsumption = programProduct?.OtherSourceOfConsumption,
                 Shipments = programProduct.Shipments
             };
+
+        }
+
+        public async Task<IActionResult> OnPostAsync()
+        {
+            var programProductDto = new CreateUpdateProgramProductDto
+            {
+                SOHLevels = Product.SOHLevels.Select(l => Enum.Parse<SOHLevel>(l)).Distinct().ToList(),
+                SOH = Product.SOH,
+                DateOfSOH = Product.DateOfSOH,
+                AMC = Product.AMC,
+                SourceOfConsumption = Product.SourceOfConsumption,
+                OtherSourceOfConsumption = Product.OtherSourceOfConsumption,
+                ActionRecommended = Product.ActionRecommended,
+                DateActionNeededBy = Product.DateActionNeededBy
+            };
+            await AppService.AddOrUpdateProgramProductAsync(Product.PeriodReportId, Product.ProgramId, Product.ProductId, programProductDto);
+            return RedirectToPage("EditProgramProduct", new { id = Product.ProductId, programId = Product.ProgramId, periodReportId = Product.PeriodReportId });
         }
     }
 }

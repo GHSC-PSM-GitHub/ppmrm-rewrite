@@ -2,6 +2,15 @@
 
     var l = abp.localization.getResource('PPMRm');
 
+    // EditProgramProduct page
+    $("#Product_SOHLevels").multiselect({
+        selectAllValue: 'multiselect-all',
+        includeSelectAllOption: true,
+        enableFiltering: true,
+        enableCaseInsensitiveFiltering: true,
+        maxHeight: 200,
+        buttonWidth: '450px'
+    });
 
     var addProductModal = new abp.ModalManager({
         viewUrl: '/PeriodReports/AddProductModal',
@@ -156,13 +165,34 @@
             });
     });
 
-    var inputAction = function (requestData, dataTableSettings) {
-        return {
-            id: "AGO-202112",
-            programId: "4"
-        };
-    };
+    function compute() {
+        var soh = $("#Product_SOH").val();
+        var amc = $("#Product_AMC").val();
+        if (amc != 0) {
+            var mos = soh / amc;
+            $('#Product_MOS').val(mos.toFixed(2));
+        }
+        else
+            $("#Product_MOS").val(0);
+    }
 
+    function toggleSourceOfConsumption() {
+        var source = $("#Product_SourceOfConsumption").val();
+        if (source == "Other") {
+            $("#Product_OtherSourceOfConsumption").parents('.form-group').show();
+            console.log("show text box");
+        }
+        else {
+            $("#Product_OtherSourceOfConsumption").val("");
+            $("#Product_OtherSourceOfConsumption").parents('.form-group').hide();
+            console.log("clear and hide");
+        }
+    }
+
+    $("#Product_SOH").change(compute);
+    $("#Product_AMC").change(compute);
+    $("#Product_SourceOfConsumption").change(toggleSourceOfConsumption);
+    toggleSourceOfConsumption();
 
 });
 
