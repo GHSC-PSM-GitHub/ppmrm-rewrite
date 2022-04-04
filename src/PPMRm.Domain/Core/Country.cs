@@ -44,6 +44,7 @@ namespace PPMRm.Core
             NumericCode = numericCode;
             ARTMISName = name;
             UpdateMinMax(PeriodReports.PeriodReportConsts.MOS.Min, PeriodReports.PeriodReportConsts.MOS.Max);
+            DefaultProgramId = (int)Core.Programs.NationalMalariaProgram;
             Products = new List<CountryProduct>();
             Programs = new List<CountryProgram>();
         }

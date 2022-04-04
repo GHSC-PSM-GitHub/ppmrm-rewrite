@@ -64,7 +64,10 @@ namespace PPMRm.PeriodReports
                     return new List<int> { (int)Programs.NationalMalariaProgram };
             }
         }
-        public int GetARTMISProgramId() => (int)GetARTMISProgram();
+        public int GetPMIProgramId() => (int)GetARTMISProgram();
+
+        
+
         public Programs GetARTMISProgram()
         {
             switch (CountryId)
@@ -87,7 +90,7 @@ namespace PPMRm.PeriodReports
         /// <param name="quantity"></param>
         public void AddOrUpdateShipment(string orderLineId, string productId, DateTime? shipmentDate, ShipmentDateType shipmentDateType, decimal quantity)
         {
-            var shipment = new ProductShipment(Guid.NewGuid(), Id, GetARTMISProgramId(), productId, Supplier.PMI, shipmentDate, shipmentDateType, quantity, ShipmentDataSource.ARTMIS);
+            var shipment = new ProductShipment(Guid.NewGuid(), Id, GetPMIProgramId(), productId, Supplier.PMI, shipmentDate, shipmentDateType, quantity, ShipmentDataSource.ARTMIS);
             ProductShipments.RemoveAll(s => s.Id == shipment.Id);
             ProductShipments.Add(shipment);
         }

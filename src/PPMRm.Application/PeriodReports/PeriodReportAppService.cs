@@ -87,7 +87,7 @@ namespace PPMRm.PeriodReports
             var periodReport = result.PeriodReport;
             var programs = await ProgramRepository.ToListAsync();
 
-            var defaultProgramProductIds = result.Country.Products.Select(c => new { ProgramId = (int)Programs.NationalMalariaProgram, ProductId = c.ProductId });
+            var defaultProgramProductIds = result.Country.Products.Select(c => new { ProgramId = periodReport.GetPMIProgramId(), ProductId = c.ProductId });
             var programProductIds = periodReport.ProductShipments.GroupBy(s => new { s.ProgramId, s.ProductId }).Select(i => (i.Key.ProgramId, i.Key.ProductId))
                                                .Concat(periodReport.ProductStocks.Select(x => (x.ProgramId, x.ProductId)))
                                                .Concat(defaultProgramProductIds.Select(x => (x.ProgramId, x.ProductId)))
