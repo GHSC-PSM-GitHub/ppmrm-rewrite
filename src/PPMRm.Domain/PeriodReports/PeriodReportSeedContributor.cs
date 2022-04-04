@@ -37,7 +37,7 @@ namespace PPMRm.PeriodReports
         [UnitOfWork]
         public async Task SeedAsync(DataSeedContext context)
         {
-            var periods = new int[] { 202112, 202201, 202202 };
+            var periods = new int[] { 202203 };
             foreach (var pId in periods)
             {
                 if (await Repository.CountAsync(pr => pr.PeriodId == pId) == 0)

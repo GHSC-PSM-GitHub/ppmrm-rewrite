@@ -17,6 +17,6 @@ namespace PPMRm.ARTMIS.OrderLines
     {
         public List<string> Countries { get; set; }
         public List<string> Products { get; set; }
-        public DateTime? ShipmentDateAfter { get; set; } = new DateTime(2022, 2, 1);
+        public DateTime? ShipmentDateAfter { get; set; } = new DateTime(2022, 3, 1);
     }
 }
