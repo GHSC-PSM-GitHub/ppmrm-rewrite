@@ -20,19 +20,26 @@
 </nav>
 <abp-card>
         <abp-card-header>
-            <abp-card-title>@Model.ProductName</abp-card-title>
+            <abp-row>
+                 <abp-column size-md="_6">
+                    <abp-card-title>@Model.ProductName</abp-card-title>
+                </abp-column>
+                <abp-column size-md="_6" class="text-right">
+                    @if(!Model.IsReadonly)
+    {
+    <div class="text-right">
+        <button type="button" id="btn-save-program-product" class="btn btn-primary" data-busy-text="Processing..."><span>Save</span></button>
+    </div>
+    }
+                </abp-column>
+            </abp-row>
         </abp-card-header>
         <abp-card-body>
-            <abp-dynamic-form abp-model="Product" submit-button="false"  data-check-form-on-close="false">
+            <abp-dynamic-form abp-model="Product" id="frm-program-product" submit-button="false"  data-check-form-on-close="false">
     <fieldset @(Model.IsReadonly ? "disabled" : "")>
         <abp-form-content />
     </fieldset>
-    @if(!Model.IsReadonly)
-    {
-    <div class="text-right">
-        <button type="submit" class="btn btn-primary" data-busy-text="Processing..."><span>Save</span></button>
-    </div>
-    }
+    
 </abp-dynamic-form>
 
         </abp-card-body>

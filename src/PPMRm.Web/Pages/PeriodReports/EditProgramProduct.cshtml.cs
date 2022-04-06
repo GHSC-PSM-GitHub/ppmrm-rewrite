@@ -88,7 +88,7 @@ namespace PPMRm.Web.Pages.PeriodReports
                 DateActionNeededBy = Product.DateActionNeededBy
             };
             await AppService.AddOrUpdateProgramProductAsync(Product.PeriodReportId, Product.ProgramId, Product.ProductId, programProductDto);
-            return RedirectToPage("EditProgramProduct", new { id = Product.ProductId, programId = Product.ProgramId, periodReportId = Product.PeriodReportId });
+            return RedirectToPage("Edit", new { id = Product.PeriodReportId });
         }
     }
 }

@@ -24,6 +24,10 @@
     var editShipmentModal = new abp.ModalManager(abp.appPath + 'PeriodReports/EditShipmentModal');
     var csModal = new abp.ModalManager(abp.appPath + 'PeriodReports/CSModal');
 
+    $("#btn-save-program-product").click(function () {
+        $("#frm-program-product").submit();
+    });
+
     $('.btn-add-shipment').click(function (e) {
         e.preventDefault();
         var params = {
@@ -193,6 +197,7 @@
     $("#Product_AMC").change(compute);
     $("#Product_SourceOfConsumption").change(toggleSourceOfConsumption);
     toggleSourceOfConsumption();
+    compute();
 
 });
 
