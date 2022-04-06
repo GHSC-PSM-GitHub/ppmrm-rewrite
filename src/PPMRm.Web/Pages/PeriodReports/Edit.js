@@ -169,6 +169,25 @@
             });
     });
 
+    $(".btn-remove-product").click(function (e) {
+        e.preventDefault();
+        var id = $(this).data('period-report-id');
+        var programId = $(this).data('program-id');
+        var productId = $(this).data('product-id');
+        abp.message.confirm('Are you sure to delete stock information for this product? This action is irreversible.')
+            .then(function (confirmed) {
+                if (confirmed) {
+                    
+                    pPMRm.periodReports.periodReport.deleteProgramProduct(id, programId, productId)
+                        .then(function () {
+                            abp.message.success('Stock information successfully deleted!').then(function () {
+                                location.reload();
+                            });
+                        });
+                }
+            });
+    });
+
     function compute() {
         var soh = $("#Product_SOH").val();
         var amc = $("#Product_AMC").val();

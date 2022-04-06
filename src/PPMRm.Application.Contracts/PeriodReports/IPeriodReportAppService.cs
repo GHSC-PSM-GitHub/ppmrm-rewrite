@@ -27,5 +27,7 @@ namespace PPMRm.PeriodReports
         Task MarkAsFinalAsync(string id);
         Task ReopenAsync(string id);
         Task CloseAsync(string id);
+
+        Task DeleteProgramProductAsync(string id, int programId, string productId);
     }
 }

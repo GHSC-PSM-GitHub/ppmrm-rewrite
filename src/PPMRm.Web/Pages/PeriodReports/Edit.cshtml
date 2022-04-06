@@ -164,8 +164,39 @@
                                                        { "id", @p.Product.Id }
                                                     };
                                             }
+                                        <abp-row>
                                             
-                                        <a class="btn btn-primary" href="/periodreports/edit/@Model.Id/programs/@p.Program.Id/products/@p.Product.Id">Edit</a>
+                                                @if(!Model.IsReadonly)
+                                                {
+                                            <abp-column size-md="_4">
+
+
+                                                    <a href="/periodreports/edit/@Model.Id/programs/@p.Program.Id/products/@p.Product.Id" 
+                                                                    class="btn-edit-product btn-sm btn btn-warning" type="button" data-busy-text="Processing..."
+                                                                    data-toggle="tooltip" data-placement="top" title="Edit Product Information"
+                                                                    >
+                                                                    <i class="fa fa-pencil"></i>
+                                                    </a>
+                                                    </abp-column>
+                                                    <abp-column size-md="_4">
+                                                    <abp-button data-product-id="@p.Product.Id" data-program-id="@p.Program.Id" data-period-report-id="@Model.Id"
+                                                                                class="btn-remove-product btn-sm @(Model.IsReadonly ? "disabled" : "")"
+                                                                                icon="minus"
+                                                                                text=""
+                                                                                data-toggle="tooltip" data-placement="top" title="Delete Stock Information"
+                                                                                button-type="Danger"/>
+                                                                                </abp-column>
+                                                    <abp-column size-md="_2">
+                                                    </abp-column>
+                                            }
+                                            else
+                                            {
+                                                <abp-column>
+                                                <a class="btn btn-primary btn-sm" href="/periodreports/edit/@Model.Id/programs/@p.Program.Id/products/@p.Product.Id">View</a>
+                                        </abp-column>
+                                            }
+                                        </abp-row>    
+                                        
                                         </td>
                                         
                                     </tr>

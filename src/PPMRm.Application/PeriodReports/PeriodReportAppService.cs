@@ -344,5 +344,14 @@ namespace PPMRm.PeriodReports
             if (productShipment == null) throw new BusinessException("The specified shipment was not found!");
             return ObjectMapper.Map<ProductShipment, CreateUpdateShipmentDto>(productShipment);
         }
+
+        async public Task DeleteProgramProductAsync(string id, int programId, string productId)
+        {
+            var queryable = await PeriodReportRepository.WithDetailsAsync(r => r.ProductStocks);
+            var periodReport = await AsyncExecuter.SingleOrDefaultAsync(queryable.Where(p => p.Id == id));
+            if (periodReport == null) throw new BusinessException("Invalid period report");
+            periodReport.RemoveProgramProduct(programId, productId);
+            await PeriodReportRepository.UpdateAsync(periodReport);
+        }
     }
 }
