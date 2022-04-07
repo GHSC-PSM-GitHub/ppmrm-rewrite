@@ -87,10 +87,13 @@ namespace PPMRm.PeriodReports
             var periodReport = result.PeriodReport;
             var programs = await ProgramRepository.ToListAsync();
 
-            var defaultProgramProductIds = result.Country.Products.Select(c => new { ProgramId = periodReport.GetPMIProgramId(), ProductId = c.ProductId });
+            var countryProgramProducts = from product in result.Country.Products
+                                         from programId in periodReport.GetDefaultProgramIds()
+                                         select new { ProgramId = programId, ProductId = product.ProductId };
+
             var programProductIds = periodReport.ProductShipments.GroupBy(s => new { s.ProgramId, s.ProductId }).Select(i => (i.Key.ProgramId, i.Key.ProductId))
                                                .Concat(periodReport.ProductStocks.Select(x => (x.ProgramId, x.ProductId)))
-                                               .Concat(defaultProgramProductIds.Select(x => (x.ProgramId, x.ProductId)))
+                                               .Concat(countryProgramProducts.Select(x => (x.ProgramId, x.ProductId)))
                                                .GroupBy(i => new { i.ProgramId, i.ProductId }).Select(p => (p.Key.ProgramId, p.Key.ProductId));
             
             var products = await AsyncExecuter.ToListAsync(productsQueryable.Where(p => programProductIds.Select(i => i.ProductId).Distinct().Contains(p.Id)));
