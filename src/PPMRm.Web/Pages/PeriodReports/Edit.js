@@ -193,10 +193,24 @@
         var amc = $("#Product_AMC").val();
         if (amc != 0) {
             var mos = soh / amc;
-            $('#Product_MOS').val(mos.toFixed(2));
+            $('#Product_MOS').val(mos.toFixed(1));
+            var shipmentMos = $(".shipment-mos");
+            $.each(shipmentMos, function (index, element) {
+                var row = $(this).closest("tr");
+                var qty = parseInt(row.find(".shipment-qty").val());
+                var sMos = qty / amc;
+                $(this).val(sMos.toFixed(1));
+            });
+            
         }
-        else
+        else {
             $("#Product_MOS").val(0);
+            var shipmentMos = $(".shipment-mos");
+            $.each(shipmentMos, function (index, element) {
+                $(this).val("");
+            });
+        }
+            
     }
 
     function toggleSourceOfConsumption() {

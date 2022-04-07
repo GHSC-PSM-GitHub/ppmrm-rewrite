@@ -68,8 +68,8 @@
         <tr>
             <td>@s.Supplier</td>
             <td>@s.ShipmentDate?.ToString(PeriodReportConsts.DataFormatting.DateFormat) @s.ShipmentDateType</td>
-            <td>@s.Quantity.ToString(PeriodReportConsts.DataFormatting.SOH_AMC_Format)</td>
-            <td>@s.MOS?.ToString(PeriodReportConsts.DataFormatting.MOS_Format)</td>
+            <td><input type="hidden" class="shipment-qty" value="@s.Quantity" /><span>@s.Quantity.ToString(PeriodReportConsts.DataFormatting.SOH_AMC_Format)</span></td>
+            <td><input type="text" class="shipment-mos" value="@s.MOS?.ToString(PeriodReportConsts.DataFormatting.MOS_Format)" disabled /></td>
             <td>@s.DataSource</td>
             <td>
             <abp-row>
