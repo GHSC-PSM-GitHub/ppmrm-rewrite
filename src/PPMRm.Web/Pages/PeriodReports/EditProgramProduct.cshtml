@@ -28,7 +28,7 @@
                     @if(!Model.IsReadonly)
     {
     <div class="text-right">
-        <button type="button" id="btn-save-program-product" class="btn btn-primary" data-busy-text="Processing..."><i class="fa fa-save"></i>&nbsp;<span>Save</span></button>
+        <button type="button" class="btn btn-primary btn-save-program-product" data-busy-text="Processing..."><i class="fa fa-save"></i>&nbsp;<span>Save</span></button>
     </div>
     }
                 </abp-column>
@@ -125,4 +125,12 @@
 </tfoot>
 </abp-table>
     </abp-card-body>
+    <abp-card-footer>
+         @if(!Model.IsReadonly)
+    {
+    <div class="text-right">
+        <button type="button" class="btn btn-primary btn-save-program-product" data-busy-text="Processing..."><i class="fa fa-save"></i>&nbsp;<span>Save</span></button>
+    </div>
+    }
+    </abp-card-footer>
 </abp-card>

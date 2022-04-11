@@ -26,7 +26,7 @@
     var editProductShipmentModal = new abp.ModalManager(abp.appPath + 'PeriodReports/EditShipmentModal');
     var csModal = new abp.ModalManager(abp.appPath + 'PeriodReports/CSModal');
 
-    $("#btn-save-program-product").click(function () {
+    $(".btn-save-program-product").click(function () {
         $("#frm-program-product").submit();
     });
 
