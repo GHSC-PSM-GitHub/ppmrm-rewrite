@@ -21,7 +21,9 @@
         modalClass: 'ProductInfo' //Matches to the abp.modals.ProductInfo
     });
     var addShipmentModal = new abp.ModalManager(abp.appPath + 'PeriodReports/AddShipmentModal');
+    var addProductShipmentModal = new abp.ModalManager(abp.appPath + 'PeriodReports/AddShipmentModal');
     var editShipmentModal = new abp.ModalManager(abp.appPath + 'PeriodReports/EditShipmentModal');
+    var editProductShipmentModal = new abp.ModalManager(abp.appPath + 'PeriodReports/EditShipmentModal');
     var csModal = new abp.ModalManager(abp.appPath + 'PeriodReports/CSModal');
 
     $("#btn-save-program-product").click(function () {
@@ -37,8 +39,19 @@
         };
         addShipmentModal.open(params);
     });
+     // Add shipment from EditProgramProduct
+    $("table .btn-add-product-shipment").on("click", function (e) {
+        e.preventDefault();
+        var params = {
+            id: $(this).data('product-id'),
+            periodReportId: $(this).data('period-report-id'),
+            programId: $(this).data('program-id')
+        };
+        addProductShipmentModal.open(params);
+    });
+   
 
-    $('.btn-edit-shipment').click(function (e) {
+    $("table").on("click", ".btn-edit-shipment", function (e) {
         e.preventDefault();
         var params = {
             id: $(this).data('product-id'),
@@ -49,11 +62,24 @@
         editShipmentModal.open(params);
     });
 
+    $("table").on("click", ".btn-edit-product-shipment", function (e) {
+        e.preventDefault();
+        var params = {
+            id: $(this).data('product-id'),
+            periodReportId: $(this).data('period-report-id'),
+            programId: $(this).data('program-id'),
+            shipmentId: $(this).data('shipment-id')
+        };
+        editProductShipmentModal.open(params);
+    });
+
     $("#edit-cs-updates").click(function (e) {
         e.preventDefault();
         var params = { id: $(this).data('id') };
         csModal.open(params);
     });
+
+    
 
     $(".btn-add-program-product").click(function (e) {
         e.preventDefault();
@@ -86,8 +112,21 @@
         location.reload();
     });
 
+    addProductShipmentModal.onResult(function () {
+        $("#tbodyShipments").load(location.href + " #tbodyShipments>*", function () {
+            // Hack set AMC again
+            $("#Product_AMC").trigger("change");
+        });
+    });
+
     editShipmentModal.onResult(function () {
         location.reload();
+    });
+
+    editProductShipmentModal.onResult(function () {
+        $("#tbodyShipments").load(location.href + " #tbodyShipments>*", function () {
+            $("#Product_AMC").trigger("change");
+        });
     });
 
     $(".btn-report-status").click(function (e) {
@@ -152,7 +191,7 @@
             });
     });
 
-    $(".btn-remove-shipment").click(function (e) {
+    $("table").on("click", ".btn-remove-shipment", function (e) {
         e.preventDefault();
         var shipmentId = $(this).data('id');
         var id = $(this).data('period-report-id');
@@ -163,6 +202,25 @@
                         .then(function () {
                             abp.message.success('Shipment successfully deleted!').then(function () {
                                 location.reload();
+                            });
+                        });
+                }
+            });
+    });
+
+    $("table").on("click", ".btn-remove-product-shipment", function (e) {
+        e.preventDefault();
+        var shipmentId = $(this).data('id');
+        var id = $(this).data('period-report-id');
+        abp.message.confirm('Are you sure to delete this Shipment? This action is irreversible.')
+            .then(function (confirmed) {
+                if (confirmed) {
+                    pPMRm.periodReports.periodReport.deleteShipment(id, shipmentId)
+                        .then(function () {
+                            abp.message.success('Shipment successfully deleted!').then(function () {
+                                $("#tbodyShipments").load(location.href + " #tbodyShipments>*", function () {
+                                    $("#Product_AMC").trigger("change");
+                                });
                             });
                         });
                 }
@@ -189,12 +247,13 @@
     });
 
     function compute() {
+        console.log("Executing compute");
         var soh = $("#Product_SOH").val();
         var amc = $("#Product_AMC").val();
         if (amc != 0) {
             var mos = soh / amc;
             $('#Product_MOS').val(mos.toFixed(1));
-            var shipmentMos = $(".shipment-mos");
+            var shipmentMos = $("#tbodyShipments tr td .shipment-mos");
             $.each(shipmentMos, function (index, element) {
                 var row = $(this).closest("tr");
                 var qty = parseInt(row.find(".shipment-qty").val());
@@ -205,7 +264,7 @@
         }
         else {
             $("#Product_MOS").val(0);
-            var shipmentMos = $(".shipment-mos");
+            var shipmentMos = $("#tbodyShipments tr td .shipment-mos");
             $.each(shipmentMos, function (index, element) {
                 $(this).val("");
             });
