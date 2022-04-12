@@ -10,6 +10,7 @@ namespace PPMRm.ARTMIS
         public const string DateTimeFormat = "yyyyMMddHHmmss";
         public const int TimestampLength = 14;
         public const int ProductIdLength = 12;
+        public const int PeriodIdLength = 6;
 
         public const string ChangeIndicator = "CHANGE_IND";
         public const string EnterpriseCode = "ENTERPRISE_CODE";
@@ -106,5 +107,51 @@ namespace PPMRm.ARTMIS
             public const string RevisedAgreedDeliveryDate = "RaDD";
             public const string ActualDeliveryDate = "AcDD";
         }
+
+        public static readonly IReadOnlyDictionary<string, string> PPMRmProductMappings = new Dictionary<string, string>()
+        {
+            {"100076AAK08VP", "AL6x1-20" },
+            {"100076AAA08WP", "AL6x1-20"},
+            {"100076AAK08WP", "AL6x1-20"},
+            {"100077AAA08VP", "AL6x1-80"},
+            {"100076AAA08XP", "AL6x2-20"},
+            {"100076AAK09DP", "AL6x2-20"},
+            {"100076AAK08XP", "AL6x2-20"},
+            {"100076AAA08YP", "AL6x3-20"},
+            {"100076AAA08ZP", "AL6x4-20"},
+            {"103199FPA05PP", "AS-INJ-30"},
+            {"100097FPA05PP", "AS-INJ-60"},
+            {"103347FPA05PP", "AS-INJ-60"},
+            {"101206HLA0EYP", "AS-SUP-100"},
+            {"101206HLA06AP", "AS-SUP-100"},
+            {"100078HLA06AP", "AS-SUP-200"},
+            {"100079HLA06AP", "AS-SUP-50"},
+            {"100073AAA08UP", "ASAQ3-100"},
+            {"100074AAA08UP", "ASAQ3-25"},
+            {"100075AAA08UP", "ASAQ3-50"},
+            {"100073AAA09AP", "ASAQ6-100"},
+            {"100091AAA08AP", "PQ-15"},
+            {"100092AAA08AP", "PQ-7_5"},
+            {"100092AAA02IP", "PQ-7_5"},
+            {"100068XYB08DP", "RDT"},
+            {"100062XXC08DP", "RDT"},
+            {"100066XXC08DP", "RDT"},
+            {"100062XXC0GJP", "RDT"},
+            {"100068XXC08TP", "RDT"},
+            {"106131XXC08DP", "RDT"},
+            {"100066XXC0GJP", "RDT"},
+            {"105284XXC08DP", "RDT"},
+            {"100068XXC08DP", "RDT"},
+            {"100068XXC0GJP", "RDT"},
+            {"100064XXC08DP", "RDT"},
+            {"100063XXC08DP", "RDT"},
+            {"100066XXC08EP", "RDT"},
+            {"100041AAA0JSP", "SP"},
+            {"100041AAA0G9P", "SP"},
+            {"100041AAA08AP", "SP"},
+            {"100041AAA07SP", "SP"},
+            {"100041AAA07NP", "SP"},
+
+        };
     }
 }

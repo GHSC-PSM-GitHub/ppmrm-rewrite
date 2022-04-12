@@ -8,7 +8,8 @@ namespace PPMRm.DbMigrator
     [DependsOn(
         typeof(AbpAutofacModule),
         typeof(PPMRmEntityFrameworkCoreModule),
-        typeof(PPMRmApplicationContractsModule)
+        typeof(PPMRmApplicationContractsModule),
+        typeof(PPMRmMartenModule)
         )]
     public class PPMRmDbMigratorModule : AbpModule
     {

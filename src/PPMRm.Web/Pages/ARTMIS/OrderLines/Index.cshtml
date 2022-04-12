@@ -1,0 +1,30 @@
+﻿@page
+@model PPMRm.Web.Pages.ARTMIS.OrderLines.IndexModel
+@{
+}
+@section scripts
+{
+    <abp-script src="/js/moment-with-locales.min.js" />
+    <abp-script src="/Pages/ARTMIS/OrderLines/Index.js" />
+    <abp-script src="/js/bootstrap-multiselect.min.js" />
+    <abp-script src="/js/dataTables.buttons.min.js" />
+}
+<div class="jumbotron jumbotron-fluid">
+    <div class="container">
+        <h3 class="display-4">ARTMIS Shipments</h3>
+        <p class="lead">Snapshot: @(Model.SnapshotTimestamp?.ToString("dd-MMMM-yyyy"))</p>
+    </div>
+</div>
+<abp-card>
+    <abp-card-header>
+       <abp-row>
+                <abp-column size-md="_6">
+         <abp-select asp-for="@Model.SelectedCountries" asp-items="@Model.Countries" />
+                </abp-column>
+                <abp-column size-md="_6" class="text-right">
+         <abp-select asp-for="@Model.SelectedProducts" asp-items="@Model.Products" />
+                </abp-column>
+            </abp-row>
+    </abp-card-header>
+</abp-card>
+<abp-table class="table-striped table-bordered .w-auto small" id="OrderLinesTable"></abp-table>

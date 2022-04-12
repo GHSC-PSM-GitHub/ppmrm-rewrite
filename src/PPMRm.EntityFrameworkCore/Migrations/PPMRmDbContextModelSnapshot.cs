@@ -18,7 +18,7 @@ namespace PPMRm.Migrations
             modelBuilder
                 .HasAnnotation("_Abp_DatabaseProvider", EfCoreDatabaseProvider.PostgreSql)
                 .HasAnnotation("Relational:MaxIdentifierLength", 63)
-                .HasAnnotation("ProductVersion", "5.0.13")
+                .HasAnnotation("ProductVersion", "5.0.15")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
             modelBuilder.Entity("PPMRm.Core.Country", b =>
@@ -45,6 +45,9 @@ namespace PPMRm.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("CreatorId");
 
+                    b.Property<int>("DefaultProgramId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("ExtraProperties")
                         .HasColumnType("text")
                         .HasColumnName("ExtraProperties");
@@ -62,6 +65,12 @@ namespace PPMRm.Migrations
                     b.Property<Guid?>("LastModifierId")
                         .HasColumnType("uuid")
                         .HasColumnName("LastModifierId");
+
+                    b.Property<decimal>("MaxStock")
+                        .HasColumnType("numeric");
+
+                    b.Property<decimal>("MinStock")
+                        .HasColumnType("numeric");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -82,10 +91,46 @@ namespace PPMRm.Migrations
                     b.HasIndex("ARTMISName")
                         .IsUnique();
 
+                    b.HasIndex("DefaultProgramId");
+
                     b.HasIndex("Name")
                         .IsUnique();
 
                     b.ToTable("AppCountries");
+                });
+
+            modelBuilder.Entity("PPMRm.Core.CountryProduct", b =>
+                {
+                    b.Property<string>("CountryId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProductId")
+                        .HasColumnType("text");
+
+                    b.HasKey("CountryId", "ProductId");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("CountryId", "ProductId");
+
+                    b.ToTable("AppCountryProducs");
+                });
+
+            modelBuilder.Entity("PPMRm.Core.CountryProgram", b =>
+                {
+                    b.Property<string>("CountryId")
+                        .HasColumnType("text");
+
+                    b.Property<int>("ProgramId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("CountryId", "ProgramId");
+
+                    b.HasIndex("ProgramId");
+
+                    b.HasIndex("CountryId", "ProgramId");
+
+                    b.ToTable("AppCountryPrograms");
                 });
 
             modelBuilder.Entity("PPMRm.Core.Period", b =>
@@ -128,73 +173,12 @@ namespace PPMRm.Migrations
                     b.ToTable("AppPeriods");
                 });
 
-            modelBuilder.Entity("PPMRm.Core.Product", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
-
-                    b.Property<string>("BaseUnit")
-                        .HasColumnType("text");
-
-                    b.Property<decimal>("BaseUnitMultiplier")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("numeric")
-                        .HasDefaultValue(1m);
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasMaxLength(40)
-                        .HasColumnType("character varying(40)")
-                        .HasColumnName("ConcurrencyStamp");
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("CreationTime");
-
-                    b.Property<Guid?>("CreatorId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("CreatorId");
-
-                    b.Property<string>("DisplayName")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("character varying(128)");
-
-                    b.Property<string>("ExtraProperties")
-                        .HasColumnType("text")
-                        .HasColumnName("ExtraProperties");
-
-                    b.Property<bool>("IsDeleted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false)
-                        .HasColumnName("IsDeleted");
-
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("LastModificationTime");
-
-                    b.Property<Guid?>("LastModifierId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("LastModifierId");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("character varying(128)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.ToTable("AppProducts");
-                });
-
             modelBuilder.Entity("PPMRm.Core.Program", b =>
                 {
                     b.Property<int>("Id")
-                        .HasColumnType("integer");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -239,6 +223,179 @@ namespace PPMRm.Migrations
                         .IsUnique();
 
                     b.ToTable("AppPrograms");
+                });
+
+            modelBuilder.Entity("PPMRm.PeriodReports.PeriodReport", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)")
+                        .HasColumnName("ConcurrencyStamp");
+
+                    b.Property<string>("CountryId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ExtraProperties")
+                        .HasColumnType("text")
+                        .HasColumnName("ExtraProperties");
+
+                    b.Property<int>("PeriodId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("ReportStatus")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PeriodId");
+
+                    b.HasIndex("CountryId", "PeriodId")
+                        .IsUnique();
+
+                    b.ToTable("AppPeriodReports");
+                });
+
+            modelBuilder.Entity("PPMRm.PeriodReports.ProductShipment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("DataSource")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ItemId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PeriodReportId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProductId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("ProgramId")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("Quantity")
+                        .HasColumnType("numeric");
+
+                    b.Property<DateTime?>("ShipmentDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("ShipmentDateType")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Supplier")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PeriodReportId");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("ProgramId");
+
+                    b.ToTable("AppProductShipments");
+                });
+
+            modelBuilder.Entity("PPMRm.PeriodReports.ProductStock", b =>
+                {
+                    b.Property<string>("PeriodReportId")
+                        .HasColumnType("text");
+
+                    b.Property<int>("ProgramId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ProductId")
+                        .HasColumnType("text");
+
+                    b.Property<decimal?>("AMC")
+                        .HasColumnType("numeric");
+
+                    b.Property<string>("ActionRecommended")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("CreationTime");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("CreatorId");
+
+                    b.Property<DateTime?>("DateActionNeededBy")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime?>("DateOfSOH")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<Guid?>("LastModifierId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("LastModifierId");
+
+                    b.Property<string>("OtherSourceOfConsumption")
+                        .HasColumnType("text");
+
+                    b.Property<decimal>("SOH")
+                        .HasColumnType("numeric");
+
+                    b.Property<int?>("SOHLevels")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("SourceOfConsumption")
+                        .HasColumnType("integer");
+
+                    b.HasKey("PeriodReportId", "ProgramId", "ProductId");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("ProgramId");
+
+                    b.ToTable("AppProductStocks");
+                });
+
+            modelBuilder.Entity("PPMRm.Products.Product", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)")
+                        .HasColumnName("ConcurrencyStamp");
+
+                    b.Property<string>("ExtraProperties")
+                        .HasColumnType("text")
+                        .HasColumnName("ExtraProperties");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("IsDeleted");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<int>("TracerCategory")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("Volo.Abp.AuditLogging.AuditLog", b =>
@@ -2440,6 +2597,139 @@ namespace PPMRm.Migrations
                     b.ToTable("CmsUsers");
                 });
 
+            modelBuilder.Entity("PPMRm.Core.Country", b =>
+                {
+                    b.HasOne("PPMRm.Core.Program", null)
+                        .WithMany()
+                        .HasForeignKey("DefaultProgramId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PPMRm.Core.CountryProduct", b =>
+                {
+                    b.HasOne("PPMRm.Core.Country", null)
+                        .WithMany("Products")
+                        .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PPMRm.Products.Product", null)
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PPMRm.Core.CountryProgram", b =>
+                {
+                    b.HasOne("PPMRm.Core.Country", null)
+                        .WithMany("Programs")
+                        .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PPMRm.Core.Program", null)
+                        .WithMany()
+                        .HasForeignKey("ProgramId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PPMRm.PeriodReports.PeriodReport", b =>
+                {
+                    b.HasOne("PPMRm.Core.Country", null)
+                        .WithMany()
+                        .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PPMRm.Core.Period", null)
+                        .WithMany()
+                        .HasForeignKey("PeriodId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsOne("PPMRm.PeriodReports.CommoditySecurityUpdates", "CommoditySecurityUpdates", b1 =>
+                        {
+                            b1.Property<string>("PeriodReportId")
+                                .HasColumnType("text");
+
+                            b1.Property<string>("ForecastingAndSupplyPlanning")
+                                .HasColumnType("text");
+
+                            b1.Property<string>("GovernanceAndFinancing")
+                                .HasColumnType("text");
+
+                            b1.Property<string>("HumanResourcesCapacityDevelopmentAndTraining")
+                                .HasColumnType("text");
+
+                            b1.Property<string>("LogisticsManagementInformationSystem")
+                                .HasColumnType("text");
+
+                            b1.Property<string>("ProcurementProductInformationAndRegistration")
+                                .HasColumnType("text");
+
+                            b1.Property<string>("ProductStockLevelsInformation")
+                                .HasColumnType("text");
+
+                            b1.Property<string>("SupplyChainCommitteePolicyAndDonorCoordination")
+                                .HasColumnType("text");
+
+                            b1.Property<string>("WarehousingAndDistribution")
+                                .HasColumnType("text");
+
+                            b1.HasKey("PeriodReportId");
+
+                            b1.ToTable("AppPeriodReports");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PeriodReportId");
+                        });
+
+                    b.Navigation("CommoditySecurityUpdates");
+                });
+
+            modelBuilder.Entity("PPMRm.PeriodReports.ProductShipment", b =>
+                {
+                    b.HasOne("PPMRm.PeriodReports.PeriodReport", null)
+                        .WithMany("ProductShipments")
+                        .HasForeignKey("PeriodReportId");
+
+                    b.HasOne("PPMRm.Products.Product", null)
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PPMRm.Core.Program", null)
+                        .WithMany()
+                        .HasForeignKey("ProgramId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PPMRm.PeriodReports.ProductStock", b =>
+                {
+                    b.HasOne("PPMRm.PeriodReports.PeriodReport", null)
+                        .WithMany("ProductStocks")
+                        .HasForeignKey("PeriodReportId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PPMRm.Products.Product", null)
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PPMRm.Core.Program", null)
+                        .WithMany()
+                        .HasForeignKey("ProgramId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Volo.Abp.AuditLogging.AuditLogAction", b =>
                 {
                     b.HasOne("Volo.Abp.AuditLogging.AuditLog", null)
@@ -2724,6 +3014,20 @@ namespace PPMRm.Migrations
                         .HasForeignKey("TenantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("PPMRm.Core.Country", b =>
+                {
+                    b.Navigation("Products");
+
+                    b.Navigation("Programs");
+                });
+
+            modelBuilder.Entity("PPMRm.PeriodReports.PeriodReport", b =>
+                {
+                    b.Navigation("ProductShipments");
+
+                    b.Navigation("ProductStocks");
                 });
 
             modelBuilder.Entity("Volo.Abp.AuditLogging.AuditLog", b =>

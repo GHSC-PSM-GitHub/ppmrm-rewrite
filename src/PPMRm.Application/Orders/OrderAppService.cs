@@ -41,7 +41,7 @@ namespace PPMRm.Orders
         async public Task<PagedResultDto<OrderDto>> GetListAsync(GetOrdersDto input)
         {
             using var session = DocumentStore.LightweightSession();
-            var products = await session.Query<Items.Item>().ToListAsync();
+            var products = await session.Query<Items.Item>().Where(i => i.ProductId != null).ToListAsync();
             var pIds = products.Select(p => p.Id).ToList();
             if (input?.Products?.Any() ?? false)
                 pIds = pIds.Where(p => input.Products.Contains(p)).ToList();
@@ -55,8 +55,9 @@ namespace PPMRm.Orders
             var result = ObjectMapper.Map<List<ARTMIS.Orders.Order>, List<OrderDto>>(items.ToList());
             foreach (var o in result)
             {
+                o.Lines.RemoveAll(l => !pIds.Contains(l.ProductId));
                 foreach (var l in o.Lines)
-                {
+                {                   
                     l.Item = ObjectMapper.Map<Items.Item, Items.ItemDto>(products.SingleOrDefault(i => i.Id == l.ProductId));
                     l.RequestedDeliveryDate = l.RequestedDeliveryDate;
                     l.EstimatedDeliveryDate = l.EstimatedDeliveryDate;

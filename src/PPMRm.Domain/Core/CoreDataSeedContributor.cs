@@ -11,14 +11,12 @@ namespace PPMRm.Core
 {
     public class CoreDataSeedContributor : IDataSeedContributor, ITransientDependency
     {
-        private IRepository<Product, string> ProductRepository { get; }
         private IRepository<Country, string> CountryRepository { get; }
-        private IRepository<Program, Programs> ProgramRepository { get; }
+        private IRepository<Program, int> ProgramRepository { get; }
         private IRepository<Period, int> PeriodRepository { get; }
 
-        public CoreDataSeedContributor(IRepository<Product, string> productRepository, IRepository<Country, string> countryRepository, IRepository<Program, Programs> programRepository, IRepository<Period, int> periodRepository)
+        public CoreDataSeedContributor(IRepository<Country, string> countryRepository, IRepository<Program, int> programRepository, IRepository<Period, int> periodRepository)
         {
-            ProductRepository = productRepository;
             CountryRepository = countryRepository;
             ProgramRepository = programRepository;
             PeriodRepository = periodRepository;
@@ -27,11 +25,6 @@ namespace PPMRm.Core
         [UnitOfWork]
         public async Task SeedAsync(DataSeedContext context)
         {
-            if(await ProductRepository.GetCountAsync() <= 0)
-            {
-
-            }
-
             if(await CountryRepository.GetCountAsync() <= 0)
             {
                 var countries = List.Where(c => c.IsDeleted == false);
@@ -106,7 +99,7 @@ namespace PPMRm.Core
             new Country("Brunei Darussalam", "BN", "BRN", "096"){ IsDeleted = true },
             new Country("Bulgaria", "BG", "BGR", "100"){ IsDeleted = true },
             new Country("Burkina Faso", "BF", "BFA", "854"),
-            new Country("Burundi", "BI", "BDI", "108"),
+            new Country("Burundi", "BI", "BDI", "108"){ IsDeleted = true },
             new Country("Cabo Verde", "CV", "CPV", "132"){ IsDeleted = true },
             new Country("Cambodia", "KH", "KHM", "116"),
             new Country("Cameroon", "CM", "CMR", "120"),
@@ -222,7 +215,7 @@ namespace PPMRm.Core
             new Country("Montserrat", "MS", "MSR", "500"){ IsDeleted = true },
             new Country("Morocco", "MA", "MAR", "504"){ IsDeleted = true },
             new Country("Mozambique", "MZ", "MOZ", "508"),
-            new Country("Myanmar", "MM", "MMR", "104"),
+            new Country("Myanmar", "MM", "MMR", "104"){DefaultProgramId = (int)Programs.CAPMalaria},
             new Country("Namibia", "NA", "NAM", "516"){ IsDeleted = true },
             new Country("Nauru", "NR", "NRU", "520"){ IsDeleted = true },
             new Country("Nepal", "NP", "NPL", "524"){ IsDeleted = true },
@@ -301,7 +294,7 @@ namespace PPMRm.Core
             new Country("Turkmenistan", "TM", "TKM", "795"){ IsDeleted = true },
             new Country("Turks and Caicos Islands", "TC", "TCA", "796"){ IsDeleted = true },
             new Country("Tuvalu", "TV", "TUV", "798"){ IsDeleted = true },
-            new Country("Uganda", "UG", "UGA", "800"),
+            new Country("Uganda", "UG", "UGA", "800"){DefaultProgramId = (int)Programs.PNFP},
             new Country("Ukraine", "UA", "UKR", "804"){ IsDeleted = true },
             new Country("United Arab Emirates", "AE", "ARE", "784"){ IsDeleted = true },
             new Country("United Kingdom of Great Britain and Northern Ireland", "GB", "GBR", "826"){ IsDeleted = true },

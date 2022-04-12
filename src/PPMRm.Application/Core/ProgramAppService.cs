@@ -8,12 +8,12 @@ namespace PPMRm.Core
     public class ProgramAppService : CrudAppService<
             Program,
             ProgramDto,
-            Programs, //Primary key 
+            int, //Primary key 
             PagedAndSortedResultRequestDto,
             ProgramDto>,
         IProgramAppService
     {
-        public ProgramAppService(IRepository<Program, Programs> repository) : base(repository)
+        public ProgramAppService(IRepository<Program, int> repository) : base(repository)
         {
         }
     }

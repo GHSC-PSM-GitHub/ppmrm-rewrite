@@ -1,1 +1,12 @@
 ﻿/* Your Global Styles */
+button.multiselect {
+    background-color: #ffffff;
+    border: 1px solid #ced4da;
+    height: calc(1.5em + 0.75rem + 2px);
+    color: #49504E;
+    border-radius: 0.25rem;
+}
+.jumbotron {
+    padding-top:0.85rem;
+    padding-bottom:0.85rem;
+}

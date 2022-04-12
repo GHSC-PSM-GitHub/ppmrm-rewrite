@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Volo.Abp;
 using Volo.Abp.Domain.Entities.Auditing;
 
@@ -24,7 +26,15 @@ namespace PPMRm.Core
         public string ThreeLetterCode { get; private set; }
         public string NumericCode { get; private set; }
         public string ARTMISName { get; set; }
+        public decimal MinStock { get; set; }
+        public decimal MaxStock { get; set; }
+        public int DefaultProgramId { get; set; }
+
+        public ICollection<CountryProduct> Products { get; private set; }
+        public ICollection<CountryProgram> Programs { get; private set; }
         public bool IsDeleted { get; set; }
+
+        private Country() { }
 
         internal Country(string name, string twoLetterCode, string threeLetterCode, string numericCode) : base(threeLetterCode)
         {
@@ -33,8 +43,55 @@ namespace PPMRm.Core
             ThreeLetterCode = threeLetterCode;
             NumericCode = numericCode;
             ARTMISName = name;
+            UpdateMinMax(PeriodReports.PeriodReportConsts.MOS.Min, PeriodReports.PeriodReportConsts.MOS.Max);
+            DefaultProgramId = (int)Core.Programs.NationalMalariaProgram;
+            Products = new List<CountryProduct>();
+            Programs = new List<CountryProgram>();
         }
 
+        internal Country(string name, string twoLetterCode, string threeLetterCode, string numericCode, List<int> programIds) : this(name, twoLetterCode, threeLetterCode, numericCode)
+        {
+            Check.NotNull(programIds, nameof(programIds));
+            programIds.ForEach(p => AddProgram(p));
+        }
+
+        public void AddProgram(int programId)
+        {
+            if (!Programs.Any(p => p.ProgramId == programId)) Programs.Add(new CountryProgram(countryId: Id, programId: programId));
+        }
+        public void UpdateMinMax(decimal minStock, decimal maxStock)
+        {
+            MinStock = minStock;
+            MaxStock = maxStock;
+        }
+
+        public void AddProduct(string productId)
+        {
+            Check.NotNull(productId, nameof(productId));
+            if (HasProduct(productId)) { return; }
+            Products.Add(new CountryProduct(countryId: Id, productId: productId));
+        }
+
+        public void RemoveProduct(string productId)
+        {
+            Check.NotNull(productId, nameof(productId));
+            Products.RemoveAll(p => p.ProductId == productId);
+        }
+
+        public void RemoveAllExceptGivenIds(List<string> productIds)
+        {
+            Check.NotNull(productIds, nameof(productIds));
+            Products.RemoveAll(x => !productIds.Contains(x.ProductId));
+        }
+
+        public void UpdateProducts(List<string> productIds)
+        {
+            Check.NotNull(productIds, nameof(productIds));
+            var idsToAdd = productIds.Where(p => !Products.Any(cp => cp.ProductId == p)).ToList();
+            RemoveAllExceptGivenIds(productIds);
+            idsToAdd.ForEach(id => Products.Add(new CountryProduct(Id, id)));
+        }
+        private bool HasProduct(string productId) => Products.Any(x => x.ProductId == productId);
         
     }
 }

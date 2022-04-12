@@ -36,7 +36,39 @@ namespace PPMRm.Web.Menus
                 )
             );
 
-            if (await context.IsGrantedAsync(PPMRmConsts.Permissions.DataReviewer))
+            if (await context.IsGrantedAsync(PPMRmConsts.Permissions.DataReviewer) || await context.IsGrantedAsync(PPMRmConsts.Permissions.DataProvider))
+            {
+                context.Menu.AddItem(
+                    new ApplicationMenuItem(
+                        "DataEntry",
+                       "Data Entry (Period Reports)",
+                        icon: "fa fa-order"
+                        ).AddItem(
+                            new ApplicationMenuItem(
+                                "ProductData",
+                                "Enter/View Period Reports",
+                                url: "/periodreports"
+                            )
+                        ).AddItem(
+                            new ApplicationMenuItem(
+                                "DownloadForm",
+                                "Download Data Entry Form",
+                                url: "/periodreports"
+                            )
+                        ).AddItem(
+                            new ApplicationMenuItem(
+                                "CountrySettings",
+                                "Country Settings",
+                                url: "/countries"
+                            )
+                        )
+                );
+
+                
+
+                
+            }
+            if(await context.IsGrantedAsync(PPMRmConsts.Permissions.DataReviewer))
             {
                 context.Menu.AddItem(
                     new ApplicationMenuItem(
@@ -53,7 +85,7 @@ namespace PPMRm.Web.Menus
                             new ApplicationMenuItem(
                                 "Orders",
                                 "Orders",
-                                url: "/orders"
+                                url: "/artmis/orderlines"
                             )
                         )
                 );
@@ -155,47 +187,47 @@ namespace PPMRm.Web.Menus
             //                )
             //            )
             //    );
-                //context.Menu.AddItem(
-                //    new ApplicationMenuItem(
-                //        "Graphs",
-                //       "Graphs",
-                //        icon: "fa fa-order"
-                //        ).AddItem(
-                //            new ApplicationMenuItem(
-                //                "Orders",
-                //                "Orders",
-                //                url: "/orders"
-                //            )
-                //        ).AddItem(
-                //            new ApplicationMenuItem(
-                //                "Shipments",
-                //                "Shipments",
-                //                url: "/shipments"
-                //            )
-                //        )
-                //);
-                //context.Menu.AddItem(
-                //    new ApplicationMenuItem(
-                //        "Reports",
-                //       "Indicator Reports",
-                //        icon: "fa fa-order"
-                //        ).AddItem(
-                //            new ApplicationMenuItem(
-                //                "Orders",
-                //                "Orders",
-                //                url: "/orders"
-                //            )
-                //        ).AddItem(
-                //            new ApplicationMenuItem(
-                //                "Shipments",
-                //                "Shipments",
-                //                url: "/shipments"
-                //            )
-                //        )
-                //);
+            //context.Menu.AddItem(
+            //    new ApplicationMenuItem(
+            //        "Graphs",
+            //       "Graphs",
+            //        icon: "fa fa-order"
+            //        ).AddItem(
+            //            new ApplicationMenuItem(
+            //                "Orders",
+            //                "Orders",
+            //                url: "/orders"
+            //            )
+            //        ).AddItem(
+            //            new ApplicationMenuItem(
+            //                "Shipments",
+            //                "Shipments",
+            //                url: "/shipments"
+            //            )
+            //        )
+            //);
+            //context.Menu.AddItem(
+            //    new ApplicationMenuItem(
+            //        "Reports",
+            //       "Indicator Reports",
+            //        icon: "fa fa-order"
+            //        ).AddItem(
+            //            new ApplicationMenuItem(
+            //                "Orders",
+            //                "Orders",
+            //                url: "/orders"
+            //            )
+            //        ).AddItem(
+            //            new ApplicationMenuItem(
+            //                "Shipments",
+            //                "Shipments",
+            //                url: "/shipments"
+            //            )
+            //        )
+            //);
             //}
 
-            if(currentUser.IsAuthenticated)
+            if (currentUser.IsAuthenticated)
             {
                 //context.Menu.AddItem(new ApplicationMenuItem(
                 //    "Help",

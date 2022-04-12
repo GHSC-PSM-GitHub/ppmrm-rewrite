@@ -16,6 +16,9 @@ using Volo.Abp.BlobStoring.Database.EntityFrameworkCore;
 using Volo.CmsKit.EntityFrameworkCore;
 using PPMRm.Core;
 using Volo.Abp.EntityFrameworkCore.Modeling;
+using PPMRm.Products;
+using PPMRm.PeriodReports;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace PPMRm.EntityFrameworkCore
 {
@@ -59,6 +62,7 @@ namespace PPMRm.EntityFrameworkCore
         public DbSet<Country> Countries { get; set; }
         public DbSet<Program> Programs { get; set; }
         public DbSet<Period> Periods { get; set; }
+        public DbSet<PeriodReport> PeriodReports { get; set; }
 
         #endregion
 
@@ -96,15 +100,15 @@ namespace PPMRm.EntityFrameworkCore
             //    b.ConfigureByConvention(); //auto configure for the base class props
             //    //...
             //});
+            
+            // Bitwise converter to convert SOHLevelValues
+            var sohLevelConverter = new EnumToNumberConverter<SOHLevel, int>();
             builder.Entity<Product>(b =>
             {
-                b.ToTable(PPMRmConsts.DbTablePrefix + "Products",
+                b.ToTable("Products",
                     PPMRmConsts.DbSchema);
                 b.ConfigureByConvention(); //auto configure for the base class props
                 b.Property(x => x.Name).IsRequired().HasMaxLength(128);
-                b.HasIndex(x => x.Name).IsUnique();
-                b.Property(x => x.DisplayName).IsRequired().HasMaxLength(128);
-                b.Property(x => x.BaseUnitMultiplier).IsRequired().HasDefaultValue(1);
             });
 
             builder.Entity<Country>(b =>
@@ -116,6 +120,30 @@ namespace PPMRm.EntityFrameworkCore
                 b.HasIndex(x => x.Name).IsUnique();
                 b.Property(x => x.ARTMISName).IsRequired().HasMaxLength(128);
                 b.HasIndex(x => x.ARTMISName).IsUnique();
+                b.HasOne<Program>().WithMany().HasForeignKey(x => x.DefaultProgramId).IsRequired();
+                b.HasMany(x => x.Products).WithOne().HasForeignKey(x => x.CountryId).IsRequired();
+                b.HasMany(x => x.Programs).WithOne().HasForeignKey(x => x.CountryId).IsRequired();
+
+            });
+
+            builder.Entity<CountryProduct>(b =>
+            {
+                b.ToTable(PPMRmConsts.DbTablePrefix + "CountryProducs", PPMRmConsts.DbSchema);
+                b.ConfigureByConvention();
+                ;// ADD THE MAPPING FOR THE RELATION
+                b.HasOne<Product>().WithMany().HasForeignKey(x => x.ProductId).IsRequired();
+                b.HasKey(x => new{ x.CountryId, x.ProductId });
+                b.HasIndex(x => new { x.CountryId, x.ProductId});
+            });
+
+            builder.Entity<CountryProgram>(b =>
+            {
+                b.ToTable(PPMRmConsts.DbTablePrefix + "CountryPrograms", PPMRmConsts.DbSchema);
+                b.ConfigureByConvention();
+                ;// ADD THE MAPPING FOR THE RELATION
+                b.HasOne<Program>().WithMany().HasForeignKey(x => x.ProgramId).IsRequired();
+                b.HasKey(x => new { x.CountryId, x.ProgramId });
+                b.HasIndex(x => new { x.CountryId, x.ProgramId });
             });
 
             builder.Entity<Program>(b =>
@@ -134,6 +162,41 @@ namespace PPMRm.EntityFrameworkCore
                 b.ConfigureByConvention(); //auto configure for the base class props
                 b.HasIndex(x => new { x.Year, x.Month }).IsUnique();
             });
+
+            builder.Entity<PeriodReport>(b =>
+            {
+                b.ToTable(PPMRmConsts.DbTablePrefix + "PeriodReports", PPMRmConsts.DbSchema);
+                b.ConfigureByConvention();
+                b.HasIndex(x => new { x.CountryId, x.PeriodId }).IsUnique();
+                // ADD THE MAPPING FOR THE RELATION
+                b.HasMany(x => x.ProductShipments).WithOne().HasForeignKey(x => x.PeriodReportId);
+                b.HasMany(x => x.ProductStocks).WithOne().HasForeignKey(x => x.PeriodReportId);
+                b.OwnsOne(x => x.CommoditySecurityUpdates);
+                b.HasOne<Country>().WithMany().HasForeignKey(x => x.CountryId).IsRequired();
+                b.HasOne<Period>().WithMany().HasForeignKey(x => x.PeriodId).IsRequired();
+            });
+
+            builder.Entity<ProductStock>(b =>
+            {
+                b.ToTable(PPMRmConsts.DbTablePrefix + "ProductStocks", PPMRmConsts.DbSchema);
+                b.ConfigureByConvention();
+                b.HasKey(x => new { x.PeriodReportId, x.ProgramId, x.ProductId });
+                b.HasOne<Program>().WithMany().HasForeignKey(x => x.ProgramId).IsRequired();
+                b.HasOne<Product>().WithMany().HasForeignKey(x => x.ProductId).IsRequired();
+                b.Property(e => e.SOHLevels)
+                    .HasConversion(sohLevelConverter);
+            });
+
+            builder.Entity<ProductShipment>(b =>
+            {
+                b.ToTable(PPMRmConsts.DbTablePrefix + "ProductShipments", PPMRmConsts.DbSchema);
+                b.ConfigureByConvention();
+                ;// ADD THE MAPPING FOR THE RELATION
+                b.HasOne<Program>().WithMany().HasForeignKey(x => x.ProgramId).IsRequired();
+                b.HasOne<Product>().WithMany().HasForeignKey(x => x.ProductId).IsRequired();
+            });
+
+            
         }
     }
 }

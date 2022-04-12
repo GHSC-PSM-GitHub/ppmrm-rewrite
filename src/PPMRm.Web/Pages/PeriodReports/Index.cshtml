@@ -1,0 +1,50 @@
+﻿@page
+@model PPMRm.Web.Pages.PeriodReports.IndexModel
+@section styles{
+   <style type="text/css">
+    li.multiselect-item {
+        text-align: left;
+    }    
+   </style>
+}
+@section scripts
+{
+    <abp-script src="/Pages/PeriodReports/Index.js" />
+    <abp-script src="/js/bootstrap-multiselect.min.js" />
+    <abp-script src="/js/dataTables.buttons.min.js" />
+}
+
+<div class="container">
+    <div class="row">
+            
+    <h2>Period Reports</h2>
+    </div>
+</div>
+<abp-card>
+    <abp-card-header>
+        <div class="container">
+          <div class="row">
+            <div class="col">
+                <abp-select asp-for="@Model.SelectedCountries" asp-items="@Model.Countries" />
+            </div>
+            <div class="col">
+                <div class="row">
+                    <div class="col-sm-4 right"><label asp-for="@Model.SelectedYear"></label></div>
+                    <div class="col-sm-8">
+                        <abp-select suppress-label="true" asp-for="@Model.SelectedYear" asp-items="@Model.Years" />
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="row">
+                    <label class="col-sm-4 right" asp-for="@Model.SelectedMonth">Period</label>
+                     <div class="col-sm-8">
+                    <abp-select suppress-label="true" asp-for="@Model.SelectedMonth" asp-items="@Model.Months" class="col-sm-8" />
+                    </div>
+                </div>
+            </div>
+         </div>
+        </div>
+    </abp-card-header>
+</abp-card>
+<abp-table class="table-striped table-bordered .w-auto small" id="PeriodReportsTable"></abp-table>

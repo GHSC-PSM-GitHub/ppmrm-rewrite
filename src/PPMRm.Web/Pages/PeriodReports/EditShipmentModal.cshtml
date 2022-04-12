@@ -1,0 +1,18 @@
+﻿@page
+@using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Modal
+@model PPMRm.Web.Pages.PeriodReports.EditShipmentModalModel
+@{
+    Layout = null;
+}
+
+<abp-dynamic-form abp-model="Shipment" asp-page="/PeriodReports/EditShipmentModal">
+    <abp-modal size="Large" scrollable="true">
+        <abp-modal-header title="Edit Shipment"></abp-modal-header>
+        <abp-modal-body>
+            <abp-select asp-for="@Model.ProgramId" asp-items="@Model.Programs" disabled="true" />
+                
+            <abp-form-content />            
+        </abp-modal-body>
+        <abp-modal-footer buttons="@(AbpModalButtons.Cancel|AbpModalButtons.Save)"></abp-modal-footer>
+    </abp-modal>
+</abp-dynamic-form>

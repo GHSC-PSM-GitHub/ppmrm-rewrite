@@ -39,7 +39,7 @@
     }
     class Program
     {
-        public const string ConnectionString = "Host=localhost;Port=5432;Database=ppmrm_core;User ID=postgres;Password=admin;";
+        public const string ConnectionString = "Host=localhost;Port=5432;Database=ppmrm_period_reports;User ID=postgres;Password=admin;";
 
 
         static List<OrderEto> orderEvents;
@@ -48,30 +48,19 @@
 
         async static Task Main(string[] args)
         {
-            var store = DocumentStore.For(opts =>
-            {
-                opts.Connection(ConnectionString);
-                // Run the Order as an inline projection
-                opts.Projections.SelfAggregate<ARTMIS.Orders.Order>(ProjectionLifecycle.Inline);
-            });
-            // Define the cancellation token.
-            CancellationTokenSource source = new CancellationTokenSource();
-            CancellationToken cancellation = source.Token;
-            using var daemon = store.BuildProjectionDaemon();
+            //var store = new DocumentStore(new PPMRmStoreOptions(ConnectionString, null));
+            //using var session = store.OpenSession();
 
-            // Fire up everything!
-            await daemon.StartAllShards();
+            //var repo = new ARTMIS.PeriodShipments.PeriodShipmentRepository(session);
 
-            //// or instead, rebuild a single projection
-            //await daemon.RebuildProjection("a projection name", cancellation);
+            //var shipment = await repo.GetAsync("AGO", 202112);
 
-            // or a single projection by its type
-            await daemon.RebuildProjection<ARTMIS.Orders.Order>(cancellation);// Be careful with this. Wait until the async daemon has completely
-                                                                              // caught up with the currently known high water mark
-            await daemon.WaitForNonStaleData(1.Minutes());
+            //if (shipment == null) { throw new Exception(); };
 
-            await daemon.StopAll();
-
+            //var decShipments = shipment.Shipments.Where(s => s.PPMRmProductId != null && (s.ShipmentDate >= new DateTime(2021, 12, 01) || s.ShipmentDateType != ARTMISConsts.OrderDeliveryDateTypes.ActualDeliveryDate)).ToList();
+            ////
+            //await SeedOrders(args);
+            //await SeedItems(new string[] { @"..\..\..\data" });
             // using var session = store.OpenSession();
             //// var order = session.Query<ARTMIS.Orders.Order>().Where(o => o.OrderNumber == "RO10137105").SingleOrDefault();
             // var decemberShipments = session.Query<ARTMIS.Orders.Order>().Where(o => o.DisplayDate > new DateTime(2021, 12, 1) && o.Lines.Any() && o.CountryId == "Angola");
@@ -86,6 +75,7 @@
             //     }
 
             // }
+            await SeedOrders(args);
 
             Console.ReadLine();
 
@@ -95,30 +85,46 @@
             orderEvents = new List<OrderEto>();
             var processRunner = StreamProcessRunner.Create<string>(DefineProcess);
             await processRunner.ExecuteAsync(@"..\..\..\data");
-            var store = DocumentStore.For(opts =>
-            {
-                opts.Connection(ConnectionString);
-                // Run the Order as an inline projection
-                opts.Projections.SelfAggregate<ARTMIS.Orders.Order>(ProjectionLifecycle.Inline);
-            });
+            var store = new DocumentStore(new PPMRmStoreOptions(ConnectionString, null));
             using var session = store.OpenSession();
-            var sortedEvents = orderEvents.OrderBy(e => e.FileDateTimeOffset).ThenBy(e => e.LineNumber);
-            var firstEvent = sortedEvents.First();
-            var lastEvent = sortedEvents.Last();
-            Console.WriteLine($"Total: - {orderEvents.Count}");
-            Console.WriteLine($"First: - {firstEvent.FileDateTimeOffset} - {firstEvent.LineNumber} - {firstEvent.FileName} ");
-            Console.WriteLine($"Last: - {lastEvent.FileDateTimeOffset} - {lastEvent.LineNumber} - {lastEvent.FileName} ");
+            var sortedEvents = orderEvents.OrderBy(e => e.FileName).ThenBy(e => e.LineNumber).Select(e => OrderLineEvent.Create(e));
+            var changeSets = sortedEvents.GroupBy(e => e.OrderLineId).ToDictionary(g => g.Key, g => g.ToList());
 
-            var eventsByOrder = sortedEvents.GroupBy(e => e.OrderNumber).ToDictionary(e => e.Key, e => e.ToList());;
-            Console.WriteLine($"Unique orders - {eventsByOrder.Count()}");
-            foreach(var e in eventsByOrder)
+            foreach (var c in changeSets)
             {
-                var orderEvents = e.Value.Select(e => ARTMIS.Orders.OrderEvent.Create(e));
-                var orderId = e.Key.ToGuid();
-                session.Events.StartStream<ARTMIS.Orders.Order>(orderId, orderEvents);
-                Console.WriteLine($"Stored Order number: {e.Key}-{e.Value.Count()}");
+                
+                try
+                {
+                    var state = await session.Events.FetchStreamStateAsync(c.Key);
+                    //var existing = await session.LoadAsync<ARTMIS.OrderLines.OrderLine>(c.Key);
+                    if(state == null)
+                    {
+                        session.Events.StartStream<ARTMIS.OrderLines.OrderLine>(c.Key, c.Value.OrderBy(e => e.EventTimestamp));
+                    }
+                    else
+                    {
+                        session.Events.Append(c.Key, c.Value.OrderBy(e => e.EventTimestamp));
+                    }
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine($"Changeset: {c.Key} already exists1");
+                    return;
+                }
+
             }
             await session.SaveChangesAsync();
+            //var firstEvent = changeSets.First().Value.First();
+            ////Console.WriteLine($"Total: - {orderEvents.Count}");
+            //Console.WriteLine($"First: - {firstEvent.FileName} - {firstEvent.FileTimestamp} - {firstEvent.EventTimestamp} - {firstEvent.PeriodId} - {firstEvent.CountryId} - {firstEvent.OrderLineId}");
+
+
+            ////var eventsByOrderLine = sortedEvents.GroupBy(e => e.OrderLineId).ToDictionary(e => e.Key, e => e.ToList());
+            ////Console.WriteLine($"Unique orders - {eventsByOrderLine.Count()}");
+            ////session.Events.StartStream("order", sortedEvents);
+            //await session.SaveChangesAsync();
+            Console.WriteLine($"Completed importing ARTMIS Changesets!");
+            Console.ReadLine();
         }
         async static Task SeedItems(string[] args)
         {
@@ -135,8 +141,8 @@
                 {
                     Resolver = new SimpleDependencyResolver().Register<DbContext>(dbCtx),
                 };
-                var res = await processRunner.ExecuteAsync(args[0], executionOptions);
-                session.StoreObjects(items.Where(i => Categories.Contains( i.TracerCategory)));
+                var res = await processRunner.ExecuteAsync(@"..\..\..\data", executionOptions);
+                session.StoreObjects(items.Where(i => i.ProductId != null));
                 await session.SaveChangesAsync();
                 await dbCtx.SaveChangesAsync();
             }
@@ -147,7 +153,7 @@
         private static void DefineProcess(ISingleStream<string> contextStream)
         {
             var orderStream = contextStream
-                .CrossApplyFolderFiles("list all required files", "2021*.tar.gz", true)
+                .CrossApplyFolderFiles("list all required files", "202203*.tar.gz", true)
                 .CrossApplyGZipFiles("extract files from zip", "*order*.txt")
                 .CrossApplyTextFile("parse file", 
                     FlatFileDefinition.Create(i => new OrderEto
@@ -165,7 +171,7 @@
                         ItemId = i.ToColumn(ARTMISConsts.OrderHeaders.ItemId),
                         LatestEstimatedDeliveryDate = i.ToOptionalDateColumn(ARTMISConsts.OrderHeaders.LatestEstimatedDeliveryDate, ARTMISConsts.DateFormat),
                         LineTotal = i.ToNumberColumn<decimal?>(ARTMISConsts.OrderHeaders.LineTotal, ""),
-                        OrderedQuantity = i.ToNumberColumn<decimal?>(ARTMISConsts.OrderHeaders.OrderedQuantity, "."),
+                        OrderedQuantity = i.ToNumberColumn<decimal>(ARTMISConsts.OrderHeaders.OrderedQuantity, "."),
                         OrderLineNumber = i.ToNumberColumn<int>(ARTMISConsts.OrderHeaders.OrderLineNumber, ""),
                         OrderNumber = i.ToColumn(ARTMISConsts.OrderHeaders.OrderNumber),
                         OrderType = i.ToColumn(ARTMISConsts.OrderHeaders.OrderType),
@@ -224,7 +230,8 @@
                     BaseUnitMultiplier = i.BaseUnitMultiplier,
                     NumberOfTreatments = i.ProductNumberOfTreatments,
                     TracerCategory = i.TracerCategory,
-                    UOM = i.UOM
+                    UOM = i.UOM,
+                    ProductId = ARTMISConsts.PPMRmProductMappings.GetOrDefault(i.ProductId)
 
                 })
                 .Distinct("remove duplicates", i => i.Id)

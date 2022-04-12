@@ -6,6 +6,7 @@ using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Identity;
+using System.Linq;
 
 namespace PPMRm.Core
 {
@@ -18,23 +19,39 @@ namespace PPMRm.Core
         ICountryAppService
     {
         IRepository<IdentityUser, Guid> UserRepository { get; }
-        public CountryAppService(IRepository<Country, string> repository, IRepository<IdentityUser, Guid> userRepository) : base(repository)
+        ICountryRepository CountryRepository => Repository as ICountryRepository;
+        public CountryAppService(ICountryRepository repository, IRepository<IdentityUser, Guid> userRepository) : base(repository)
         {
             UserRepository = userRepository;
+        }
+
+        async public Task<UpdateCountryDto> GetDetailsAsync(string id)
+        {
+            var queryable = await CountryRepository.WithDetailsAsync(c => c.Products, c => c.Programs);
+            var country = await AsyncExecuter.SingleAsync(queryable.Where(c => c.Id == id));
+            var result = ObjectMapper.Map<Country, UpdateCountryDto>(country);
+            result.ProductIds = country.Products.Select(p => p.ProductId).ToList();
+            result.ProgramIds = country.Programs.Select(p => p.ProgramId).ToList();
+            return result;
         }
 
         [Authorize]
         async public Task<PagedResultDto<CountryDto>> GetUserCountryListAsync(PagedAndSortedResultRequestDto input)
         {
-            var user = await UserRepository.GetAsync(CurrentUser.Id.Value);
-            if (user.GetUserType() == Identity.UserType.DataProvider)
-            {
-                var userCountry = await Repository.GetAsync(user.GetCountryId());
-                var list = new List<CountryDto>();
-                if (userCountry != null) list.Add(ObjectMapper.Map<Country, CountryDto>(userCountry));
-                return new PagedResultDto<CountryDto>(list.Count, list);
-            }
-            return await GetListAsync(input);
+            var countries = (await CountryRepository.GetUserCountriesAsync());
+            var results = ObjectMapper.Map<List<Country>, List<CountryDto>>(countries.Skip(input.SkipCount).Take(input.MaxResultCount).ToList());
+            return new PagedResultDto<CountryDto>(countries.Count, results);
+        }
+
+        public async Task UpdateAsync(string id, UpdateCountryDto countryDto)
+        {
+            var queryable = await CountryRepository.WithDetailsAsync(c => c.Products, c => c.Programs);
+            var country = await AsyncExecuter.SingleAsync(queryable.Where(c => c.Id == id));
+            country.UpdateMinMax(countryDto.MinStock, countryDto.MaxStock);
+            country.UpdateProducts(countryDto.ProductIds ?? new List<string>());
+            await CountryRepository.UpdateAsync(country);
+            //country.UpdateMinMax();
+            
         }
     }
 }

@@ -4,9 +4,13 @@ using Volo.Abp.Domain.Entities.Auditing;
 
 namespace PPMRm.Core
 {
-    public class Program : AuditedAggregateRoot<Programs>, ISoftDelete
+    public class Program : AuditedAggregateRoot<int>, ISoftDelete
     {
-        internal Program(Programs id, string name) : base(id)
+        private Program()
+        {
+
+        }
+        internal Program(Programs program, string name) : base((int)program)
         {
             Check.NotNullOrEmpty(name, nameof(name));
             Name = name;
