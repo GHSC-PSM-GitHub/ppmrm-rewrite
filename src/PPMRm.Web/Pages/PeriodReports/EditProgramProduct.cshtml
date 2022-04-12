@@ -1,0 +1,136 @@
+﻿@page "/PeriodReports/Edit/{periodReportId}/programs/{programId:int}/products/{id?}"
+@model PPMRm.Web.Pages.PeriodReports.EditProgramProductModel
+@using PPMRm.PeriodReports
+@using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Modal
+@{
+}
+@section scripts
+{
+    <abp-script src="/Pages/PeriodReports/Edit.js" />
+    <abp-script src="/js/bootstrap-multiselect.min.js" />
+    <abp-script src="/js/dataTables.buttons.min.js" />
+}
+<nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="/periodreports">Period Reports</a></li>
+        <li class="breadcrumb-item"><a href="/periodreports/edit/@(Model.PeriodReportId)">@($"{Model.PeriodReport.Country.Name} - {Model.PeriodReport.Period.ShortName}")</a></li>
+        <li class="breadcrumb-item active" aria-current="page">@Model.ProgramName</li>
+      </ol>
+</nav>
+<abp-card>
+        <abp-card-header>
+            <abp-row>
+                 <abp-column size-md="_6">
+                    <abp-card-title>@Model.ProductName</abp-card-title>
+                </abp-column>
+                <abp-column size-md="_6" class="text-right">
+                    @if(!Model.IsReadonly)
+    {
+    <div class="text-right">
+        <button type="button" class="btn btn-primary btn-save-program-product" data-busy-text="Processing..."><i class="fa fa-save"></i>&nbsp;<span>Save</span></button>
+    </div>
+    }
+                </abp-column>
+            </abp-row>
+        </abp-card-header>
+        <abp-card-body>
+            <abp-dynamic-form abp-model="Product" id="frm-program-product" submit-button="false"  data-check-form-on-close="false">
+    <fieldset @(Model.IsReadonly ? "disabled" : "")>
+        <abp-form-content />
+    </fieldset>
+    
+</abp-dynamic-form>
+
+        </abp-card-body>
+</abp-card>
+<abp-card>
+    <abp-card-header>
+        <abp-card-title>Shipments</abp-card-title>
+    </abp-card-header>
+    <abp-card-body>
+        <abp-table class="table table-sm" id="tblShipments">
+    <thead>
+    <tr>
+    <th>Supplier</th>
+    <th>Next Shipment Date</th>
+    <th>Quantity</th>
+    <th>Shipment MOS</th>
+    <th>Data Source</th>
+    <th></th>
+    </tr>
+    </thead>
+    <tbody id="tbodyShipments">
+        @if(Model.Product.Shipments != null && Model.Product.Shipments.Any())
+        {
+            @foreach(var s in Model.Product.Shipments?.OrderBy(l => l.ShipmentDate))
+    {
+        <tr>
+            <td>@s.Supplier</td>
+            <td>@s.ShipmentDate?.ToString(PeriodReportConsts.DataFormatting.DateFormat) @s.ShipmentDateType</td>
+            <td><input type="hidden" class="shipment-qty" value="@s.Quantity" /><span>@s.Quantity.ToString(PeriodReportConsts.DataFormatting.SOH_AMC_Format)</span></td>
+            <td><input type="text" class="shipment-mos" value="@s.MOS?.ToString(PeriodReportConsts.DataFormatting.MOS_Format)" disabled /></td>
+            <td>@s.DataSource</td>
+            <td>
+            <abp-row>
+                <abp-column size-md="_6"  class="text-right">
+                           @if(!Model.IsReadonly)
+                {
+                <abp-button data-id="@s.Id" data-product-id="@s.ProductId" data-program-id="@Model.Product.ProgramId" data-period-report-id="@Model.Product.PeriodReportId" data-shipment-id="@s.Id"
+                            class="btn-edit-product-shipment btn-sm @(Model.IsReadonly ? "disabled" : "")"
+                            icon="pencil"
+                            text=""
+                            button-type="Warning"/>
+
+                }                             
+                </abp-column>
+                <abp-column size-md="_6">
+                @if(!Model.IsReadonly)
+                {
+                <abp-button data-id="@s.Id" data-product-id="@s.ProductId" data-program-id="@Model.Product.ProgramId" data-period-report-id="@Model.Product.PeriodReportId"
+                            class="btn-remove-product-shipment btn-sm @(Model.IsReadonly ? "disabled" : "")"
+                            icon="minus"
+                            text=""
+                            button-type="Danger"/>
+                }
+                </abp-column>
+            </abp-row>
+            </td>
+        </tr>
+    }
+    
+            
+        }
+        @if(Model.Product.Shipments != null && Model.Product.Shipments.Count() == 0)
+        {
+            <tr>
+            <td class="text-center" colspan="13">No shipments reported for this product.</td>
+            </tr>
+        }
+        
+</tbody>
+<tfoot>
+    <tr>
+        <td class="text-right" colspan="6">
+        @if(!Model.IsReadonly)
+    {
+    <abp-button data-product-id="@Model.Product.ProductId" data-program-id="@Model.Product.ProgramId" data-period-report-id="@Model.Product.PeriodReportId"
+                            class="btn-add-product-shipment btn-sm @(Model.IsReadonly ? "disabled" : "")"
+                            icon="plus"
+                            text="Add Shipment"
+                            button-type="Success"/>
+    }
+            </td>
+    </tr>
+</tfoot>
+</abp-table>
+    </abp-card-body>
+    <abp-card-footer>
+         @if(!Model.IsReadonly)
+    {
+    <div class="text-right">
+        <button type="button" class="btn btn-primary btn-save-program-product" data-busy-text="Processing..."><i class="fa fa-save"></i>&nbsp;<span>Save</span></button>
+    </div>
+    }
+    </abp-card-footer>
+</abp-card>

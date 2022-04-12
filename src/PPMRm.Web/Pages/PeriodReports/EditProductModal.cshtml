@@ -1,0 +1,17 @@
+﻿@page
+@model PPMRm.Web.Pages.PeriodReports.EditProductModalModel
+@using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Modal
+@{
+    Layout = null;
+}
+<abp-dynamic-form abp-model="Product" asp-page="/PeriodReports/EditProductModal" data-check-form-on-close="false">
+    <abp-modal scrollable="true" size="Large">
+        <abp-modal-header title="Edit Product - @Model.ProductName"></abp-modal-header>
+        <abp-modal-body>
+            <fieldset @(Model.IsReadonly ? "disabled" : "")>
+                <abp-form-content />
+            </fieldset>
+        </abp-modal-body>
+        <abp-modal-footer buttons="@(!Model.IsReadonly ? AbpModalButtons.Cancel|AbpModalButtons.Save : AbpModalButtons.Close)"></abp-modal-footer>
+    </abp-modal>
+</abp-dynamic-form>

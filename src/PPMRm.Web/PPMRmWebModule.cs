@@ -37,6 +37,9 @@ using Volo.Abp.UI.Navigation.Urls;
 using Volo.Abp.UI;
 using Volo.Abp.UI.Navigation;
 using Volo.Abp.VirtualFileSystem;
+using Volo.CmsKit.Web;
+using Volo.Abp.AspNetCore.Mvc.UI.Components.LayoutHook;
+using PPMRm.Web.Components.Footer;
 
 namespace PPMRm.Web
 {
@@ -54,6 +57,7 @@ namespace PPMRm.Web
         typeof(AbpAspNetCoreSerilogModule),
         typeof(AbpSwashbuckleModule)
         )]
+    [DependsOn(typeof(CmsKitWebModule))]
     public class PPMRmWebModule : AbpModule
     {
         public override void PreConfigureServices(ServiceConfigurationContext context)
@@ -85,6 +89,19 @@ namespace PPMRm.Web
             ConfigureNavigationServices();
             ConfigureAutoApiControllers();
             ConfigureSwaggerServices(context.Services);
+            ConfigureLayouts();
+
+        }
+
+        private void ConfigureLayouts()
+        {
+            Configure<AbpLayoutHookOptions>(options =>
+            {
+                options.Add(
+                    LayoutHooks.Body.Last, //The hook name
+                    typeof(FooterViewComponent) //The component to add
+                );
+            });
         }
 
         private void ConfigureUrls(IConfiguration configuration)
@@ -104,6 +121,9 @@ namespace PPMRm.Web
                     bundle =>
                     {
                         bundle.AddFiles("/global-styles.css");
+                        bundle.AddFiles("/libs/bootstrap/css/bootstrap.css");
+                        bundle.AddFiles("/styles/bootstrap-multiselect.css");
+                        bundle.AddFiles("/styles/buttons.dataTables.min.css");
                     }
                 );
             });
@@ -153,7 +173,7 @@ namespace PPMRm.Web
                 //options.Languages.Add(new LanguageInfo("en-GB", "en-GB", "English (UK)"));
                 //options.Languages.Add(new LanguageInfo("hu", "hu", "Magyar"));
                 //options.Languages.Add(new LanguageInfo("fi", "fi", "Finnish"));
-                options.Languages.Add(new LanguageInfo("fr", "fr", "Français"));
+                //options.Languages.Add(new LanguageInfo("fr", "fr", "Français"));
                 //options.Languages.Add(new LanguageInfo("hi", "hi", "Hindi", "in"));
                 //options.Languages.Add(new LanguageInfo("it", "it", "Italian", "it"));
                 //options.Languages.Add(new LanguageInfo("pt-BR", "pt-BR", "Português"));

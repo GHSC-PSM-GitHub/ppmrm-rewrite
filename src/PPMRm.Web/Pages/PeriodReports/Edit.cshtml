@@ -1,0 +1,277 @@
+﻿@page "{id}"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Mvc.Localization
+@using PPMRm
+@using PPMRm.PeriodReports
+@using PPMRm.Localization
+@model PPMRm.Web.Pages.PeriodReports.EditModel
+@inject IHtmlLocalizer<PPMRmResource> Localizer
+@inject IAuthorizationService AuthService
+@section scripts
+{
+    <abp-script src="/Pages/PeriodReports/Edit.js" />
+    <abp-script src="/js/bootstrap-multiselect.min.js" />
+    <abp-script src="/js/dataTables.buttons.min.js" />
+}
+@{
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="/periodreports">Period Reports</a></li>
+        <li class="breadcrumb-item active" aria-current="page">@Model.PeriodReport.Country.Name - @Model.PeriodReport.Period.ShortName</li>
+      </ol>
+    </nav>
+    <abp-card>
+        <abp-card-header>
+            <abp-row>
+                <abp-column size-md="_6">
+                    <abp-card-title class="">Status: @Model.PeriodReport.ReportStatus</abp-card-title>
+                </abp-column>
+                <abp-column size-md="_6" class="text-right">
+                <abp-button id="edit-cs-updates" data-id="@Model.Id"
+                                text="@(Model.IsReadonly ? "View CS Updates" : "View/Edit CS Updates")"
+                                button-type="Primary"/>
+                                @if((await AuthService.AuthorizeAsync(PPMRmConsts.Permissions.DataReviewer)).Succeeded)
+                    {
+                        <div class="btn-group">
+                            @if(Model.PeriodReport.ReportStatus == PeriodReportStatus.Initialized)
+                            {
+                                <button id="btn-open" class="btn-report-status btn btn-warning" data-id="@Model.PeriodReport.Id" data-action="open"><i class="fa fa-folder-open-o" aria-hidden="true"></i> Open</button>
+                            }
+                            else if(Model.PeriodReport.ReportStatus == PeriodReportStatus.Open || Model.PeriodReport.ReportStatus == PeriodReportStatus.Reopened)
+                            {
+                                <button id="btn-mark-as-final" class="btn-report-status btn btn-warning" data-id="@Model.PeriodReport.Id" data-action="finalize"><i class="fa fa-flag-checkered" aria-hidden="true"></i> Mark as Final</button>
+                            }
+                            else
+                            {
+                                //TODO: Remove Closed status on Enum
+                                <button id="btn-reopen" class="btn-report-status btn btn-warning" data-id="@Model.PeriodReport.Id" data-action="reopen"><i class="fa fa-envelope-open" aria-hidden="true"></i> Re-open</button>
+                            }
+                        </div>
+                    }
+                    
+                </abp-column>
+            </abp-row>
+        </abp-card-header>
+    </abp-card>
+    <div class="jumbotron jumbotron-fluid">
+  <div class="container">
+    <h1 class="display-4">@Model.PeriodReport.Country.Name</h1>
+    <p class="lead">@Model.PeriodReport.Period.Name</p>
+  </div>
+</div>
+            <abp-input asp-for="Id" />
+    @foreach(var program in Model.PeriodReport.Programs)
+                {
+                    <abp-card>
+                        <abp-card-header>
+                            <abp-row>
+                                <abp-column size-md="_6">
+                                    <abp-card-title>@program.Program.Name</abp-card-title>
+                                </abp-column>
+                                <abp-column size-md="_6" class="text-right">
+                                @if(!Model.IsReadonly)
+                        {
+                        <abp-button class="btn-add-program-product btn-sm @(Model.IsReadonly ? "disabled" : "")"
+                                                data-period-report-id="@program.PeriodReportId"
+                                                data-program-id="@program.Program.Id"
+                                                text="Add Product"
+                                                icon="plus"
+                                                button-type="Success"
+                                                />
+                                    <abp-button data-product-id="" data-program-id="@program.ProgramId" data-period-report-id="@program.PeriodReportId"
+                                                                    class="btn-add-shipment btn-sm @(Model.IsReadonly ? "disabled" : "")"
+                                                                    icon="plus"
+                                                                    text="Add Shipment"
+                                                                    button-type="Success"/>   
+                        }
+                                </abp-column>
+                            </abp-row>
+                        </abp-card-header>
+                       <abp-card-body>
+                            <span class="font-weight-bold">SOH Levels: <small class="font-weight-light">@(program.SOHLevels != null? program.SOHLevels : "None")</small></span>
+                       </abp-card-body>
+                    </abp-card>
+                    <abp-table class="table-striped table-bordered .w-auto small" data-id="@program.PeriodReportId" data-program-id="@program.Program.Id">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Min</th>
+                                        <th>Max</th>
+                                        <th>MOS</th>
+                                        <th>Status</th>
+                                        <th>SoH</th>
+                                        <th>SoH Date</th>
+                                        <th>AMC</th>
+                                        <th class"th-sm">Source of Consumption</th>
+                                        <th class="th-lg">Action Recommended</th>
+                                        <th>Action needed by</th>
+                                        <th>Shipments</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach(var p in program.Products)
+                                {
+                                    <tr>
+                                        <td scope="row">@p.Product.Name</td>
+                                        <td>@p.MinStock.ToString(PeriodReportConsts.DataFormatting.SOH_AMC_Format)</td>
+                                        <td>@p.MaxStock.ToString(PeriodReportConsts.DataFormatting.SOH_AMC_Format)</td>
+                                        <td>@p.MOS?.ToString(PeriodReportConsts.DataFormatting.MOS_Format)</td>
+                                        <td>
+                                            @if(p.MOSStatus.HasValue)
+                                            {
+                                                @Localizer[$"Enum:MOSStatus:{(int)p.MOSStatus}"]
+                                            }
+                                        </td>
+                                        <td>@p.SOH?.ToString(PeriodReportConsts.DataFormatting.SOH_AMC_Format)</td>
+                                        <td>@p.DateOfSOH?.ToString(PeriodReportConsts.DataFormatting.DateFormat)</td>
+                                        <td>@p.AMC?.ToString(PeriodReportConsts.DataFormatting.SOH_AMC_Format)</td>
+                                        <td>
+                                            @if(p.SourceOfConsumption.HasValue)
+                                            {
+                                                
+                                                @if(p.SourceOfConsumption == SourceOfConsumption.Other)
+                                                {
+                                                    @("Other:" + p.OtherSourceOfConsumption);
+                                                }
+                                                else
+                                                {
+                                                    @Localizer[$"Enum:SourceOfConsumption:{(int)p.SourceOfConsumption}"]
+                                                }
+                                            }
+                                        </td>
+                                        <td><small>@p.ActionRecommended</small></td>
+                                        <td>@p.DateActionNeededBy?.ToString(PeriodReportConsts.DataFormatting.DateFormat)</td>
+                                        <td>
+                                             <abp-button  class="accordion-toggle btn-sm" data-toggle="collapse" data-target="#@p.Product.Id-@p.Program.Id"
+                                                    text="View (@(p.Shipments?.Count ?? 0))"
+                                                    button-type="Link" />
+                                        </td>
+                                        <td>
+                                        <!--
+                                            <abp-button data-id="@p.Product.Id" data-program-id="@p.Program.Id" data-period-report-id="@Model.Id"
+                                                    class="btn-edit-product btn-sm"
+                                                    text="@(Model.IsReadonly ? "View" : "Edit")"
+                                                    button-type="Primary"/>
+                                                    -->
+
+                                            @{   
+                                                var editProgramProduct = new Dictionary<string, string>
+                                                    {
+                                                       { "periodReportId", @Model.Id },
+                                                       { "programId", $"{@p.Program.Id}" },
+                                                       { "id", @p.Product.Id }
+                                                    };
+                                            }
+                                        <abp-row>
+                                            
+                                                @if(!Model.IsReadonly)
+                                                {
+                                            <abp-column size-md="_4">
+
+
+                                                    <a href="/periodreports/edit/@Model.Id/programs/@p.Program.Id/products/@p.Product.Id" 
+                                                                    class="btn-sm btn btn-warning"
+                                                                    >
+                                                                    <i class="fa fa-pencil"></i>
+                                                    </a>
+                                                    </abp-column>
+                                                    <abp-column size-md="_4">
+                                                    <abp-button data-product-id="@p.Product.Id" data-program-id="@p.Program.Id" data-period-report-id="@Model.Id"
+                                                                                class="btn-remove-product btn-sm @(Model.IsReadonly ? "disabled" : "")"
+                                                                                icon="minus"
+                                                                                text=""
+                                                                                data-toggle="tooltip" data-placement="top" title="Delete Stock Information"
+                                                                                button-type="Danger"/>
+                                                                                </abp-column>
+                                                    <abp-column size-md="_2">
+                                                    </abp-column>
+                                            }
+                                            else
+                                            {
+                                                <abp-column>
+                                                <a class="btn btn-primary btn-sm" href="/periodreports/edit/@Model.Id/programs/@p.Program.Id/products/@p.Product.Id">View</a>
+                                        </abp-column>
+                                            }
+                                        </abp-row>    
+                                        
+                                        </td>
+                                        
+                                    </tr>
+                                    <tr>
+                                      <td scope="row" class="accordion-body collapse text-right" id="@p.Product.Id-@p.Program.Id" colspan="13">
+                                        <table class="table">
+                                          <thead>
+                                          <tr>
+                                           <th>Supplier</th>
+                                            <th>Next Shipment Date</th>
+                                            <th>Quantity</th>
+                                            <th>Shipment MOS</th>
+                                            <th>Data Source</th>
+                                            <th></th>
+                                          </tr>
+                                          </thead>
+                                          <tbody>
+                                            @foreach(var s in p.Shipments.OrderBy(l => l.ShipmentDate))
+                                            {
+                                                <tr>
+                                                    <td>@s.Supplier</td>
+                                                    <td>@s.ShipmentDate?.ToString(PeriodReportConsts.DataFormatting.DateFormat) @s.ShipmentDateType</td>
+                                                    <td>@s.Quantity.ToString(PeriodReportConsts.DataFormatting.SOH_AMC_Format)</td>
+                                                    <td>@s.MOS?.ToString(PeriodReportConsts.DataFormatting.MOS_Format)</td>
+                                                    <td>@s.DataSource</td>
+                                                    <td>
+                                                    <abp-row>
+                                                        <abp-column size-md="_6">
+                                                        
+                                                        </abp-column>
+                                                        <abp-column size-md="_6">
+                                                        @if(!Model.IsReadonly)
+                                                        {
+                                                        <abp-button data-id="@s.Id" data-product-id="@s.ProductId" data-program-id="@p.Program.Id" data-period-report-id="@Model.Id" data-shipment-id="@s.Id"
+                                                                    class="btn-edit-shipment btn-sm @(Model.IsReadonly ? "disabled" : "")"
+                                                                    icon="pencil"
+                                                                    text=""
+                                                                    button-type="Warning"/>
+                                                        <abp-button data-id="@s.Id" data-product-id="@s.ProductId" data-program-id="@p.Program.Id" data-period-report-id="@Model.Id"
+                                                                    class="btn-remove-shipment btn-sm @(Model.IsReadonly ? "disabled" : "")"
+                                                                    icon="minus"
+                                                                    text=""
+                                                                    button-type="Danger"/>
+                                                        }
+                                                        </abp-column>
+                                                    </abp-row>
+                                                    </td>
+                                                </tr>
+                                            }
+                                            <tr>
+                                                <td class="text-right" colspan="6">
+                                                @if(!Model.IsReadonly)
+                                            {
+                                            <abp-button data-product-id="@p.Product.Id" data-program-id="@p.Program.Id" data-period-report-id="@Model.Id"
+                                                                    class="btn-add-shipment btn-sm @(Model.IsReadonly ? "disabled" : "")"
+                                                                    icon="plus"
+                                                                    text="Add Shipment"
+                                                                    button-type="Success"/>
+                                            }
+                                                    </td>
+                                            </tr>
+                                        </tbody>
+                                        </table>
+                                      </td>
+                                    </tr>
+                                }
+                                @if(program.Products.Count == 0)
+                        {
+                            <tr>
+                            <td class="text-center" colspan="13">No reports have been submitted for this program</td>
+                            </tr>
+                        }
+                    </tbody>
+                            </abp-table>
+                    <hr class="my-4" />
+                }
+    
+}
+
