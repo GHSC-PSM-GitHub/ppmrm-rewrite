@@ -83,9 +83,14 @@ $(document).ready(function () {
         includeSelectAllOption: true,
         enableFiltering: true,
         enableCaseInsensitiveFiltering: true,
-        maxHeight: 200,
-        buttonWidth: '250px'
+        // inherits the class of the button from the original select
+        //inheritClass: true,
+        buttonClass: 'form-control',
+        buttonWidth: '100%',
+        maxHeight: 250
+
     });
+    $("span.multiselect-native-select").addClass("form-control p-0 border-0 text-left");
 
 
     $('#SelectedCountries').on('change', function () {
