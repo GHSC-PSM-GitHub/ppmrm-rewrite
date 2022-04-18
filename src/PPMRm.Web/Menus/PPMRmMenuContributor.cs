@@ -72,6 +72,26 @@ namespace PPMRm.Web.Menus
             {
                 context.Menu.AddItem(
                     new ApplicationMenuItem(
+                        "Reports",
+                       "Reports",
+                        icon: "fa fa-order"
+                        ).AddItem(
+                            new ApplicationMenuItem(
+                                "Overview",
+                                "View Period Reports",
+                                url: "/reports"
+                            )
+                        ).AddItem(
+                            new ApplicationMenuItem(
+                                "Build",
+                                "Build your own report",
+                                url: "/reports/build"
+                            )
+                        )
+                );
+
+                context.Menu.AddItem(
+                    new ApplicationMenuItem(
                         "ARTMIS",
                        "ARTMIS",
                         icon: "fa fa-order"

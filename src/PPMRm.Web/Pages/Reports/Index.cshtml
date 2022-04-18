@@ -1,0 +1,54 @@
+﻿@page
+@model PPMRm.Web.Pages.Reports.IndexModel
+@section styles{
+   
+}
+@{
+}
+@section scripts
+{
+    <abp-script src="/Pages/Reports/Index.js" />
+    <abp-script src="/js/bootstrap-multiselect.min.js" />
+    <abp-script src="/js/dataTables.buttons.min.js" />
+}
+<abp-card>
+    <abp-card-header>
+                <abp-card-title>View Period Reports</abp-card-title><br />
+            <abp-card-subtitle class="text-muted mb-3">This page shows reporting summary for each country</abp-card-subtitle>
+            <form class="needs-validation" novalidate>
+  
+<div class="form-row mt-3">
+    <div class="col-md-4 mb-3">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="inputGroupPrependCountry">Country</span>
+        </div>
+        <select asp-for="@Model.SelectedCountries" asp-items="@Model.Countries"></select>
+      </div>
+    </div>
+    <div class="col-md-4 mb-3">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="inputGroupPrependYear">Year</span>
+        </div>
+        <select asp-for="@Model.SelectedYear" asp-items="@Model.Years" class="form-control"></select>
+      </div>
+    </div>
+    <div class="col-md-4 mb-3">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="inputGroupPrependPeriod">Period</span>
+        </div>
+        <select asp-for="@Model.SelectedMonth" asp-items="@Model.Months" class="form-control"></select>
+       
+      </div>
+    </div>
+  </div>
+</form>
+        
+    </abp-card-header>
+    <abp-card-body>
+    </abp-card-body>
+</abp-card>
+
+
