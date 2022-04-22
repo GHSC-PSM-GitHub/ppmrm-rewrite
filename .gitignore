@@ -5,3 +5,4 @@ src/PPMRm.Web/Logs
 src/PPMRm.DataSync/data/
 src/PPMRm.Web/.config/dotnet-tools.json
 src/PPMRm.Web/Properties/
+src/PPMRm.Web/node_modules/
