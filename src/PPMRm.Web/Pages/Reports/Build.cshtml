@@ -6,19 +6,31 @@
 {
     <abp-script src="/Pages/Reports/Index.js" />
     <abp-script src="/js/bootstrap-multiselect.min.js" />
+    <abp-script src="/libs/datatables.net/js/jquery.dataTables.js" />
+    <abp-script src="/js/jszip.min.js" />
     <abp-script src="/js/dataTables.buttons.min.js" />
+    <abp-script src="/libs/datatables.net-bs4/js/dataTables.bootstrap4.js" />
+    <abp-script src="/libs/chart.js/Chart.bundle.js" />
+    <abp-script src="/js/buttons.html5.min.js" />
+}
+
+@section styles
+{
+    <link rel="stylesheet" href="/libs/datatables.net-bs4/css/dataTables.bootstrap4.css">
+    <link rel="stylesheet" href="/styles/buttons.dataTables.min.css">
+    
 }
 <abp-card>
     <abp-card-header>
                 <abp-card-title>Build Your Own Report</abp-card-title><br />
             <abp-card-subtitle class="text-muted mb-3">Stock Status list page</abp-card-subtitle>
-            <form class="needs-validation" novalidate>
+            <form class="needs-validation" novalidate method="post">
   
 <div class="form-row mt-3">
     <div class="col-md-4 mb-3">
       <div class="input-group">
         <div class="input-group-prepend">
-          <span class="input-group-text" id="inputGroupPrependCountry">Country</span>
+          <span class="input-group-text" id="inputGroupPrependCountry">Countries</span>
         </div>
         <select asp-for="@Model.SelectedCountries" asp-items="@Model.Countries"></select>
       </div>
@@ -26,24 +38,797 @@
     <div class="col-md-4 mb-3">
       <div class="input-group">
         <div class="input-group-prepend">
-          <span class="input-group-text" id="inputGroupPrependYear">Year</span>
+          <span class="input-group-text" id="inputGroupPrependCountry">Start Period</span>
         </div>
-        <select asp-for="@Model.SelectedYear" asp-items="@Model.Years" class="form-control"></select>
+        <!-- <input type="text" asp-for="@Model.StartPeriod" class="period-picker form-control" readonly="readonly" /> -->
+      <input type="text" id="StartPeriod" name="StartPeriod" readonly="readonly" class="period-picker  form-control" />
       </div>
     </div>
     <div class="col-md-4 mb-3">
       <div class="input-group">
         <div class="input-group-prepend">
-          <span class="input-group-text" id="inputGroupPrependPeriod">Period</span>
+          <span class="input-group-text" id="inputGroupPrependYear">End Period</span>
         </div>
-        <select asp-for="@Model.SelectedMonth" asp-items="@Model.Months" class="form-control"></select>
+        <!--<input type="text" asp-for="@Model.EndPeriod" class="period-picker form-control" readonly="readonly" />-->
+       <input type="text" id="EndPeriod" name="EndPeriod" readonly="readonly" class="period-picker form-control" />
+      </div>
+    </div>
+    
+  </div>
+
+  <div class="form-row mt-3">
+    <div class="col-md-6 mb-3">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="inputGroupPrependYear">Programs</span>
+        </div>
+        <select asp-for="@Model.SelectedPrograms" asp-items="@Model.Programs" class="form-control"></select>
+      </div>
+    </div>
+    <div class="col-md-6 mb-3">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="inputGroupPrependPeriod">Products</span>
+        </div>
+        <select asp-for="@Model.SelectedProducts" asp-items="@Model.Products" class="form-control"></select>
        
       </div>
     </div>
+    <!-- <div class="col-md-4 mb-3">
+      <div class="input-group">
+        
+        <input type="submit" value="Generate" class="btn btn-primary" />
+       
+      </div> 
+    </div>-->
+  </div>
+
+  <div class="form-row mt-3">
+      <div class="col-md-12 mb-3">
+      <div class="input-group">
+        
+      </div>
+        <input type="submit" value="Generate" class="btn btn-primary form-control" />
+    </div>
+    
   </div>
 </form>
         
     </abp-card-header>
     <abp-card-body>
+        
     </abp-card-body>
 </abp-card>
+<div class="mt-2">
+
+<div class="table-responsive table-body">
+<table id="tblReport" class="table-striped table-bordered table-sm .w-auto small">
+    <thead>
+            <th>Country</th>
+            <th>Program</th>
+            <th>Product</th>
+            <th>Month</th>
+            <th>Year</th>
+                        
+                <th>
+                    Period Month                </th>
+            
+                <th>
+                    SOH Levels                </th>
+            
+                <th>
+                    No New Data                </th>
+            
+                <th>
+                    Stock on Hand                </th>
+            
+                <th>
+                    MOS                </th>
+            
+                <th>
+                    AMC                </th>
+            
+                <th>
+                    Date of SOH                </th>
+            
+                <th>
+                    Min                </th>
+            
+                <th>
+                    Max                </th>
+            
+                <th>
+                    Date Stock Reported                </th>
+            
+                <th>
+                    Source Of Consumption                </th>
+            
+                <th>
+                    Source Of Consumption Type                </th>
+            
+                <th>
+                    Actions Recommended                </th>
+            
+                <th>
+                    Date Action Needed by                </th>
+            
+                <th>
+                    Supplier of Next Shipment                </th>
+            
+                <th>
+                    Next Shipment Quantity                </th>
+            
+                <th>
+                    Next Shipment Info (Supplier, Expected Date, Quantity, Shipment MOS, Data Source)                </th>
+                    
+    </thead>
+    <tbody>
+                    <tr>
+
+                <td>
+                    Angola                </td>
+                <td>
+                    National Malaria Program                </td>
+                <td>
+                    Artesunate/Amodiaquine 25mg/67.5mg FDC 3 tabs                </td>
+                <td>
+                    Sep                </td>
+                <td>
+                    2021                </td>
+                                    <td>
+                        </td>
+                                    <td>
+                        Provincial Warehouse, Central Warehouse</td>
+                                    <td>
+                        No</td>
+                                    <td>
+                        48,845</td>
+                                    <td>
+                        0.24</td>
+                                    <td>
+                        200,642</td>
+                                    <td>
+                        10-May-21</td>
+                                    <td>
+                        6</td>
+                                    <td>
+                        12</td>
+                                    <td>
+                        10-May-21</td>
+                                    <td>
+                        </td>
+                                    <td>
+                        Forecasted</td>
+                                    <td>
+                        The GHSC-PSM field office recommends that the Angolan government complies with the purchase of the product based on the anticipated quantities and distribute the product in all 12 provinces not supported by PMI on arrival. Requests must be based on quantification to meet country needs.    </td>
+                                    <td>
+                        31-Oct-21</td>
+                                    <td>
+                        Global Fund, PMI, PMI, PMI</td>
+                                    <td>
+                        17525, 186650, 537725, 537725</td>
+                                    <td>
+                        [Global Fund, 02-Nov-21(edd), 17525, 0.09, Country Team]  [PMI, 22-Oct-21(edd), 186650, 0.93, ARTMIS]  [PMI, TBD, 537725, 2.68, ARTMIS]  [PMI, TBD, 537725, 2.68, ARTMIS]</td>
+                            </tr>
+                                <tr>
+
+                <td>
+                    Angola                </td>
+                <td>
+                    National Malaria Program                </td>
+                <td>
+                    Artesunate Injectable 60mg                </td>
+                <td>
+                    Sep                </td>
+                <td>
+                    2021                </td>
+                                    <td>
+                        </td>
+                                    <td>
+                        Provincial Warehouse, Central Warehouse</td>
+                                    <td>
+                        No</td>
+                                    <td>
+                        196,453</td>
+                                    <td>
+                        0.62</td>
+                                    <td>
+                        314,845</td>
+                                    <td>
+                        01-Jan-70</td>
+                                    <td>
+                        6</td>
+                                    <td>
+                        12</td>
+                                    <td>
+                        01-Jan-70</td>
+                                    <td>
+                        </td>
+                                    <td>
+                        Forecasted</td>
+                                    <td>
+                        The GHSC-PSM field office recommends that the Angolan government complies with the purchase of the product based on the anticipated quantities and distribute the product in all 12 provinces not supported by PMI on arrival. Requests must be based on quantification to meet country needs.	   </td>
+                                    <td>
+                        31-Oct-21</td>
+                                    <td>
+                        Global Fund, PMI, PMI, PMI</td>
+                                    <td>
+                        63163, 200000, 400000, 316997</td>
+                                    <td>
+                        [Global Fund, 02-Nov-21(edd), 63163, 0.2, Country Team]  [PMI, 25-Oct-21(edd), 200000, 0.64, ARTMIS]  [PMI, 15-Nov-21(edd), 400000, 1.27, ARTMIS]  [PMI, 12-Nov-21(edd), 316997, 1.01, ARTMIS]</td>
+                            </tr>
+                                <tr>
+
+                <td>
+                    Angola                </td>
+                <td>
+                    National Malaria Program                </td>
+                <td>
+                    Artesunate suppository 100mg                </td>
+                <td>
+                    Sep                </td>
+                <td>
+                    2021                </td>
+                                    <td>
+                        </td>
+                                    <td>
+                        Provincial Warehouse, Central Warehouse</td>
+                                    <td>
+                        No</td>
+                                    <td>
+                        0</td>
+                                    <td>
+                        0.00</td>
+                                    <td>
+                        2,499</td>
+                                    <td>
+                        23-Jun-21</td>
+                                    <td>
+                        6</td>
+                                    <td>
+                        12</td>
+                                    <td>
+                        23-Jun-21</td>
+                                    <td>
+                        </td>
+                                    <td>
+                        Forecasted</td>
+                                    <td>
+                        There is an urgent need for the GHSC-PSM to accelerate the process of ongoing Artesunate 100mg suppository acquisitions to fill gaps.   </td>
+                                    <td>
+                        31-Oct-21</td>
+                                    <td>
+                        Global Fund, PMI</td>
+                                    <td>
+                        3468, 9920</td>
+                                    <td>
+                        [Global Fund, 02-Nov-21(edd), 3468, 1.39, Country Team]  [PMI, TBD, 9920, 3.97, ARTMIS]</td>
+                            </tr>
+                                <tr>
+
+                <td>
+                    Angola                </td>
+                <td>
+                    National Malaria Program                </td>
+                <td>
+                    Artesunate/Amodiaquine 100mg/270mg FDC 6 tabs                </td>
+                <td>
+                    Sep                </td>
+                <td>
+                    2021                </td>
+                                    <td>
+                        </td>
+                                    <td>
+                        Provincial Warehouse, Central Warehouse</td>
+                                    <td>
+                        No</td>
+                                    <td>
+                        210,170</td>
+                                    <td>
+                        8.26</td>
+                                    <td>
+                        25,431</td>
+                                    <td>
+                        01-Jan-70</td>
+                                    <td>
+                        6</td>
+                                    <td>
+                        12</td>
+                                    <td>
+                        01-Jan-70</td>
+                                    <td>
+                        </td>
+                                    <td>
+                        Forecasted</td>
+                                    <td>
+                        The GHSC-PSM field office recommends that the Angolan government does not procure additional ASAQ.   </td>
+                                    <td>
+                        31-Oct-21</td>
+                                    <td>
+                        PMI, PMI</td>
+                                    <td>
+                        403875, 403875</td>
+                                    <td>
+                        [PMI, TBD, 403875, 15.88, ARTMIS]  [PMI, TBD, 403875, 15.88, ARTMIS]</td>
+                            </tr>
+                                <tr>
+
+                <td>
+                    Angola                </td>
+                <td>
+                    National Malaria Program                </td>
+                <td>
+                    Artesunate/Amodiaquine 100mg/270mg FDC 3 tabs                </td>
+                <td>
+                    Sep                </td>
+                <td>
+                    2021                </td>
+                                    <td>
+    </td>
+                                    <td>
+                        Provincial Warehouse, Central Warehouse</td>
+                                    <td>
+                        No</td>
+                                    <td>
+                        81,599</td>
+                                    <td>
+                        2.05</td>
+                                    <td>
+                        39,777</td>
+                                    <td>
+                        01-Jan-70</td>
+                                    <td>
+                        6</td>
+                                    <td>
+                        12</td>
+                                    <td>
+                        01-Jan-70</td>
+                                    <td>
+                        </td>
+                                    <td>
+                        Forecasted</td>
+                                    <td>
+                        The GHSC-PSM field office recommends that the Angolan government does not procure additional ASAQ.   </td>
+                                    <td>
+                        31-Oct-21</td>
+                                    <td>
+                        PMI, PMI</td>
+                                    <td>
+                        237700, 237700</td>
+                                    <td>
+                        [PMI, TBD, 237700, 5.98, ARTMIS]  [PMI, TBD, 237700, 5.98, ARTMIS]</td>
+                            </tr>
+                                
+                                <tr>
+
+                <td>
+                    Burkina Faso                </td>
+                <td>
+                    National Malaria Program                </td>
+                <td>
+                    Artemether/Lumefantrine 20mg/120mg 6x4 Blisters                </td>
+                <td>
+                    Nov                </td>
+                <td>
+                    2021                </td>
+                                    <td>
+                        </td>
+                                    <td>
+                        </td>
+                                    <td>
+                        No</td>
+                                    <td>
+                        0</td>
+                                    <td>
+                        0.00</td>
+                                    <td>
+                        0</td>
+                                    <td>
+                        01-Jan-70</td>
+                                    <td>
+                        6</td>
+                                    <td>
+                        12</td>
+                                    <td>
+                        01-Jan-70</td>
+                                    <td>
+                        </td>
+                                    <td>
+                        </td>
+                                    <td>
+                        </td>
+                                    <td>
+                        </td>
+                                    <td>
+                        </td>
+                                    <td>
+                        </td>
+                                    <td>
+                        </td>
+                            </tr>
+                                <tr>
+
+                <td>
+                    Burkina Faso                </td>
+                <td>
+                    National Malaria Program                </td>
+                <td>
+                    Sulphadoxine-Pyrimethamine                </td>
+                <td>
+                    Nov                </td>
+                <td>
+                    2021                </td>
+                                    <td>
+                        </td>
+                                    <td>
+                        </td>
+                                    <td>
+                        No</td>
+                                    <td>
+                        0</td>
+                                    <td>
+                        0.00</td>
+                                    <td>
+                        0</td>
+                                    <td>
+                        01-Jan-70</td>
+                                    <td>
+                        6</td>
+                                    <td>
+                        12</td>
+                                    <td>
+                        01-Jan-70</td>
+                                    <td>
+                        </td>
+                                    <td>
+                        </td>
+                                    <td>
+                        </td>
+                                    <td>
+                        </td>
+                                    <td>
+                        </td>
+                                    <td>
+                        </td>
+                                    <td>
+                        </td>
+                            </tr>
+                                <tr>
+
+                <td>
+                    Burkina Faso                </td>
+                <td>
+                    National Malaria Program                </td>
+                <td>
+                    Artesunate Injectable 120mg                </td>
+                <td>
+                    Nov                </td>
+                <td>
+                    2021                </td>
+                                    <td>
+                        </td>
+                                    <td>
+                        </td>
+                                    <td>
+                        No</td>
+                                    <td>
+                        0</td>
+                                    <td>
+                        0.00</td>
+                                    <td>
+                        0</td>
+                                    <td>
+                        01-Jan-70</td>
+                                    <td>
+                        6</td>
+                                    <td>
+                        12</td>
+                                    <td>
+                        01-Jan-70</td>
+                                    <td>
+                        </td>
+                                    <td>
+                        </td>
+                                    <td>
+                        </td>
+                                    <td>
+                        </td>
+                                    <td>
+                        </td>
+                                    <td>
+                        </td>
+                                    <td>
+                        </td>
+                            </tr>
+                                <tr>
+
+                <td>
+                    Burkina Faso                </td>
+                <td>
+                    National Malaria Program                </td>
+                <td>
+                    Artesunate Injectable 60mg                </td>
+                <td>
+                    Dec                </td>
+                <td>
+                    2021                </td>
+                                    <td>
+                        </td>
+                                    <td>
+                        Central Warehouse</td>
+                                    <td>
+                        No</td>
+                                    <td>
+                        406,752</td>
+                                    <td>
+                        0.83</td>
+                                    <td>
+                        490,660</td>
+                                    <td>
+                        01-Jan-70</td>
+                                    <td>
+                        6</td>
+                                    <td>
+                        12</td>
+                                    <td>
+                        01-Jan-70</td>
+                                    <td>
+                        </td>
+                                    <td>
+                        Combined (Actual + Forecasted)</td>
+                                    <td>
+                         A delivery of Global Fund is planned in  May 2022 . So agree with global fund to bring it in february 01st
+ PMI Delivery of october 2022  must be bring in february 2022 to avoid stockout.</td>
+                                    <td>
+                        20-Jan-22</td>
+                                    <td>
+                        PMI, Global Fund, Global Fund, Global Fund</td>
+                                    <td>
+                        200000, 500000, 500000, 150216</td>
+                                    <td>
+                        [PMI, 04-Oct-22(edd), 200000, 2.84, ARTMIS]  [Global Fund, 01-May-22(edd), 500000, 7.1, Country Team]  [Global Fund, 01-Jul-22(edd), 500000, 7.1, Country Team]  [Global Fund, 01-Aug-22(rdd), 150216, 2.13, Country Team]</td>
+                            </tr>
+                                <tr>
+
+                <td>
+                    Burkina Faso                </td>
+                <td>
+                    National Malaria Program                </td>
+                <td>
+                    Artemether/Lumefantrine 20mg/120mg 6x3 Blisters                </td>
+                <td>
+                    Dec                </td>
+                <td>
+                    2021                </td>
+                                    <td>
+                        </td>
+                                    <td>
+                        Central Warehouse</td>
+                                    <td>
+                        No</td>
+                                    <td>
+                        359,358</td>
+                                    <td>
+                        1.79</td>
+                                    <td>
+                        200,275</td>
+                                    <td>
+                        01-Jan-70</td>
+                                    <td>
+                        6</td>
+                                    <td>
+                        12</td>
+                                    <td>
+                        01-Jan-70</td>
+                                    <td>
+                        </td>
+                                    <td>
+                        Combined (Actual + Forecasted)</td>
+                                    <td>
+                          National stockout (all level) in February,2022. Early delivery recommended to avoid stock out.</td>
+                                    <td>
+                        28-Feb-22</td>
+                                    <td>
+                        PMI, Global Fund</td>
+                                    <td>
+                        1000020, 1483647</td>
+                                    <td>
+                        [PMI, 18-Jun-22(edd), 1000020, 9.16, ARTMIS]  [Global Fund, 30-Apr-22(edd), 1483647, 13.59, Country Team]</td>
+                            </tr>
+                                <tr>
+
+                <td>
+                    Burkina Faso                </td>
+                <td>
+                    National Malaria Program                </td>
+                <td>
+                    Artemether/Lumefantrine 20mg/120mg 6x1 Blisters                </td>
+                <td>
+                    Dec                </td>
+                <td>
+                    2021                </td>
+                                    <td>
+                        </td>
+                                    <td>
+                        Central Warehouse</td>
+                                    <td>
+                        No</td>
+                                    <td>
+                        395,961</td>
+                                    <td>
+                        0.9</td>
+                                    <td>
+                        442,182</td>
+                                    <td>
+                        01-Jan-70</td>
+                                    <td>
+                        6</td>
+                                    <td>
+                        12</td>
+                                    <td>
+                        01-Jan-70</td>
+                                    <td>
+                        </td>
+                                    <td>
+                        Combined (Actual + Forecasted)</td>
+                                    <td>
+                         Early delivery in March or April, 2022 to avoid National stockout in March,2022 .   </td>
+                                    <td>
+                        </td>
+                                    <td>
+                        PMI, PMI, Global Fund, Global Fund</td>
+                                    <td>
+                        1000020, 1500000, 1020900, 1756526</td>
+                                    <td>
+                        [PMI, 30-Jun-22(edd), 1000020, 4.15, ARTMIS]  [PMI, 11-Apr-22(edd), 1500000, 6.22, ARTMIS]  [Global Fund, 15-Apr-22(rdd), 1020900, 4.24, Country Team]  [Global Fund, 01-Jul-22(edd), 1756526, 7.29, Country Team]</td>
+                            </tr>
+                                <tr>
+
+                <td>
+                    Burkina Faso                </td>
+                <td>
+                    National Malaria Program                </td>
+                <td>
+                    Artemether/Lumefantrine 20mg/120mg 6x2 Blisters                </td>
+                <td>
+                    Dec                </td>
+                <td>
+                    2021                </td>
+                                    <td>
+                        </td>
+                                    <td>
+                        Central Warehouse</td>
+                                    <td>
+                        No</td>
+                                    <td>
+                        2,361,248</td>
+                                    <td>
+                        4.85</td>
+                                    <td>
+                        486,811</td>
+                                    <td>
+                        01-Jan-70</td>
+                                    <td>
+                        6</td>
+                                    <td>
+                        12</td>
+                                    <td>
+                        01-Jan-70</td>
+                                    <td>
+                        </td>
+                                    <td>
+                        Combined (Actual + Forecasted)</td>
+                                    <td>
+                        The level of stock at the districts level is good (MOS=12) .  So no action recommended</td>
+                                    <td>
+                        20-Jan-22</td>
+                                    <td>
+                        PMI, Global Fund, Global Fund</td>
+                                    <td>
+                        1000020, 609720, 778770</td>
+                                    <td>
+                        [PMI, 30-Jun-22(edd), 1000020, 3.77, ARTMIS]  [Global Fund, 30-Apr-22(rdd), 609720, 2.3, Country Team]  [Global Fund, 31-Jul-22(rdd), 778770, 2.93, Country Team]</td>
+                            </tr>
+                                <tr>
+
+                <td>
+                    Burkina Faso                </td>
+                <td>
+                    National Malaria Program                </td>
+                <td>
+                    Artemether/Lumefantrine 20mg/120mg 6x4 Blisters                </td>
+                <td>
+                    Dec                </td>
+                <td>
+                    2021                </td>
+                                    <td>
+                        </td>
+                                    <td>
+                        Central Warehouse</td>
+                                    <td>
+                        No</td>
+                                    <td>
+                        814,655</td>
+                                    <td>
+                        1.82</td>
+                                    <td>
+                        447,702</td>
+                                    <td>
+                        01-Jan-70</td>
+                                    <td>
+                        6</td>
+                                    <td>
+                        12</td>
+                                    <td>
+                        01-Jan-70</td>
+                                    <td>
+                        </td>
+                                    <td>
+                        Combined (Actual + Forecasted)</td>
+                                    <td>
+                        At the end of March, 2022 , The National level of stock will be (3 MOS) . So no  action recommended before Global fund delivery ( in April)</td>
+                                    <td>
+                        </td>
+                                    <td>
+                        PMI, Global Fund, Global Fund</td>
+                                    <td>
+                        1499850, 1209480, 1879341</td>
+                                    <td>
+                        [PMI, 31-May-22(edd), 1499850, 6.15, ARTMIS]  [Global Fund, 30-Apr-22(edd), 1209480, 4.96, Country Team]  [Global Fund, 01-Jul-22(edd), 1879341, 7.7, Country Team]</td>
+                            </tr>
+                                <tr>
+
+                <td>
+                    Burkina Faso                </td>
+                <td>
+                    National Malaria Program                </td>
+                <td>
+                    Rapid Diagnostic Tests                </td>
+                <td>
+                    Dec                </td>
+                <td>
+                    2021                </td>
+                                    <td>
+                        </td>
+                                    <td>
+                        Central Warehouse</td>
+                                    <td>
+                        No</td>
+                                    <td>
+                        11,307,150</td>
+                                    <td>
+                        4.92</td>
+                                    <td>
+                        2,299,163</td>
+                                    <td>
+                        13-Jan-22</td>
+                                    <td>
+                        6</td>
+                                    <td>
+                        12</td>
+                                    <td>
+                        13-Jan-22</td>
+                                    <td>
+                        </td>
+                                    <td>
+                        Combined (Actual + Forecasted)</td>
+                                    <td>
+                         There are already 6 MOS at the service delivery Points (SDP) according to the quaterly report (October- december) of the Ministry of Health.
+ We are also 4,9 MOS at central level, So RDT delivery could start in June,2022.</td>
+                                    <td>
+                        20-Jan-22</td>
+                                    <td>
+                        PMI, PMI, Global Fund, Global Fund</td>
+                                    <td>
+                        3000000, 4000000, 5000000, 6820650</td>
+                                    <td>
+                        [PMI, 01-Jun-22(rdd), 3000000, 2.28, ARTMIS]  [PMI, 01-Apr-22(rdd), 4000000, 1.74, ARTMIS]  [Global Fund, 01-Jun-22(rdd), 5000000, 3.8, Country Team]  [Global Fund, 01-Sep-22(rdd), 6820650, 5.19, Country Team]</td>
+                            </tr>
+                                
+                        </tbody>
+</table>
+</div>
+</div>
+<div style="display:none">
+<canvas id="myChart"></canvas>
+</div>
