@@ -12,6 +12,7 @@ using Volo.Abp.Domain.Repositories;
 using PPMRm.Products;
 using System;
 using System.ComponentModel.DataAnnotations;
+using PPMRm.Reports;
 
 namespace PPMRm.Web.Pages.Reports
 {
@@ -21,12 +22,14 @@ namespace PPMRm.Web.Pages.Reports
         ICountryRepository CountryRepository { get; }
         IRepository<Product, string> ProductRepository { get; }
         IRepository<Core.Program, int> ProgramRepository { get; }
+        IReportAppService ReportAppService { get; }
 
-        public BuildModel(ICountryRepository countryRepository, IRepository<Product, string> productRepository, IRepository<Core.Program, int> programRepository)
+        public BuildModel(ICountryRepository countryRepository, IRepository<Product, string> productRepository, IRepository<Core.Program, int> programRepository, IReportAppService reportAppService)
         {
             CountryRepository = countryRepository;
             ProductRepository = productRepository;
             ProgramRepository = programRepository;
+            ReportAppService = reportAppService;
         }
         public async Task OnGetAsync()
         {
@@ -45,7 +48,7 @@ namespace PPMRm.Web.Pages.Reports
             SelectedYear = 2022; // TODO: Get latest year from period repo
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public async Task OnPostAsync()
         {
             var allCountries = await CountryRepository.GetUserCountriesAsync();
             Countries = allCountries.OrderBy(c => c.Name).Select(c => new SelectListItem { Value = c.Id, Text = c.Name }).ToList();
@@ -55,10 +58,17 @@ namespace PPMRm.Web.Pages.Reports
             //SelectedProducts = Products.Select(p => p.Value).ToList();
             var allPrograms = await ProgramRepository.GetQueryableAsync();
             Programs = allPrograms.OrderBy(p => p.Name).ToList().Select(p => new SelectListItem { Value = $"{p.Id}", Text = p.Name }).ToList();
-            //SelectedPrograms = Programs.Select(p => p.Value).ToList();
-           // Months = Enumerable.Range(1, 12).Select(i => new SelectListItem { Value = $"{i}", Text = DateTimeFormatInfo.CurrentInfo.GetMonthName(i) }).ToList();
+            //var allPrograms = await ProgramRepository.GetQueryableAsync();
+            var request = new GetStockStatusDto
+            {
+                CountryIds = SelectedCountries ?? new List<string>(),
+                ProductIds = SelectedProducts ?? new List<string>(),
+                ProgramIds = SelectedPrograms?.Select(x => Convert.ToInt32(x)).ToList() ?? new List<int>(),
+                StartPeriodId = StartPeriodId,
+                EndPeriodId = EndPeriodId
+            };
 
-            return NoContent();
+            Results = await ReportAppService.GetStockStatusAsync(request);
         }
         public List<SelectListItem> Countries { get; set; } = new();
         public List<SelectListItem> Products { get; set; } = new();
@@ -79,11 +89,13 @@ namespace PPMRm.Web.Pages.Reports
         [DisplayName("Period")]
         public int SelectedMonth { get; set; }
         [Required]
-        public string StartPeriod { get; set; }
+        public DateTime? StartPeriod { get; set; }
         [Required]
-        public string EndPeriod { get; set; }
+        public DateTime? EndPeriod { get; set; }
 
-        //public int StartPeriodId => Convert.ToInt32(StartPeriod.Value.ToString("yyyyMM"));
-        //public int EndPeriodId => Convert.ToInt32(EndPeriod.Value.ToString("yyyyMM"));
+        public List<StockStatusDto> Results { get; set; }
+
+        public int StartPeriodId => Convert.ToInt32(StartPeriod.Value.ToString("yyyyMM"));
+        public int EndPeriodId => Convert.ToInt32(EndPeriod.Value.ToString("yyyyMM"));
     }
 }

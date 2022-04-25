@@ -109,7 +109,7 @@
     });
 
     $('#tblReport').DataTable({
-        dom: 'Brt',
+        dom: 'Brtp',
         buttons: [
             {
                 extend: 'copyHtml5',
@@ -123,6 +123,7 @@
                     columns: ':visible'
                 }
             },
+            'csv',
             'colvis'
         ]
     });

@@ -12,8 +12,8 @@ namespace PPMRm.Reports
         public Core.PeriodDto Period { get; set; }
         public List<string> SOHLevels { get; set; }
         public decimal SOH { get; set; }
-        public decimal AMC { get; set; }
-        public decimal? MOS => AMC > 0 ? SOH / AMC : null;
+        public decimal? AMC { get; set; }
+        public decimal? MOS => AMC.HasValue && AMC > 0 ? SOH / AMC : null;
         public DateTime? DateOfSOH { get; set; }
         public decimal MinStock { get; set; }
         public decimal MaxStock { get; set; }
