@@ -1,4 +1,9 @@
 ﻿@page
+@using Volo.Abp.AspNetCore.Mvc.UI.Layout
+@inject IPageLayout PageLayout
+@{
+    PageLayout.Content.Title = "Build Your Own Report";
+}
 @model PPMRm.Web.Pages.Reports.BuildModel
 @{
 }
@@ -20,7 +25,7 @@
     <link rel="stylesheet" href="/styles/buttons.dataTables.min.css">
     
 }
-<abp-card>
+<abp-card class="mb-2">
     <abp-card-header>
                 <abp-card-title>Build Your Own Report</abp-card-title><br />
             <abp-card-subtitle class="text-muted mb-3">Stock Status list page</abp-card-subtitle>
@@ -99,32 +104,26 @@
         
     </abp-card-body>
 </abp-card>
-<div class="mt-2">
+<div class="mx-2 pl-5">
 
-<div class="table-responsive table-body">
-<table id="tblReport" class="table-striped table-bordered table-sm .w-auto small">
+<div class="table-responsive table-body full-width px-2">
+<table id="tblReport" class="table-striped table-bordered table-sm .w-auto small .mx-auto" style="width:90%">
     <thead>
             <th>Country</th>
             <th>Program</th>
             <th>Product</th>
-            <th>Month</th>
+            <th>Period</th>
             <th>Year</th>
-            <th>Period Month</th>
             <th>SOH Levels</th>
-            <th>No New Data</th>
             <th>Stock on Hand</th>
             <th>MOS</th>
             <th>AMC</th>
             <th>Date of SOH</th>
             <th>Min</th>
             <th>Max</th>
-            <th>Date Stock Reported</th>
             <th>Source Of Consumption</th>
-            <th>Source Of Consumption Type</th>
             <th>Actions Recommended</th>
             <th>Date Action Needed by</th>
-            <th>Supplier of Next Shipment</th>
-            <th>Next Shipment Quantity</th>
             <th>Next Shipment Info (Supplier, Expected Date, Quantity, Shipment MOS, Data Source)</th>
                     
     </thead>
@@ -137,25 +136,19 @@
                     <td>@s.Country.Name</td>
                     <td>@s.Program.Name</td>
                     <td>@s.Product.Name</td>
-                    <td>@s.Period.ShortName</td>
+                    <td>@s.Period.MonthName</td>
                     <td>@s.Period.Year</td>
-                    <td>@s.Period.ShortName</td>
-                    <td></td>
-                    <td></td>
+                    <td>@s.SOHLevels</td>
                     <td>@s.SOH</td>
                     <td>@s.MOS?.ToString("N1")</td>
                     <td>@s.AMC</td>
-                    <td>@s.DateOfSOH</td>
+                    <td>@s.DateOfSOH?.ToString(PPMRm.PeriodReports.PeriodReportConsts.DataFormatting.DateFormat)</td>
                     <td>@s.MinStock</td>
                     <td>@s.MaxStock</td>
-                    <td>@s.DateOfSOH</td>
-                    <td>@s.SourceOfConsumption</td>
                     <td>@s.SourceOfConsumption</td>
                     <td>@s.ActionRecommended</td>
-                    <td>@s.DateActionNeededBy</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td>@s.DateActionNeededBy?.ToString(PPMRm.PeriodReports.PeriodReportConsts.DataFormatting.DateFormat)</td>
+                    <td>@s.ShipmentSummary</td>
                 </tr>           
             }
         }

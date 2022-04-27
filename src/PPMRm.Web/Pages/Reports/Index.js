@@ -98,18 +98,24 @@
 
     $("#StartPeriod").datepicker({
         format: "MM yyyy",
-        startView: "months",
+        startView: "years",
         minViewMode: "months",
+        startDate: "December 2021",
+        endDate: new Date()
     });
 
     $("#EndPeriod").datepicker({
         format: "MM yyyy",
-        startView: "months",
+        startView: "years",
         minViewMode: "months",
+        startDate: "December 2021",
+        endDate: new Date()
     });
 
     $('#tblReport').DataTable({
         dom: 'Brtp',
+        paging: false,
+        serverSide: false,
         buttons: [
             {
                 extend: 'copyHtml5',
@@ -121,10 +127,11 @@
                 extend: 'excelHtml5',
                 exportOptions: {
                     columns: ':visible'
-                }
+                },
+                title: `Period Reports:  ${$("#StartPeriod").val()} - ${$("#EndPeriod").val()}`
             },
             'csv',
-            'colvis'
+            'columnsToggle'
         ]
     });
 });

@@ -72,14 +72,30 @@ namespace PPMRm.Reports
                                 && periodReportIds.Contains(ps.PeriodReportId)
                                 select ps;
 
-            var productStocksResult = productStocksQueryable.ToList();
+            var productShipmentsQueryable = from ps in (await PeriodReportRepository.WithDetailsAsync(x => x.ProductShipments)).SelectMany(x => x.ProductShipments)
+                                            where request.ProductIds.Contains(ps.ProductId) && request.ProgramIds.Contains(ps.ProgramId)
+                                            && periodReportIds.Contains(ps.PeriodReportId)
+                                            select ps;
+                                            
 
+            var productStocksResult = productStocksQueryable.ToList();
+            var productShipmentsResult = from ps in productShipmentsQueryable.ToList()
+                                         group ps by new { ps.PeriodReportId, ps.ProgramId, ps.ProductId } into g
+                                         select new
+                                         {
+                                             PeriodReportId = g.Key.PeriodReportId,
+                                             ProgramId = g.Key.ProgramId,
+                                             ProductId = g.Key.ProductId,
+                                             Shipments = g.ToList()
+                                         };
 
 
             var result = from ps in productStocksResult
                                 join product in await ProductRepository.GetQueryableAsync() on ps.ProductId equals product.Id
                                 join program in await ProgramRepository.GetQueryableAsync() on ps.ProgramId equals program.Id
                                 join pr in periodReportsResult on ps.PeriodReportId equals pr.PeriodReport.Id
+                                join ship in productShipmentsResult on new { ps.PeriodReportId, ps.ProgramId, ps.ProductId } equals new { ship.PeriodReportId, ship.ProgramId, ship.ProductId } into shipments
+                                from s in shipments.DefaultIfEmpty()
                                 where request.ProgramIds.Contains(program.Id) && request.ProductIds.Contains(product.Id)
                                 orderby pr.Country.Name
                                 //join c in countriesQueryable on pr.Country.Id equals c.Id
@@ -88,7 +104,7 @@ namespace PPMRm.Reports
                                 select new StockStatusDto
                                 {
                                     Country = new CountryDto { Id = pr.Country.Id, Name = pr.Country.Name},
-                                    Period = new PeriodDto { Id = pr.Period.Id, StartDate = pr.Period.StartDate, EndDate = pr.Period.EndDate},
+                                    Period = new PeriodDto { Id = pr.Period.Id, StartDate = pr.Period.StartDate, EndDate = pr.Period.EndDate, Year = pr.Period.Year, Month = pr.Period.Month},
                                     Product = new ProductDto { Id = product.Id, Name = product.Name },
                                     Program = new ProgramDto { Id = program.Id, Name = program.Name},
                                     ActionRecommended = ps.ActionRecommended,
@@ -97,11 +113,19 @@ namespace PPMRm.Reports
                                     DateOfSOH = ps.DateOfSOH,
                                     MaxStock = pr.Country.MaxStock,
                                     MinStock = pr.Country.MinStock,
-                                    //Shipments = new List<ShipmentSummaryDto>(),
+                                    Shipments = s?.Shipments?.Select(x => new ShipmentSummaryDto
+                                    {
+                                        AMC = ps.AMC,
+                                        Supplier = x.Supplier.ToString(),
+                                        Quantity = x.Quantity,
+                                        DataSource = x.DataSource,
+                                        ShipmentDate = x.ShipmentDate,
+                                        ShipmentDateType = x.ShipmentDateType,
+                                        Id = x.Id
+                                    }).ToList() ?? new List<ShipmentSummaryDto>(),
                                     SOH = ps.SOH,
-                                    //SOHLevels = ps.SOHLevels.ToString(),
-                                    //SourceOfConsumption = ps.SourceOfConsumption == ,
-                                    
+                                    SOHLevels = ps.SOHLevels.ToString(),
+                                    SourceOfConsumption = ps.OtherSourceOfConsumption ?? ps.SourceOfConsumption.ToString()
                                 };
 
             return result.ToList();
