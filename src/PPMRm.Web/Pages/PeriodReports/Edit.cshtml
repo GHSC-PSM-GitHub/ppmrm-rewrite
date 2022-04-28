@@ -31,7 +31,7 @@
                 <abp-button id="edit-cs-updates" data-id="@Model.Id"
                                 text="@(Model.IsReadonly ? "View CS Updates" : "View/Edit CS Updates")"
                                 button-type="Primary"/>
-                                @if((await AuthService.AuthorizeAsync(PPMRmConsts.Permissions.DataReviewer)).Succeeded)
+                                @if((await AuthService.AuthorizeAsync(PPMRmConsts.Permissions.DataAdministrator)).Succeeded)
                     {
                         <div class="btn-group">
                             @if(Model.PeriodReport.ReportStatus == PeriodReportStatus.Initialized)
@@ -70,7 +70,7 @@
                                     <abp-card-title>@program.Program.Name</abp-card-title>
                                 </abp-column>
                                 <abp-column size-md="_6" class="text-right">
-                                @if(!Model.IsReadonly)
+                                @if(!Model.IsReadonly && (await AuthService.AuthorizeAsync(PPMRmConsts.Permissions.DataProvider)).Succeeded)
                         {
                         <abp-button class="btn-add-program-product btn-sm @(Model.IsReadonly ? "disabled" : "")"
                                                 data-period-report-id="@program.PeriodReportId"
@@ -166,7 +166,7 @@
                                             }
                                         <abp-row>
                                             
-                                                @if(!Model.IsReadonly)
+                                                @if(!Model.IsReadonly && (await AuthService.AuthorizeAsync(PPMRmConsts.Permissions.DataProvider)).Succeeded)
                                                 {
                                             <abp-column size-md="_4">
 

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using PPMRm.PeriodReports;
@@ -20,17 +21,18 @@ namespace PPMRm.Web.Pages.PeriodReports
 
         public bool IsReadonly { get; set; }
         IPeriodReportAppService AppService { get; }
-
-        public CSModalModel(IPeriodReportAppService appService)
+        IAuthorizationService AuthService { get; }
+        public CSModalModel(IPeriodReportAppService appService, IAuthorizationService authService)
         {
             AppService = appService;
+            AuthService = authService;
         }
         public async Task OnGetAsync()
         {
             var periodReport = await AppService.GetAsync(Id);
             CSUpdates = ObjectMapper.Map<CommoditySecurityUpdatesDto, CSUpdateViewModel>(periodReport.CommoditySecurityUpdates);
             Title = $"{periodReport.Country.Name} - {periodReport.Period.ShortName}";
-            IsReadonly = periodReport.ReportStatus != PeriodReportStatus.Open && periodReport.ReportStatus != PeriodReportStatus.Reopened;
+            IsReadonly = (periodReport.ReportStatus != PeriodReportStatus.Open && periodReport.ReportStatus != PeriodReportStatus.Reopened) || !(await AuthService.AuthorizeAsync(PPMRmConsts.Permissions.DataProvider)).Succeeded;
         }
 
         public async Task<IActionResult> OnPostAsync()

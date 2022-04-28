@@ -20,6 +20,7 @@
     "Permissions:Core": "PPMRm",
     "Permissions:DataReviewer": "Data Reviewer",
     "Permissions:DataProvider": "Data Provider",
+    "Permissions:DataAdministrator": "Data Administrator",
     "Enum:PeriodReportStatus:0": "Initialized",
     "Enum:PeriodReportStatus:1": "Open",
     "Enum:PeriodReportStatus:2": "Marked as Final",
