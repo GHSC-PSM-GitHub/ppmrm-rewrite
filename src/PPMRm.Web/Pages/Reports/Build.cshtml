@@ -22,7 +22,7 @@
 
 @section styles
 {
-    <link rel="stylesheet" type="text/css" href="/js/jquery.dataTables.min.css" />
+    <link rel="stylesheet" type="text/css" href="/styles/jquery.dataTables.min.css" />
    <link rel="stylesheet" href="/libs/datatables.net-bs4/css/dataTables.bootstrap4.css" />
     <link rel="stylesheet" href="/styles/buttons.dataTables.min.css" />
     
@@ -126,7 +126,8 @@
             <th>Next Shipment Info (Supplier, Expected Date, Quantity, Shipment MOS, Data Source)</th>
             @for(var i=0; i < Model.ShipmentColumns; i++)
             {
-                <th class="col-shipment">Shipment @(i+1)</th>
+                <th class="col-shipment">Shipment @(i+1) Qty</th>
+                <th class="col-shipment">Shipment @(i+1) MOS</th>
             }
                     
     </thead>
@@ -156,10 +157,12 @@
                     {
                         if(@s.Shipments?.Count > i)
                         {
-                            <td>@s[i]</td>
+                            <td>@s[i].Quantity </td>
+                            <td>@s[i].MOS?.ToString("N1")</td>
                         }
                         else
                         {
+                            <td></td>
                             <td></td>
                         }
                     }

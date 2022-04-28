@@ -130,11 +130,6 @@
                 extend: 'excelHtml5',
                 title: `Period Reports:  ${$("#StartPeriod").val()} - ${$("#EndPeriod").val()}`
             },
-            {
-                extend: 'pdfHtml5',
-                orientation: 'landscape',
-                pageSize: 'LEGAL'
-            },
             'csv',
             'columnsToggle'
         ]
