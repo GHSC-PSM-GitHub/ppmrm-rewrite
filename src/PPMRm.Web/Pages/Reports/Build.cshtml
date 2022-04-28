@@ -12,17 +12,19 @@
     <abp-script src="/Pages/Reports/Index.js" />
     <abp-script src="/js/bootstrap-multiselect.min.js" />
     <abp-script src="/libs/datatables.net/js/jquery.dataTables.js" />
-    <abp-script src="/js/jszip.min.js" />
     <abp-script src="/js/dataTables.buttons.min.js" />
-    <abp-script src="/libs/datatables.net-bs4/js/dataTables.bootstrap4.js" />
+    <abp-script src="/js/jszip.min.js" />
+    <abp-script src="/js/pdfmake.min.js" />
+    <abp-script src="/js/vfs_fonts.js" />
     <abp-script src="/libs/chart.js/Chart.bundle.js" />
     <abp-script src="/js/buttons.html5.min.js" />
 }
 
 @section styles
 {
-    <link rel="stylesheet" href="/libs/datatables.net-bs4/css/dataTables.bootstrap4.css">
-    <link rel="stylesheet" href="/styles/buttons.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="/js/jquery.dataTables.min.css" />
+   <link rel="stylesheet" href="/libs/datatables.net-bs4/css/dataTables.bootstrap4.css" />
+    <link rel="stylesheet" href="/styles/buttons.dataTables.min.css" />
     
 }
 <abp-card class="mb-2">
@@ -100,14 +102,11 @@
 </form>
         
     </abp-card-header>
-    <abp-card-body>
-        
-    </abp-card-body>
 </abp-card>
-<div class="mx-2 pl-5">
+<div class="">
 
-<div class="table-responsive table-body full-width px-2">
-<table id="tblReport" class="table-striped table-bordered table-sm .w-auto small .mx-auto" style="width:90%">
+<div class="table-responsive ">
+<table id="tblReport" class="table-striped table-bordered table-sm .mx-5 small display compact">
     <thead>
             <th>Country</th>
             <th>Program</th>
@@ -115,7 +114,7 @@
             <th>Period</th>
             <th>Year</th>
             <th>SOH Levels</th>
-            <th>Stock on Hand</th>
+            <th>SOH</th>
             <th>MOS</th>
             <th>AMC</th>
             <th>Date of SOH</th>
@@ -125,6 +124,10 @@
             <th>Actions Recommended</th>
             <th>Date Action Needed by</th>
             <th>Next Shipment Info (Supplier, Expected Date, Quantity, Shipment MOS, Data Source)</th>
+            @for(var i=0; i < Model.ShipmentColumns; i++)
+            {
+                <th class="col-shipment">Shipment @(i+1)</th>
+            }
                     
     </thead>
     <tbody>
@@ -139,9 +142,9 @@
                     <td>@s.Period.MonthName</td>
                     <td>@s.Period.Year</td>
                     <td>@s.SOHLevels</td>
-                    <td>@s.SOH</td>
+                    <td>@s.SOH.ToString(PPMRm.PeriodReports.PeriodReportConsts.DataFormatting.SOH_AMC_Format)</td>
                     <td>@s.MOS?.ToString("N1")</td>
-                    <td>@s.AMC</td>
+                    <td>@s.AMC?.ToString(PPMRm.PeriodReports.PeriodReportConsts.DataFormatting.SOH_AMC_Format)</td>
                     <td>@s.DateOfSOH?.ToString(PPMRm.PeriodReports.PeriodReportConsts.DataFormatting.DateFormat)</td>
                     <td>@s.MinStock</td>
                     <td>@s.MaxStock</td>
@@ -149,6 +152,17 @@
                     <td>@s.ActionRecommended</td>
                     <td>@s.DateActionNeededBy?.ToString(PPMRm.PeriodReports.PeriodReportConsts.DataFormatting.DateFormat)</td>
                     <td>@s.ShipmentSummary</td>
+                    @for(var i=0; i < Model.ShipmentColumns; i++)
+                    {
+                        if(@s.Shipments?.Count > i)
+                        {
+                            <td>@s[i]</td>
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+                    }
                 </tr>           
             }
         }

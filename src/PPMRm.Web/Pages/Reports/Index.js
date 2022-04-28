@@ -114,8 +114,11 @@
 
     $('#tblReport').DataTable({
         dom: 'Brtp',
-        paging: false,
+        paging: true,
         serverSide: false,
+        columnDefs: [
+            { targets: 'col-shipment', visible: false }
+        ],
         buttons: [
             {
                 extend: 'copyHtml5',
@@ -125,13 +128,17 @@
             },
             {
                 extend: 'excelHtml5',
-                exportOptions: {
-                    columns: ':visible'
-                },
                 title: `Period Reports:  ${$("#StartPeriod").val()} - ${$("#EndPeriod").val()}`
+            },
+            {
+                extend: 'pdfHtml5',
+                orientation: 'landscape',
+                pageSize: 'LEGAL'
             },
             'csv',
             'columnsToggle'
         ]
     });
+    //$('#tblReport').DataTable();
+    $('#tblReport').removeClass('dataTable');
 });

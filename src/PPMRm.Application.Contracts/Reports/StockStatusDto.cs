@@ -13,7 +13,7 @@ namespace PPMRm.Reports
         public string SOHLevels { get; set; }
         public decimal SOH { get; set; }
         public decimal? AMC { get; set; }
-        public decimal? MOS => AMC.HasValue && AMC > 0 ? SOH / AMC : null;
+        public decimal? MOS => SOH == 0 ? 0 : AMC.HasValue && AMC > 0 ? SOH / AMC : null;
         public DateTime? DateOfSOH { get; set; }
         public decimal MinStock { get; set; }
         public decimal MaxStock { get; set; }
@@ -22,6 +22,11 @@ namespace PPMRm.Reports
         public DateTime? DateActionNeededBy { get; set; }
         public List<ShipmentSummaryDto> Shipments { get; set; }
         public string ShipmentSummary => string.Join(" ", Shipments ?? new List<ShipmentSummaryDto>());
+
+        public ShipmentSummaryDto this[int i]
+        {
+            get { return Shipments?.Count >= i ? Shipments[i] : null; }
+        }
     }
 
     public class ShipmentSummaryDto
