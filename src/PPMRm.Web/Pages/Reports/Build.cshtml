@@ -22,7 +22,6 @@
 
 @section styles
 {
-    <link rel="stylesheet" type="text/css" href="/styles/jquery.dataTables.min.css" />
    <link rel="stylesheet" href="/libs/datatables.net-bs4/css/dataTables.bootstrap4.css" />
     <link rel="stylesheet" href="/styles/buttons.dataTables.min.css" />
     
@@ -103,10 +102,10 @@
         
     </abp-card-header>
 </abp-card>
-<div class="">
+<div class="" style="">
 
-<div class="table-responsive ">
-<table id="tblReport" class="table-striped table-bordered table-sm .mx-5 small display compact">
+<div class="table-responsive-lg">
+<table id="tblReport" class="table-striped table-bordered table-sm small display compact my-5" style="zoom:80%;">
     <thead>
             <th>Country</th>
             <th>Program</th>
@@ -124,17 +123,19 @@
             <th>Actions Recommended</th>
             <th>Date Action Needed by</th>
             <th>Next Shipment Info (Supplier, Expected Date, Quantity, Shipment MOS, Data Source)</th>
-            @for(var i=0; i < Model.ShipmentColumns; i++)
+            @if(Model.Results != null && Model.Results.Any())
             {
-                <th class="col-shipment">Shipment @(i+1) Qty</th>
-                <th class="col-shipment">Shipment @(i+1) MOS</th>
-            }
-                    
+                @for(var i=0; i < Model.ShipmentColumns; i++)
+                {
+                    <th class="col-shipment">Shipment @(i+1) Qty</th>
+                    <th class="col-shipment">Shipment @(i+1) MOS</th>
+                }
+            }       
     </thead>
     <tbody>
         @if(Model.Results != null && Model.Results.Any())
         {
-            foreach(var s in Model.Results.OrderBy(x => x.Period.Id).ThenBy(x => x.Country.Name))
+            foreach(var s in Model.Results)
             {
                 <tr>
                     <td>@s.Country.Name</td>

@@ -95,7 +95,7 @@ namespace PPMRm.Web.Pages.Reports
 
         public List<StockStatusDto> Results { get; set; }
 
-        public int ShipmentColumns => Results?.Max(x => x.Shipments?.Count ?? 0) ?? 0;
+        public int ShipmentColumns => Results != null && Results.Any() ? Results.Max(x => x.Shipments?.Count ?? 0) : 0;
 
         public int StartPeriodId => Convert.ToInt32(StartPeriod.Value.ToString("yyyyMM"));
         public int EndPeriodId => Convert.ToInt32(EndPeriod.Value.ToString("yyyyMM"));

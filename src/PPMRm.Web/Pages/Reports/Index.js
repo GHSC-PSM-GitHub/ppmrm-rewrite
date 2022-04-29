@@ -136,4 +136,6 @@
     });
     //$('#tblReport').DataTable();
     $('#tblReport').removeClass('dataTable');
+    $('div.dt-buttons > button').removeClass('dt-button');
+    $('div.dt-buttons > button').addClass('btn btn-primary mb-2');
 });
