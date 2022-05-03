@@ -127,11 +127,11 @@
             {
                 @for(var i=0; i < Model.ShipmentColumns; i++)
                 {
+                    <th class="col-shipment">Shipment @(i+1) Supplier</th>
                     <th class="col-shipment">Shipment @(i+1) Qty</th>
                     <th class="col-shipment">Shipment @(i+1) MOS</th>
+                    <th class="col-shipment">Shipment @(i+1) Date</th>
                 }
-                <th class="col-shipment">Total Shipment Qty</th>
-                <th class="col-shipment">Total Shipment MOS</th>
 
             }       
     </thead>
@@ -161,17 +161,19 @@
                     {
                         if(@s.Shipments?.Count > i)
                         {
+                            <td>@s[i].Supplier</td>
                             <td>@s[i].Quantity </td>
                             <td>@s[i].MOS?.ToString("N1")</td>
+                            <td>@s[i].ShipmentDate?.ToString(PPMRm.PeriodReports.PeriodReportConsts.DataFormatting.DateFormat)</td>
                         }
                         else
                         {
                             <td></td>
                             <td></td>
+                            <td></td>
+                            <td></td>
                         }
                     }
-                    <td>@s.Shipments?.Sum(x => x.Quantity)</td>
-                    <td>@s.Shipments?.Sum(x => x.MOS)</td>
                 </tr>           
             }
         }
