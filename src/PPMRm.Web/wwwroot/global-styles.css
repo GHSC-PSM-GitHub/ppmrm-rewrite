@@ -19,3 +19,56 @@ button.multiselect {
     margin-left: -50vw;
     margin-right: -50vw;
 }
+section {
+    display:block;
+}
+
+.chart-container {
+    position: relative;
+    margin: auto;
+    height: 40vh;
+    width: 75vw;
+}
+
+.scrollable {
+    height: 50vw;
+    overflow-y: scroll;
+}
+
+@media screen {
+    header {
+        display:none;
+    }
+}
+
+@media print {
+    @page {
+        size: landscape
+    }
+
+    div.page-break {
+        page-break-after: always;
+    }
+
+    footer {
+        margin-top: 10px;
+    }
+
+    .chart-container
+    {
+        margin-top:50px;
+        margin-right:25vw;
+    }
+
+    .chart-container canvas {
+        margin-right: 25vw;
+    }
+
+    div.card {
+        display:none;
+    }
+
+    footer > p {
+        display: none;
+    }
+}

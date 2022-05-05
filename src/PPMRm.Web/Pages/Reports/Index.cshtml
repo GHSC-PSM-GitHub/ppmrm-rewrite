@@ -15,46 +15,187 @@
     <abp-script src="/libs/datatables.net-bs4/js/dataTables.bootstrap4.js" />
     <abp-script src="/libs/chart.js/Chart.bundle.js" />
     <abp-script src="/js/buttons.html5.min.js" />
+    <abp-script src="/js/jspdf.min.js" />
 }
 <abp-card>
     <abp-card-header>
                 <abp-card-title>View Period Reports</abp-card-title><br />
             <abp-card-subtitle class="text-muted mb-3">This page shows reporting summary for each country</abp-card-subtitle>
-            <form class="needs-validation" novalidate>
+            <form class="needs-validation" novalidate method="post">
   
 <div class="form-row mt-3">
-    <div class="col-md-4 mb-3">
+    <abp-input asp-for="@Model.SelectedPeriodId" value="@Model.SelectedPeriodId" />
+    <div class="col-md-6 mb-3">
       <div class="input-group">
         <div class="input-group-prepend">
-          <span class="input-group-text" id="inputGroupPrependCountry">Country</span>
+          <span class="input-group-text" id="inputGroupPrependCountry">Countries</span>
         </div>
         <select asp-for="@Model.SelectedCountries" asp-items="@Model.Countries"></select>
       </div>
     </div>
-    <div class="col-md-4 mb-3">
+    <div class="col-md-6 mb-3">
       <div class="input-group">
         <div class="input-group-prepend">
-          <span class="input-group-text" id="inputGroupPrependYear">Year</span>
+          <span class="input-group-text" id="inputGroupPrependCountry">Period</span>
         </div>
-        <select asp-for="@Model.SelectedYear" asp-items="@Model.Years" class="form-control"></select>
+      <input type="text" id="SelectedPeriod" asp-for="@Model.SelectedPeriod" name="SelectedPeriod" readonly="readonly" class="period-picker  form-control" />
       </div>
     </div>
-    <div class="col-md-4 mb-3">
+        
+  </div>
+
+  <div class="form-row mt-3">
+      <div class="col-md-12 mb-3">
       <div class="input-group">
-        <div class="input-group-prepend">
-          <span class="input-group-text" id="inputGroupPrependPeriod">Period</span>
-        </div>
-        <select asp-for="@Model.SelectedMonth" asp-items="@Model.Months" class="form-control"></select>
-       
+        
       </div>
+        <input type="submit" value="Generate" class="btn btn-primary form-control" />
     </div>
+    
   </div>
 </form>
         
     </abp-card-header>
-    <abp-card-body>
-<canvas id="myChart"></canvas>
+    
+        @if(Model.PeriodSummary != null)
+        {
+            <abp-card-body>
+            <div class="row">
+                <div class="col-sm-12 text-right">
+                    <button id="btnPdf" class="btn btn-primary">Download PDF</button>
+                </div>
+            </div>
     </abp-card-body>
+        }
 </abp-card>
+<div class="container" id="reportSummary">
+        @if(Model.PeriodSummary != null)
+        {
+            <header class="mt-5" style="vertical-align:central;">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <img class="img-fluid" src="/logos/usaid_deliver-no-bg.png" alt="MDN logo" />
+                    </div>
+                    <div class="col-sm-4 text-center">
+                        <h6>PROCUREMENT PLANNING AND MONITORING REPORT - MALARIA (PPMRm) Status Report Summary Summary</h6>
+                    </div>
+                    <div class="col-sm-2 text-center">
+                        <span>@Model.PeriodSummary.Period.ShortName</span>
+                    </div>
+                </div>
+</header>
+        
+        <div class="container">
+    <h3 class="text-center">Stockouts</h3>
+                <div class="chart-container mb-5">
+                    <canvas id="chrtStockouts" ></canvas>
+                    </div>
+                <table class="table">
+                <thead>
+                    <tr>
+                    <th>Product</th>
+                    <th>SOH</th>
+                    <th>MOS</th>
 
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var c in Model.PeriodSummary.CountrySummaries.Where(x => x.Stockouts.Any()))
+                    {
+                        <tr>
+                            <td>Min: @c.Country.MinStock </td>
+                            <td>Max: @c.Country.MaxStock</td>
+                            <td>@c.Country.Name</td>
+                        </tr>
+                        @foreach(var p in c.Stockouts)
+                        {
+                            <tr>
+                                <td>@p.Product.Name</td>
+                                <td>@p.SOH</td>
+                                <td>@p.MOS?.ToString("N1")</td>
+                            </tr>
+                        }
+                    }
 
+                </tbody>
+            
+                </table>
+                </div>
+                <div class="page-break"></div>
+<div class="container">
+    <h3 class="text-center">Shortages</h3>
+                <div class="chart-container mb-5">
+                    <canvas id="chrtShortages" ></canvas>
+                    </div>
+                <table class="table">
+                <thead>
+                    <tr>
+                    <th>Product</th>
+                    <th>SOH</th>
+                    <th>MOS</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var c in Model.PeriodSummary.CountrySummaries.Where(x => x.Shortages.Any()))
+                    {
+                        <tr>
+                            <td>Min: @c.Country.MinStock </td>
+                            <td>Max: @c.Country.MaxStock</td>
+                            <td>@c.Country.Name</td>
+                        </tr>
+                        @foreach(var p in c.Shortages)
+                        {
+                            <tr>
+                                <td>@p.Product.Name</td>
+                                <td>@p.SOH</td>
+                                <td>@p.MOS?.ToString("N1")</td>
+                            </tr>
+                        }
+                    }
+
+                </tbody>
+            
+                </table>
+                </div>
+                <div class="page-break"></div>
+
+                <div class="container">
+    <h3 class="text-center">Over Supply</h3>
+                <div class="chart-container mb-5">
+                    <canvas id="chrtOversupplies" ></canvas>
+                    </div>
+                <table class="table">
+                <thead>
+                    <tr>
+                    <th>Product</th>
+                    <th>SOH</th>
+                    <th>MOS</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var c in Model.PeriodSummary.CountrySummaries.Where(x => x.Oversupply.Any()))
+                    {
+                        <tr>
+                            <td>Min: @c.Country.MinStock </td>
+                            <td>Max: @c.Country.MaxStock</td>
+                            <td>@c.Country.Name</td>
+                        </tr>
+                        @foreach(var p in c.Oversupply)
+                        {
+                            <tr>
+                                <td>@p.Product.Name</td>
+                                <td>@p.SOH</td>
+                                <td>@p.MOS?.ToString("N1")</td>
+                            </tr>
+                        }
+                    }
+
+                </tbody>
+            
+                </table>
+                </div>
+                }
+
+                </div>

@@ -9,36 +9,54 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Volo.Abp.Domain.Repositories;
+using PPMRm.Reports;
+using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace PPMRm.Web.Pages.Reports
 {
+
+    [BindProperties]
     public class IndexModel : PPMRmPageModel
     {
         ICountryRepository CountryRepository { get; }
+        IReportAppService ReportAppService { get; }
 
-        public IndexModel(ICountryRepository countryRepository)
+        public IndexModel(ICountryRepository countryRepository, IReportAppService reportAppService)
         {
             CountryRepository = countryRepository;
+            ReportAppService = reportAppService;
         }
         public async Task OnGetAsync()
         {
             var allCountries = await CountryRepository.GetUserCountriesAsync();
             Countries = allCountries.OrderBy(c => c.Name).Select(c => new SelectListItem { Value = c.Id, Text = c.Name }).ToList();
             SelectedCountries = Countries.Select(c => c.Value).ToList();
-            Months = Enumerable.Range(1, 12).Select(i => new SelectListItem { Value = $"{i}", Text = DateTimeFormatInfo.CurrentInfo.GetMonthName(i) }).ToList();
-            SelectedMonth = 3; // TODO: Get latest month from period repo
-            Years = Enumerable.Range(2021, 2).Select(i => new SelectListItem { Value = $"{i}", Text = $"{i}" }).ToList();
-            SelectedYear = 2022; // TODO: Get latest year from period repo
+            //PeriodSummary = await ReportAppService.GetAsync(202203);
         }
 
+        public async Task OnPostAsync()
+        {
+            var allCountries = await CountryRepository.GetUserCountriesAsync();
+            Countries = allCountries.OrderBy(c => c.Name).Select(c => new SelectListItem { Value = c.Id, Text = c.Name }).ToList();
+            if (ModelState.IsValid)
+            {
+                SelectedPeriodId = Convert.ToInt32(SelectedPeriod.Value.ToString("yyyyMM"));
+                PeriodSummary = await ReportAppService.GetAsync(SelectedPeriodId.Value);
+            }
+            
+        }
+
+        public PeriodSummaryDto PeriodSummary { get; set; }        
         public List<SelectListItem> Countries { get; set; } = new();
         public List<SelectListItem> Years { get; set; } = new();
         public List<SelectListItem> Months { get; set; } = new();
         [DisplayName("Countries")]
         public List<string> SelectedCountries { get; set; } = new();
-        [DisplayName("Year")]
-        public int SelectedYear { get; set; }
-        [DisplayName("Period")]
-        public int SelectedMonth { get; set; }
+        [Required]
+        public DateTime? SelectedPeriod { get; set; }
+        [HiddenInput]
+        public int? SelectedPeriodId { get; set; }
+
     }
 }
