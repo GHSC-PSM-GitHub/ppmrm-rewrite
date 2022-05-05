@@ -62,6 +62,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Pages\Shared\" />
     <Folder Include="wwwroot\logos\" />
     <Folder Include="Components\Footer\" />
     <Folder Include="wwwroot\images\" />
