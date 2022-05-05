@@ -37,6 +37,8 @@ namespace PPMRm.Reports
             AsyncExecuter = asyncExecuter;
         }
 
+        #region Old Implementation
+
         [Obsolete]
         public async Task<List<StockStatusDto>> GetStockStatusLegacyAsync(GetStockStatusDto request)
         {
@@ -134,6 +136,8 @@ namespace PPMRm.Reports
             return result.ToList() ?? new List<StockStatusDto>();
         }
 
+        #endregion
+
         public async Task<List<StockStatusDto>> GetStockStatusAsync(GetStockStatusDto request)
         {
             var queryable = await PeriodReportRepository.WithDetailsAsync(x => x.ProductStocks, x => x.ProductShipments);
@@ -201,6 +205,76 @@ namespace PPMRm.Reports
                              };
 
             return stockQuery.OrderBy(x => x.Country.Name).ThenBy(x => x.Period.Id).ThenBy(x => x.Product.Name).ThenBy(x => x.Program.Name).ToList();
+        }
+
+        public async Task<PeriodSummaryDto> GetAsync(int id)
+        {
+            var queryable = await PeriodReportRepository.WithDetailsAsync(x => x.ProductStocks, x => x.ProductShipments);
+            var countries = await CountryRepository.GetQueryableAsync();
+            var periods = await PeriodRepository.GetQueryableAsync();
+            var products = await ProductRepository.GetListAsync();
+            var programs = await ProgramRepository.GetListAsync();
+            var period = await PeriodRepository.GetAsync(id);
+            var query = from pr in queryable
+                          join c in countries on pr.CountryId equals c.Id
+                          where pr.PeriodId == id && pr.ProductStocks.Any()
+                          select new
+                          {
+                              PeriodReport = pr,
+                              Country = c
+                          };
+            var results = await AsyncExecuter.ToListAsync(query);
+
+            var programProducts = from ps in results.SelectMany(x => x.PeriodReport.ProductStocks)
+                                  join pr in results on ps.PeriodReportId equals pr.PeriodReport.Id
+                                  join product in products on ps.ProductId equals product.Id
+                                  join program in programs on ps.ProgramId equals program.Id
+                                  select new ProgramProductDto
+                                  {
+                                      Product = new ProductDto { Id = product.Id, Name = product.Name },
+                                      ActionRecommended = ps.ActionRecommended,
+                                      AMC = ps.AMC,
+                                      DateActionNeededBy = ps.DateActionNeededBy,
+                                      DateOfSOH = ps.DateOfSOH,
+                                      MaxStock = pr.Country.MaxStock,
+                                      MinStock = pr.Country.MinStock,
+                                      OtherSourceOfConsumption = ps.OtherSourceOfConsumption,
+                                      Program = new ProgramDto { Id = program.Id, Name = program.Name},
+                                      ReportStatus = pr.PeriodReport.ReportStatus.GetValueOrDefault(),
+                                      Shipments = new List<ProductShipmentDto>(),
+                                      SOH = ps.SOH,
+                                      SourceOfConsumption = ps.SourceOfConsumption
+                                  };
+            var countrySummaries = results.Select(r => new CountrySummaryDto
+            {
+                Country = new CountryDto { Id = r.Country.Id, Name = r.Country.Name, MinStock = r.Country.MinStock, MaxStock = r.Country.MaxStock},
+                CSUpdates = ObjectMapper.Map<CommoditySecurityUpdates, CommoditySecurityUpdatesDto>(r.PeriodReport.CommoditySecurityUpdates),
+                Products = (from ps in r.PeriodReport.ProductStocks
+                           join pr in results on ps.PeriodReportId equals pr.PeriodReport.Id
+                           join product in products on ps.ProductId equals product.Id
+                           join program in programs on ps.ProgramId equals program.Id
+                           select new ProgramProductDto
+                           {
+                               Product = new ProductDto { Id = product.Id, Name = product.Name },
+                               ActionRecommended = ps.ActionRecommended,
+                               AMC = ps.AMC,
+                               DateActionNeededBy = ps.DateActionNeededBy,
+                               DateOfSOH = ps.DateOfSOH,
+                               MaxStock = pr.Country.MaxStock,
+                               MinStock = pr.Country.MinStock,
+                               OtherSourceOfConsumption = ps.OtherSourceOfConsumption,
+                               Program = new ProgramDto { Id = program.Id, Name = program.Name },
+                               ReportStatus = pr.PeriodReport.ReportStatus.GetValueOrDefault(),
+                               Shipments = new List<ProductShipmentDto>(),
+                               SOH = ps.SOH,
+                               SourceOfConsumption = ps.SourceOfConsumption
+                           }).ToList()
+            });
+            return new PeriodSummaryDto
+            {
+                CountrySummaries = countrySummaries.ToList(),
+                Period = new PeriodDto { Id = period.Id, StartDate = period.StartDate, EndDate = period.EndDate, Month = period.Month, Year = period.Year}
+            };
         }
     }
 }
