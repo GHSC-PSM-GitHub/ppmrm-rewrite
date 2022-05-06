@@ -127,7 +127,7 @@ namespace PPMRm.Reports
                                         ShipmentDate = x.ShipmentDate,
                                         ShipmentDateType = x.ShipmentDateType,
                                         Id = x.Id
-                                    }).ToList() ?? new List<ShipmentSummaryDto>(),
+                                    }).OrderBy(x => x.ShipmentDate).ToList() ?? new List<ShipmentSummaryDto>(),
                                     SOH = ps.SOH,
                                     SOHLevels = ps.SOHLevels.ToString(),
                                     SourceOfConsumption = ps.OtherSourceOfConsumption ?? ps.SourceOfConsumption.ToString()
