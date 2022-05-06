@@ -1,4 +1,5 @@
 ﻿@page
+@using PPMRm.PeriodReports
 @model PPMRm.Web.Pages.Reports.IndexModel
 @section styles{
    
@@ -71,13 +72,13 @@
 <div class="container" id="reportSummary">
         @if(Model.PeriodSummary != null)
         {
-            <header class="mt-5" style="vertical-align:central;">
+            <header class="mt-5 mb-2" style="vertical-align:central;">
                 <div class="row">
-                    <div class="col-sm-6">
+                    <div class="col-sm-4">
                         <img class="img-fluid" src="/logos/usaid_deliver-no-bg.png" alt="MDN logo" />
                     </div>
-                    <div class="col-sm-4 text-center">
-                        <h6>PROCUREMENT PLANNING AND MONITORING REPORT - MALARIA (PPMRm) Status Report Summary Summary</h6>
+                    <div class="col-sm-6 text-center">
+                        <h6 class="small">PROCUREMENT PLANNING AND MONITORING REPORT - MALARIA (PPMRm) Status Report Summary Summary</h6>
                     </div>
                     <div class="col-sm-2 text-center">
                         <span>@Model.PeriodSummary.Period.ShortName</span>
@@ -90,31 +91,33 @@
                 <div class="chart-container mb-5">
                     <canvas id="chrtStockouts" ></canvas>
                     </div>
-                <table class="table">
+                <table class="table table-striped" id="tblStockouts">
                 <thead>
                     <tr>
-                    <th>Product</th>
-                    <th>SOH</th>
-                    <th>MOS</th>
-
+                        <th>Country</th>
+                        <th>Product</th>
+                        <th>Recommended Action</th>
+                        <th>Date Action Needed By</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach(var c in Model.PeriodSummary.CountrySummaries.Where(x => x.Stockouts.Any()))
                     {
-                        <tr>
-                            <td>Min: @c.Country.MinStock </td>
-                            <td>Max: @c.Country.MaxStock</td>
-                            <td>@c.Country.Name</td>
-                        </tr>
                         @foreach(var p in c.Stockouts)
                         {
                             <tr>
+                                <td>@c.Country.Name</td>
                                 <td>@p.Product.Name</td>
-                                <td>@p.SOH</td>
-                                <td>@p.MOS?.ToString("N1")</td>
+                                <td>@p.ActionRecommended</td>
+                                <td>@p.DateActionNeededBy?.ToString(PeriodReportConsts.DataFormatting.DateFormat)</td>
                             </tr>
                         }
+                    }
+                    @if(!Model.PeriodSummary.CountrySummaries.Where(x => x.Stockouts.Any()).Any())
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center">No Stockouts reported for period</td>
+                        </tr>
                     }
 
                 </tbody>
@@ -127,31 +130,35 @@
                 <div class="chart-container mb-5">
                     <canvas id="chrtShortages" ></canvas>
                     </div>
-                <table class="table">
+                <table class="table table-striped" id="tblShortages">
                 <thead>
                     <tr>
-                    <th>Product</th>
-                    <th>SOH</th>
-                    <th>MOS</th>
-
+                        <th>Country</th>
+                        <th>Product</th>
+                        <th>MOS</th>
+                        <th>Recommended Action</th>
+                        <th>Date Action Needed By</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach(var c in Model.PeriodSummary.CountrySummaries.Where(x => x.Shortages.Any()))
                     {
-                        <tr>
-                            <td>Min: @c.Country.MinStock </td>
-                            <td>Max: @c.Country.MaxStock</td>
-                            <td>@c.Country.Name</td>
-                        </tr>
                         @foreach(var p in c.Shortages)
                         {
                             <tr>
+                                <td>@c.Country.Name</td>
                                 <td>@p.Product.Name</td>
-                                <td>@p.SOH</td>
                                 <td>@p.MOS?.ToString("N1")</td>
+                                <td>@p.ActionRecommended</td>
+                                <td>@p.DateActionNeededBy?.ToString(PeriodReportConsts.DataFormatting.DateFormat)</td>
                             </tr>
                         }
+                    }
+                    @if(!Model.PeriodSummary.CountrySummaries.Where(x => x.Shortages.Any()).Any())
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center">No Shortages reported for period</td>
+                        </tr>
                     }
 
                 </tbody>
@@ -165,31 +172,35 @@
                 <div class="chart-container mb-5">
                     <canvas id="chrtOversupplies" ></canvas>
                     </div>
-                <table class="table">
+                <table class="table table-striped" id="tblOversupply">
                 <thead>
                     <tr>
-                    <th>Product</th>
-                    <th>SOH</th>
-                    <th>MOS</th>
-
+                        <th>Country</th>
+                        <th>Product</th>
+                        <th>MOS</th>
+                        <th>Recommended Action</th>
+                        <th>Date Action Needed By</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach(var c in Model.PeriodSummary.CountrySummaries.Where(x => x.Oversupply.Any()))
                     {
-                        <tr>
-                            <td>Min: @c.Country.MinStock </td>
-                            <td>Max: @c.Country.MaxStock</td>
-                            <td>@c.Country.Name</td>
-                        </tr>
                         @foreach(var p in c.Oversupply)
                         {
                             <tr>
+                                <td>@c.Country.Name</td>
                                 <td>@p.Product.Name</td>
-                                <td>@p.SOH</td>
                                 <td>@p.MOS?.ToString("N1")</td>
+                                <td>@p.ActionRecommended</td>
+                                <td>@p.DateActionNeededBy?.ToString(PeriodReportConsts.DataFormatting.DateFormat)</td>
                             </tr>
                         }
+                    }
+                    @if(!Model.PeriodSummary.CountrySummaries.Where(x => x.Oversupply.Any()).Any())
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center">No Over Supply reported for period</td>
+                        </tr>
                     }
 
                 </tbody>
