@@ -92,7 +92,7 @@ namespace PPMRm.Reports
                                              PeriodReportId = g.Key.PeriodReportId,
                                              ProgramId = g.Key.ProgramId,
                                              ProductId = g.Key.ProductId,
-                                             Shipments = g.ToList()
+                                             Shipments = g.OrderBy(x => x.ShipmentDate?.Ticks).ToList()
                                          };
 
 

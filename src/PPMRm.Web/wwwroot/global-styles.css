@@ -36,14 +36,16 @@ section {
 }
 
 @media screen {
-    header {
-        display:none;
-    }
+    
 }
 
 @media print {
     @page {
-        size: landscape
+        size: A4 landscape;
+
+        @bottom-left {
+            content: counter(page) "/" counter(pages);
+        }
     }
 
     div.page-break {

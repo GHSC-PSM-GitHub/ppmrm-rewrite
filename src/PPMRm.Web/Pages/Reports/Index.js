@@ -217,7 +217,23 @@
     });
 
     $("#btnPdf").click(function () {
-        window.print();
+        console.log("printing...");
+        var element = document.getElementById("reportSummary");
+        var opt = {
+            margin: 1,
+            filename: 'myfile.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'in', format: 'letter', orientation: 'landscape' }
+        };
+
+        // New Promise-based usage:
+        html2pdf().set(opt).from(element).save();
+        //html2pdf(element).then(function () {
+        //    console.log("printed!");
+        //}).catch(function (e) {
+        //    console.log(e.toString())
+        //});
     });
 
     

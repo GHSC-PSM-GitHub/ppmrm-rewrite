@@ -1,6 +1,7 @@
 ﻿using PPMRm.PeriodReports;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace PPMRm.Reports
 {
@@ -21,11 +22,16 @@ namespace PPMRm.Reports
         public string ActionRecommended { get; set; }
         public DateTime? DateActionNeededBy { get; set; }
         public List<ShipmentSummaryDto> Shipments { get; set; }
-        public string ShipmentSummary => string.Join(" ", Shipments ?? new List<ShipmentSummaryDto>());
+        public string ShipmentSummary => string.Join(" ", (Shipments ?? new List<ShipmentSummaryDto>()).OrderBy(x => x.ShipmentDate?.Ticks));
 
         public ShipmentSummaryDto this[int i]
         {
-            get { return Shipments?.Count >= i ? Shipments[i] : null; }
+            get
+            {
+                if (Shipments?.Count <= i) return null;
+                var orderedShipments = Shipments.OrderBy(x => x.ShipmentDate?.Ticks).ToList();
+                return orderedShipments[i];
+            }
         }
     }
 

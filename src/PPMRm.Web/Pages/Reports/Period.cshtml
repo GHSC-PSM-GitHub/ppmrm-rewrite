@@ -1,10 +1,11 @@
-﻿@page
+﻿@page "/reports/periods/{id:int}"
 @using PPMRm.PeriodReports
-@model PPMRm.Web.Pages.Reports.IndexModel
-@section styles{
-   
-}
 @{
+    Layout = "_NoNavbar.cshtml";
+}
+@model PPMRm.Web.Pages.Reports.PeriodModel
+@{
+    ViewBag.Title = $"Period Summary - {Model.PeriodSummary?.Period.ShortName}";
 }
 @section scripts
 {
@@ -18,80 +19,29 @@
     <abp-script src="/js/buttons.html5.min.js" />
     <abp-script src="/js/html2pdf.bundle.min.js" />
 }
-<abp-card>
-    <abp-card-header>
-                <abp-card-title>View Period Reports</abp-card-title><br />
-            <abp-card-subtitle class="text-muted mb-3">This page shows reporting summary for each country</abp-card-subtitle>
-            <form class="needs-validation" novalidate method="post">
-  
-<div class="form-row mt-3">
-    <abp-input asp-for="@Model.SelectedPeriodId" value="@Model.SelectedPeriodId" />
-    <div class="col-md-6 mb-3">
-      <div class="input-group">
-        <div class="input-group-prepend">
-          <span class="input-group-text" id="inputGroupPrependCountry">Countries</span>
-        </div>
-        <select asp-for="@Model.SelectedCountries" asp-items="@Model.Countries"></select>
-      </div>
-    </div>
-    <div class="col-md-6 mb-3">
-      <div class="input-group">
-        <div class="input-group-prepend">
-          <span class="input-group-text" id="inputGroupPrependCountry">Period</span>
-        </div>
-      <input type="text" id="SelectedPeriod" asp-for="@Model.SelectedPeriod" name="SelectedPeriod" readonly="readonly" class="period-picker  form-control" />
-      </div>
-    </div>
-        
-  </div>
-
-  <div class="form-row mt-3">
-      <div class="col-md-12 mb-3">
-      <div class="input-group">
-        
-      </div>
-        <input type="submit" value="Generate" class="btn btn-primary form-control" />
-    </div>
-    
-  </div>
-</form>
-        
-    </abp-card-header>
-    
-        @if(Model.PeriodSummary != null)
-        {
-            <abp-card-body>
-            <div class="row">
-                <div class="col-sm-12 text-right">
-                    <button id="btnPdf" class="btn btn-primary">Download PDF</button>
-                </div>
+@if(Model.PeriodSummary != null)
+{
+    <input type="hidden" id="SelectedPeriodId" name="SelectedPeriodId" value="@Model.Id" />
+    <header class="mt-5 mb-2" style="vertical-align:central;">
+        <div class="row align-items-center">
+            <div class="col-sm-3">
+                <img class="img-fluid float-right" src="/logos/usaid_deliver-no-bg.png" alt="MDN logo" />
             </div>
-    </abp-card-body>
-        }
-</abp-card>
-<div class="container" id="reportSummary">
-        @if(Model.PeriodSummary != null)
-        {
-            <header class="mt-5 mb-2" style="vertical-align:central;">
-                <div class="row">
-                    <div class="col-sm-4">
-                        <img class="img-fluid" src="/logos/usaid_deliver-no-bg.png" alt="MDN logo" />
-                    </div>
-                    <div class="col-sm-6 text-center">
-                        <h6 class="small">PROCUREMENT PLANNING AND MONITORING REPORT - MALARIA (PPMRm) Status Report Summary Summary</h6>
-                    </div>
-                    <div class="col-sm-2 text-center">
-                        <span>@Model.PeriodSummary.Period.ShortName</span>
-                    </div>
-                </div>
-</header>
+            <div class="col-sm-6 text-center">
+                <p class="lead">PROCUREMENT PLANNING AND MONITORING REPORT<br /> MALARIA (PPMRm) <br /> Status Report Summary Summary</p>
+            </div>
+            <div class="col-sm-3">
+                <span class="lead text-center">@Model.PeriodSummary.Period.ShortName</span>
+            </div>
+        </div>
+    </header>
         
         <div class="container">
-    <h3 class="text-center">Stockouts</h3>
+        <h3 class="text-center">Stockouts</h3>
                 <div class="chart-container mb-5">
                     <canvas id="chrtStockouts" ></canvas>
                     </div>
-                <table class="table table-striped" id="tblStockouts">
+                <table class="table table-striped table-sm" id="tblStockouts">
                 <thead>
                     <tr>
                         <th>Country</th>
@@ -130,7 +80,7 @@
                 <div class="chart-container mb-5">
                     <canvas id="chrtShortages" ></canvas>
                     </div>
-                <table class="table table-striped" id="tblShortages">
+                <table class="table table-striped table-sm" id="tblShortages">
                 <thead>
                     <tr>
                         <th>Country</th>
@@ -172,7 +122,7 @@
                 <div class="chart-container mb-5">
                     <canvas id="chrtOversupplies" ></canvas>
                     </div>
-                <table class="table table-striped" id="tblOversupply">
+                <table class="table table-striped table-sm" id="tblOversupply">
                 <thead>
                     <tr>
                         <th>Country</th>
@@ -207,6 +157,6 @@
             
                 </table>
                 </div>
-                }
+                
 
-                </div>
+     }
