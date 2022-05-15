@@ -4,32 +4,40 @@
 
     const colorConfigs = {
         backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(153, 102, 255, 0.2)',
-            'rgba(255, 159, 64, 0.2)',
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(153, 102, 255, 0.2)',
-            'rgba(255, 159, 64, 0.2)'
+            '#112e51',
+            '#2e8540',
+            '#4c2c92',
+            '#212121',
+            '#046b99',
+            '#cd2026',
+            '#fad980',
+            '#94bfa2',
+            '#112e51',
+            '#2e8540',
+            '#4c2c92',
+            '#212121',
+            '#046b99',
+            '#cd2026',
+            '#fad980',
+            '#94bfa2'
         ],
         borderColor: [
-            'rgba(255, 99, 132, 1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-            'rgba(153, 102, 255, 1)',
-            'rgba(255, 159, 64, 1)',
-            'rgba(255, 99, 132, 1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-            'rgba(153, 102, 255, 1)',
-            'rgba(255, 159, 64, 1)'
+            '#112e51',
+            '#2e8540',
+            '#4c2c92',
+            '#212121',
+            '#046b99',
+            '#cd2026',
+            '#fad980',
+            '#94bfa2',
+            '#112e51',
+            '#2e8540',
+            '#4c2c92',
+            '#212121',
+            '#046b99',
+            '#cd2026',
+            '#fad980',
+            '#94bfa2'
         ]
     };
 
@@ -72,6 +80,12 @@
                     }]
                 },
                 options: {
+                    legend: {
+                        display: true,
+                        labels: {
+                            fontColor: 'rgb(255, 99, 132)'
+                        }
+                    },
                     maintainAspectRatio: false,
                     scales: {
                         y: {
@@ -147,6 +161,12 @@
                             display: true,
                             text: '# of Countries'
                         }
+                    },
+                    legend: {
+                        display: true,
+                        labels: {
+                            fontColor: 'rgb(255, 99, 132)'
+                        }
                     }
                 }
             });
@@ -164,13 +184,17 @@
                     }]
                 },
                 options: {
-                    plugins: {
-                        legend: {
-                            display: true,
-                            labels: {
-                                color: 'rgb(255, 99, 132)'
-                            }
-                        }
+                    //legend: {
+                    //    display: true,
+                    //    labels: {
+                    //        fontColor: 'rgb(255, 99, 132)'
+                    //    }
+                    //},
+                    title: {
+                        display: true,
+                        text: '# of Countries per Commodity Overstocked',
+                        fontColor: '#000000',
+                        position: 'bottom'
                     },
                     indexAxis: 'x',
                     maintainAspectRatio: false,
@@ -196,12 +220,6 @@
                                 display: false
                             }
                         }]
-                    },
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: '# of Countries'
-                        }
                     }
                 }
             });
@@ -217,18 +235,10 @@
     });
 
     $("#btnPdf").click(function () {
-        console.log("printing...");
-        var element = document.getElementById("reportSummary");
-        var opt = {
-            margin: 1,
-            filename: 'myfile.pdf',
-            image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2 },
-            jsPDF: { unit: 'in', format: 'letter', orientation: 'landscape' }
-        };
+        window.print();
 
         // New Promise-based usage:
-        html2pdf().set(opt).from(element).save();
+        //html2pdf().set(opt).from(element).save();
         //html2pdf(element).then(function () {
         //    console.log("printed!");
         //}).catch(function (e) {

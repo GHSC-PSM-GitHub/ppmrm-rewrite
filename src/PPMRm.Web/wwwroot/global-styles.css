@@ -23,12 +23,7 @@ section {
     display:block;
 }
 
-.chart-container {
-    position: relative;
-    margin: auto;
-    height: 40vh;
-    width: 75vw;
-}
+
 
 .scrollable {
     height: 50vw;
@@ -36,15 +31,33 @@ section {
 }
 
 @media screen {
-    
+    .chart-container {
+        position: relative;
+        margin: auto;
+        height: 40vh;
+        width: 75vw;
+    }
 }
 
 @media print {
+    body {
+        margin: 25mm 25mm 25mm 25mm;
+    }
+    .chart-container {
+        position: relative;
+        margin: unset;
+        margin-right: 0px;
+        margin-left: 0px;
+        height: 40vh;
+        width: 75vw;
+    }
     @page {
         size: A4 landscape;
+    }
 
-        @bottom-left {
-            content: counter(page) "/" counter(pages);
+    @page:right {
+        @bottom-right {
+            content: counter(page);
         }
     }
 

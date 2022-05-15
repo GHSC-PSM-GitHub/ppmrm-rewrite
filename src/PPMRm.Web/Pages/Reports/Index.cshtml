@@ -5,6 +5,7 @@
    
 }
 @{
+    var defaultCSUpdateValue = "No new developments";
 }
 @section scripts
 {
@@ -207,6 +208,57 @@
             
                 </table>
                 </div>
+                <div class="page-break"></div>
+                @foreach(var c in Model.PeriodSummary.CountrySummaries)
+                {
+                    
+                    <div class="container" id="countryStatus">
+                        <div class="jumbotron jumbotron-fluid">
+                          <div class="container">
+                            <h1 class="display-5">@c.Country.Name</h1>
+                            <p class="lead">Min: @c.Country.MinStock - Max: @c.Country.MaxStock</p>
+                          </div>
+                        </div>
+                        <table class="table table-sm caption-top">
+                            <caption class="text-center text-capitalize" style="caption-side:top;">Commodity Security Updates</caption>
+                            <tbody>
+                                <tr>
+                                    <th class="width-30">Forecasting and Supply Planning</th>
+                                    <td>@(c.CSUpdates?.ForecastingAndSupplyPlanning ?? @defaultCSUpdateValue)</td>
+                                </tr>
+                                <tr>
+                                    <th>Procurement, Product Information and Registration</th>
+                                    <td>@(c.CSUpdates?.ProcurementProductInformationAndRegistration ?? defaultCSUpdateValue)</td>
+                                </tr>
+                                <tr>
+                                    <th class="width-20">Warehousing and Distribution</th>
+                                    <td>@(c.CSUpdates?.WarehousingAndDistribution ?? defaultCSUpdateValue)</td>
+                                </tr>
+                                <tr>
+                                    <th>Logistic Management Information System (LMIS)</th>
+                                    <td>@(c.CSUpdates?.LogisticsManagementInformationSystem ?? defaultCSUpdateValue)</td>
+                                </tr>
+                                <tr>
+                                    <th class="width-20">Governance and Financing</th>
+                                    <td>@(c.CSUpdates?.GovernanceAndFinancing ?? defaultCSUpdateValue)</td>
+                                </tr>
+                                <tr>
+                                    <th>Human Resources, Capacity Development, and Training</th>
+                                    <td>@(c.CSUpdates?.HumanResourcesCapacityDevelopmentAndTraining ?? defaultCSUpdateValue)</td>
+                                </tr>
+                                <tr>
+                                    <th class="width-20">Supply Chain Committee, Policy, and Donor Coordination</th>
+                                    <td>@(c.CSUpdates?.SupplyChainCommitteePolicyAndDonorCoordination ?? defaultCSUpdateValue)</td>
+                                </tr>
+                                <tr>
+                                    <th>Product Stock Levels Information</th>
+                                    <td>@(c.CSUpdates?.ProductStockLevelsInformation ?? defaultCSUpdateValue)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                <div class="page-break"></div>
+                }
                 }
 
                 </div>

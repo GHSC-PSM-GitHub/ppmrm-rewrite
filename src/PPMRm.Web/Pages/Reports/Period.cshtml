@@ -2,10 +2,43 @@
 @using PPMRm.PeriodReports
 @{
     Layout = "_NoNavbar.cshtml";
+    var defaultCSUpdateValue = "No new developments";
 }
 @model PPMRm.Web.Pages.Reports.PeriodModel
 @{
     ViewBag.Title = $"Period Summary - {Model.PeriodSummary?.Period.ShortName}";
+}
+@section styles
+{
+    <style type="text/css" media="print">
+        .chart-container {
+        position: relative;
+        margin: unset;
+        margin-right: 0px;
+        margin-left: 0px;
+        height: 40vh;
+        width: 75vw;
+    }
+  @@page { size: A4 landscape; }
+  @@page :left {
+        
+        @@bottom-right {
+    margin: 10pt 0 30pt 0;
+    border-top: .25pt solid #666;
+    content: "Our Cats";
+    font-size: 9pt;
+    color: #333;
+  }
+
+    @@bottom-left { 
+    margin: 10pt 0 30pt 0;
+    border-top: .25pt solid #666;
+    content: counter(page);
+    font-size: 9pt;
+  }
+    }
+
+</style>
 }
 @section scripts
 {
@@ -21,10 +54,18 @@
 }
 @if(Model.PeriodSummary != null)
 {
+    <div class="row">
+                <div class="col-sm-12 text-right">
+                    <button id="btnPdf" class="btn btn-primary">Download PDF</button>
+                </div>
+            </div>
     <input type="hidden" id="SelectedPeriodId" name="SelectedPeriodId" value="@Model.Id" />
-    <header class="mt-5 mb-2" style="vertical-align:central;">
+    
+        
+        <div class="container-fluid">
+            <header class="mt-5 mb-2" style="vertical-align:central;">
         <div class="row align-items-center">
-            <div class="col-sm-3">
+            <div class="col-sm-3"  syle="zoom:50%;">
                 <img class="img-fluid float-right" src="/logos/usaid_deliver-no-bg.png" alt="MDN logo" />
             </div>
             <div class="col-sm-6 text-center">
@@ -35,10 +76,8 @@
             </div>
         </div>
     </header>
-        
-        <div class="container">
         <h3 class="text-center">Stockouts</h3>
-                <div class="chart-container mb-5">
+                <div class="chart-container-fluid mb-5">
                     <canvas id="chrtStockouts" ></canvas>
                     </div>
                 <table class="table table-striped table-sm" id="tblStockouts">
@@ -75,7 +114,7 @@
                 </table>
                 </div>
                 <div class="page-break"></div>
-<div class="container">
+<div class="container-fluid">
     <h3 class="text-center">Shortages</h3>
                 <div class="chart-container mb-5">
                     <canvas id="chrtShortages" ></canvas>
@@ -117,7 +156,7 @@
                 </div>
                 <div class="page-break"></div>
 
-                <div class="container">
+                <div class="container-fluid">
     <h3 class="text-center">Over Supply</h3>
                 <div class="chart-container mb-5">
                     <canvas id="chrtOversupplies" ></canvas>
@@ -158,5 +197,91 @@
                 </table>
                 </div>
                 
+                @foreach(var c in Model.PeriodSummary.CountrySummaries)
+                {
+                <div class="page-break"></div>
+                    
+                    <div class="container-fluid" id="countryStatus">
+                        <div class="jumbotron jumbotron-fluid">
+                          <div class="container">
+                            <h1 class="display-5">@c.Country.Name</h1>
+                            <p class="lead">Min: @c.Country.MinStock - Max: @c.Country.MaxStock</p>
+                          </div>
+                        </div>
+                        <table class="table table-sm caption-top">
+                            <caption class="text-center text-capitalize" style="caption-side:top;">Commodity Security Updates</caption>
+                            <tbody>
+                                <tr>
+                                    <th style="width: 33.33%">Forecasting and Supply Planning</th>
+                                    <td style="width: 66.66%">@(c.CSUpdates?.ForecastingAndSupplyPlanning ?? @defaultCSUpdateValue)</td>
+                                </tr>
+                                <tr>
+                                    <th>Procurement, Product Information and Registration</th>
+                                    <td>@(c.CSUpdates?.ProcurementProductInformationAndRegistration ?? defaultCSUpdateValue)</td>
+                                </tr>
+                                <tr>
+                                    <th class="width-20">Warehousing and Distribution</th>
+                                    <td>@(c.CSUpdates?.WarehousingAndDistribution ?? defaultCSUpdateValue)</td>
+                                </tr>
+                                <tr>
+                                    <th>Logistic Management Information System (LMIS)</th>
+                                    <td>@(c.CSUpdates?.LogisticsManagementInformationSystem ?? defaultCSUpdateValue)</td>
+                                </tr>
+                                <tr>
+                                    <th class="width-20">Governance and Financing</th>
+                                    <td>@(c.CSUpdates?.GovernanceAndFinancing ?? defaultCSUpdateValue)</td>
+                                </tr>
+                                <tr>
+                                    <th>Human Resources, Capacity Development, and Training</th>
+                                    <td>@(c.CSUpdates?.HumanResourcesCapacityDevelopmentAndTraining ?? defaultCSUpdateValue)</td>
+                                </tr>
+                                <tr>
+                                    <th class="width-20">Supply Chain Committee, Policy, and Donor Coordination</th>
+                                    <td>@(c.CSUpdates?.SupplyChainCommitteePolicyAndDonorCoordination ?? defaultCSUpdateValue)</td>
+                                </tr>
+                                <tr>
+                                    <th>Product Stock Levels Information</th>
+                                    <td>@(c.CSUpdates?.ProductStockLevelsInformation ?? defaultCSUpdateValue)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                <div class="page-break"></div>
+                @foreach(var prog in c.Programs)
+                {
+                    <table class="table table-sm">
+                            <caption class="text-center text-capitalize" style="caption-side:top;">@prog.Name</caption>
+                            <thead>
+                    <tr>
+                        <th>Country</th>
+                        <th>Product</th>
+                        <th>MOS</th>
+                        <th>Recommended Action</th>
+                        <th>Date Action Needed By</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var p in c.Products.Where(x => x.Program.Id == prog.Id))
+                    {
+                        
+                            <tr>
+                                <td>@c.Country.Name</td>
+                                <td>@p.Product.Name</td>
+                                <td>@p.MOS?.ToString("N1")</td>
+                                <td>@p.ActionRecommended</td>
+                                <td>@p.DateActionNeededBy?.ToString(PeriodReportConsts.DataFormatting.DateFormat)</td>
+                            </tr>
+                    }
+                    @if(!c.Products.Where(x => x.Program.Id == prog.Id).Any())
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center">No products reported for this program</td>
+                        </tr>
+                    }
+
+                </tbody>
+                    </table>
+                }
+                }
 
      }
