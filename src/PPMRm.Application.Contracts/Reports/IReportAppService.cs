@@ -89,6 +89,7 @@ namespace PPMRm.Reports
     {
         public CountryDto Country { get; set; }
         public CommoditySecurityUpdatesDto CSUpdates { get; set; }
+        public List<ProgramDto> Programs { get; set; }
         public List<ProgramProductDto> Products { get; set; }
         public List<ProgramProductDto> Stockouts => Products?.Where(x => x.SOH == 0).ToList();
         public List<ProgramProductDto> Shortages => Products?.Where(x => x.MOSStatus == MOSStatus.BelowMin).ToList();

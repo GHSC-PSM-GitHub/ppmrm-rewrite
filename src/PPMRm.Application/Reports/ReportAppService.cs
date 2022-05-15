@@ -217,11 +217,12 @@ namespace PPMRm.Reports
             var period = await PeriodRepository.GetAsync(id);
             var query = from pr in queryable
                           join c in countries on pr.CountryId equals c.Id
-                          where pr.PeriodId == id && pr.ProductStocks.Any()
+                          where pr.PeriodId == id // && pr.ProductStocks.Any()
                           select new
                           {
                               PeriodReport = pr,
-                              Country = c
+                              Country = c,
+                              Programs = pr.GetDefaultProgramIds()
                           };
             var results = await AsyncExecuter.ToListAsync(query);
 
@@ -248,6 +249,9 @@ namespace PPMRm.Reports
             var countrySummaries = results.Select(r => new CountrySummaryDto
             {
                 Country = new CountryDto { Id = r.Country.Id, Name = r.Country.Name, MinStock = r.Country.MinStock, MaxStock = r.Country.MaxStock},
+                Programs = (from p in r.Programs
+                            join program in programs on p equals program.Id
+                            select new ProgramDto { Id = p, Name = program.Name }).ToList(),
                 CSUpdates = ObjectMapper.Map<CommoditySecurityUpdates, CommoditySecurityUpdatesDto>(r.PeriodReport.CommoditySecurityUpdates),
                 Products = (from ps in r.PeriodReport.ProductStocks
                            join pr in results on ps.PeriodReportId equals pr.PeriodReport.Id
