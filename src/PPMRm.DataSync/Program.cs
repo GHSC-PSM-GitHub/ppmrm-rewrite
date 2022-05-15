@@ -39,7 +39,7 @@
     }
     class Program
     {
-        public const string ConnectionString = "Host=localhost;Port=5432;Database=ppmrm_period_reports;User ID=postgres;Password=admin;";
+        public const string ConnectionString = "Host=localhost;Port=5432;Database=ppmrm_april;User ID=postgres;Password=admin;";
 
 
         static List<OrderEto> orderEvents;
