@@ -210,7 +210,7 @@
                 </table>
                 </div>
                 
-                @foreach(var c in Model.PeriodSummary.CountrySummaries)
+                @foreach(var c in Model.PeriodSummary.CountrySummaries.OrderBy(x => x.Country.Name))
                 {
                 <div class="page-break"></div>
                     
