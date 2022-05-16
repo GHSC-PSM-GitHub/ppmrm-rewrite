@@ -36,6 +36,7 @@ section {
         margin: auto;
         height: 40vh;
         width: 75vw;
+        padding-right:10vw;
     }
 }
 
@@ -45,11 +46,10 @@ section {
     }
     .chart-container {
         position: relative;
-        margin: unset;
-        margin-right: 0px;
-        margin-left: 0px;
+        margin: auto;
         height: 40vh;
         width: 75vw;
+        padding-right: 10vw;
     }
     @page {
         size: A4 landscape;
