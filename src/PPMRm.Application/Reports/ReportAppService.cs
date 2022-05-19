@@ -288,6 +288,7 @@ namespace PPMRm.Reports
                                ActionRecommended = ps.ActionRecommended,
                                AMC = ps.AMC,
                                DateActionNeededBy = ps.DateActionNeededBy,
+                               SOHLevels = ps.GetSOHLevelsList().Select(x => x.ToString()).ToList(),
                                DateOfSOH = ps.DateOfSOH,
                                MaxStock = pr.Country.MaxStock,
                                MinStock = pr.Country.MinStock,
