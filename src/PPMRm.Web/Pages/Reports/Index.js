@@ -73,8 +73,7 @@
                     labels: result.stockouts.labels,
                     datasets: [{
                         label: '# of Countries/Channels per commodity stocked out',
-                        backgroundColor: colorConfigs.backgroundColor,
-                        borderColor: colorConfigs.borderColor,
+                        backgroundColor: '#cd2026',
                         data: result.stockouts.data,
                         borderWidth: 1
                     }]
@@ -125,8 +124,7 @@
                     labels: result.shortages.labels,
                     datasets: [{
                         label: '# of Countries/Channels per Commodity Understocked',
-                        backgroundColor: colorConfigs.backgroundColor,
-                        borderColor: colorConfigs.borderColor,
+                        backgroundColor: '#fad980',
                         borderWidth: 1,
                         data: result.shortages.data,
                     }]
@@ -177,25 +175,12 @@
                     labels: result.oversupplies.labels,
                     datasets: [{
                         label: '# of Countries/Channels per Commodity Overstocked',
-                        backgroundColor: colorConfigs.backgroundColor,
-                        borderColor: colorConfigs.borderColor,
+                        backgroundColor: '#2e8540',
                         data: result.oversupplies.data,
                         borderWidth: 1
                     }]
                 },
                 options: {
-                    //legend: {
-                    //    display: true,
-                    //    labels: {
-                    //        fontColor: 'rgb(255, 99, 132)'
-                    //    }
-                    //},
-                    title: {
-                        display: true,
-                        text: '# of Countries per Commodity Overstocked',
-                        fontColor: '#000000',
-                        position: 'bottom'
-                    },
                     indexAxis: 'x',
                     maintainAspectRatio: false,
                     scales: {

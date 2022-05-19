@@ -263,13 +263,14 @@
                 @foreach(var prog in c.Programs)
                 {
                     <table class="table table-sm">
-                            <caption class="text-center text-capitalize" style="caption-side:top;">@prog.Name</caption>
+                            <caption class="text-center text-capitalize" style="caption-side:top;">@prog.Name - SOH Levels: @(c.SOHLevels?.Count > 0 ? string.Join(", ", @c.SOHLevels): "None")</caption>
                             <thead>
                     <tr>
                         <th>Product</th>
                         <th>MOS</th>
-                        <th>Average Monthly Consumption</th>
-                        <th>Stock on Hand</th>
+                        <th>AMC</th>
+                        <th>SOH</th>
+                        <th>Date of SOH</th>
                         <th>Next Shipment Quantity</th>
                         <th>Date of Next Shipment</th>
                         <th>Supplier</th>
@@ -286,6 +287,7 @@
                                 <td>@p.MOS?.ToString("N1")</td>
                                 <td>@p.AMC?.ToString("N0")</td>
                                 <td>@p.SOH?.ToString("N0")</td>
+                                <td>@p.DateOfSOH?.ToString(PPMRm.PeriodReports.PeriodReportConsts.DataFormatting.DateFormat)</td>
                                 @if(@p.Shipments?.Count > 0)
                                 {
                                     <td>
@@ -371,7 +373,7 @@
                     @if(!c.Products.Where(x => x.Program.Id == prog.Id).Any())
                     {
                         <tr>
-                            <td colspan="9" class="text-center">No products reported for this program</td>
+                            <td colspan="10" class="text-center">No products reported for this program</td>
                         </tr>
                     }
 
