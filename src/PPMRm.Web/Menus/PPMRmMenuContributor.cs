@@ -64,12 +64,6 @@ namespace PPMRm.Web.Menus
                         )
                 );
 
-                
-
-                
-            }
-            if(await context.IsGrantedAsync(PPMRmConsts.Permissions.DataReviewer))
-            {
                 context.Menu.AddItem(
                     new ApplicationMenuItem(
                         "Reports",
@@ -109,6 +103,12 @@ namespace PPMRm.Web.Menus
                             )
                         )
                 );
+
+
+            }
+            if(await context.IsGrantedAsync(PPMRmConsts.Permissions.DataReviewer))
+            {
+                
             }
             //    context.Menu.GetAdministration().AddItem(
             //    new ApplicationMenuItem(

@@ -17,6 +17,7 @@ using PPMRm.Reports;
 namespace PPMRm.Web.Pages.Reports
 {
     [BindProperties]
+    [Authorize]
     public class BuildModel : PPMRmPageModel
     {
         ICountryRepository CountryRepository { get; }

@@ -17,6 +17,7 @@ namespace PPMRm.Web.Pages.Reports
 {
 
     [BindProperties]
+    [Authorize]
     public class IndexModel : PPMRmPageModel
     {
         ICountryRepository CountryRepository { get; }
