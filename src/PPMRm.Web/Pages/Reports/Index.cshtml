@@ -89,17 +89,17 @@
         
         <div class="container-fluid">
             
-        <h3 class="text-center">Stockouts</h3>
+        <h3 class="text-center border-top border-bottom border-dark py-2">Stockouts</h3>
                 <div class="chart-container mb-5">
                     <canvas id="chrtStockouts" ></canvas>
                     </div>
+                <div class="page-break"></div>
                 <table class="table table-striped table-sm" id="tblStockouts">
                 <thead>
                     <tr>
                         <th>Country</th>
                         <th>Product</th>
-                        <th>Recommended Action</th>
-                        <th>Date Action Needed By</th>
+                        <th style="width: 33%">Recommended Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -111,7 +111,6 @@
                                 <td>@c.Country.Name</td>
                                 <td>@p.Product.Name</td>
                                 <td>@p.ActionRecommended</td>
-                                <td>@p.DateActionNeededBy?.ToString(PeriodReportConsts.DataFormatting.DateFormat)</td>
                             </tr>
                         }
                     }
@@ -128,18 +127,19 @@
                 </div>
                 <div class="page-break"></div>
 <div class="container-fluid">
-    <h3 class="text-center">Shortages</h3>
+    <h3 class="text-center border-top border-bottom border-dark py-2">Understocks</h3>
                 <div class="chart-container mb-5">
                     <canvas id="chrtShortages" ></canvas>
                     </div>
+                    
+                <div class="page-break"></div>
                 <table class="table table-striped table-sm" id="tblShortages">
                 <thead>
                     <tr>
                         <th>Country</th>
                         <th>Product</th>
                         <th>MOS</th>
-                        <th>Recommended Action</th>
-                        <th>Date Action Needed By</th>
+                        <th style="width: 33%">Recommended Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -152,7 +152,6 @@
                                 <td>@p.Product.Name</td>
                                 <td>@p.MOS?.ToString("N1")</td>
                                 <td>@p.ActionRecommended</td>
-                                <td>@p.DateActionNeededBy?.ToString(PeriodReportConsts.DataFormatting.DateFormat)</td>
                             </tr>
                         }
                     }
@@ -170,18 +169,18 @@
                 <div class="page-break"></div>
 
                 <div class="container-fluid">
-    <h3 class="text-center">Over Supply</h3>
+    <h3 class="text-center border-top border-bottom border-dark py-2">Overstocks</h3>
                 <div class="chart-container mb-5">
                     <canvas id="chrtOversupplies" ></canvas>
                     </div>
+                <div class="page-break"></div>
                 <table class="table table-striped table-sm" id="tblOversupply">
                 <thead>
                     <tr>
                         <th>Country</th>
                         <th>Product</th>
                         <th>MOS</th>
-                        <th>Recommended Action</th>
-                        <th>Date Action Needed By</th>
+                        <th style="width: 33%">Recommended Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -194,7 +193,6 @@
                                 <td>@p.Product.Name</td>
                                 <td>@p.MOS?.ToString("N1")</td>
                                 <td>@p.ActionRecommended</td>
-                                <td>@p.DateActionNeededBy?.ToString(PeriodReportConsts.DataFormatting.DateFormat)</td>
                             </tr>
                         }
                     }
@@ -271,15 +269,12 @@
                         <th>AMC</th>
                         <th>SOH</th>
                         <th>Date of SOH</th>
-                        <th>Next Shipment Quantity</th>
-                        <th>Date of Next Shipment</th>
-                        <th>Supplier</th>
-                        <th>Recommended Action</th>
-                        <th>Date Action Needed By</th>
+                        <th>Shipments</th>
+                        <th style="width:30%;">Recommended Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach(var p in c.Products.Where(x => x.Program.Id == prog.Id))
+                    @foreach(var p in c.Products.Where(x => x.Program.Id == prog.Id).OrderBy(x => x.Product.Name))
                     {
                         
                             <tr>
@@ -288,56 +283,36 @@
                                 <td>@p.AMC?.ToString("N0")</td>
                                 <td>@p.SOH?.ToString("N0")</td>
                                 <td>@p.DateOfSOH?.ToString(PPMRm.PeriodReports.PeriodReportConsts.DataFormatting.DateFormat)</td>
+                                
                                 @if(@p.Shipments?.Count > 0)
                                 {
                                     <td>
-                                    <table border="0" width="100%">
-                                              <tbody>
-                                    @foreach(var s in p.Shipments.Select((value, i) => (value, i)))
-                                    {
-                                       <tr>
-                                            <td>
-                                            <span class="text-center small">Shipment @(s.i + 1)<br/>@s.value.Quantity.ToString(PPMRm.PeriodReports.PeriodReportConsts.DataFormatting.SOH_AMC_Format)</span></td>
-                                       </tr>
-                                    }
-                                    </tbody>
-                                    </table>
-                                    </td>
-                                    <td>
-                                    <table border="0" width="100%">
-                                              <tbody>
-                                    @foreach(var s in p.Shipments.Select((value, i) => (value, i)))
-                                    {
-                                       <tr>
-                                             <td>
-                                                <span class="text-center small">@(s.value.ShipmentDate?.ToString(PPMRm.PeriodReports.PeriodReportConsts.DataFormatting.DateFormat) ?? "-")<br/>@s.value.ShipmentDateType</span>
-                                            </td>
-                                       </tr>
-                                    }
-                                    </tbody>
-                                    </table>
-                                    </td>
-                                    <td>
-                                    <table border="0" width="100%">
-                                              <tbody>
-                                    @foreach(var s in p.Shipments.Select((value, i) => (value, i)))
-                                    {
-                                       <tr>
-                                            <td>
-                                                <span class="text-center small">@s.value.Supplier<br/>&nbsp;</span>
-                                            </td>
-                                       </tr>
-                                    }
-                                    </tbody>
-                                    </table>
-                                    </td>
-                                               
+                                    <table class="table table-sm">
+                                          <thead>
+                                          <tr>
+                                            <th>Supplier</th>
+                                            <th>Next Shipment Date</th>
+                                            <th>Quantity</th>
+                                            <th>MOS</th>
+                                          </tr>
+                                          </thead>
+                                          <tbody>
+                                            @foreach(var s in p.Shipments.OrderBy(l => l.ShipmentDate))
+                                            {
+                                                <tr>
+                                                    <td>@s.Supplier</td>
+                                                    <td>@s.ShipmentDate?.ToString(PeriodReportConsts.DataFormatting.DateFormat) @s.ShipmentDateType</td>
+                                                    <td>@s.Quantity.ToString(PeriodReportConsts.DataFormatting.SOH_AMC_Format)</td>
+                                                    <td>@s.MOS?.ToString(PeriodReportConsts.DataFormatting.MOS_Format)</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                        </table>
+                                </td>          
                                     
                                 }
                                 else
                                 {
-                                    <td></td>
-                                    <td></td>
                                     <td></td>
                                 }
                                 <!--<td>
@@ -367,13 +342,12 @@
                                 }
                                 </td> -->
                                 <td>@p.ActionRecommended</td>
-                                <td>@p.DateActionNeededBy?.ToString(PeriodReportConsts.DataFormatting.DateFormat)</td>
                             </tr>
                     }
                     @if(!c.Products.Where(x => x.Program.Id == prog.Id).Any())
                     {
                         <tr>
-                            <td colspan="10" class="text-center">No products reported for this program</td>
+                            <td colspan="8" class="text-center">No products reported for this program</td>
                         </tr>
                     }
 

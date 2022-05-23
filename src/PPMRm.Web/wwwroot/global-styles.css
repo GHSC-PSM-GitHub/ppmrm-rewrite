@@ -34,7 +34,7 @@ section {
     .chart-container {
         position: relative;
         margin: auto;
-        height: 40vh;
+        height: 50vh;
         width: 75vw;
         padding-right:10vw;
     }
@@ -42,12 +42,12 @@ section {
 
 @media print {
     body {
-        margin: 25mm 25mm 25mm 25mm;
+        margin: 0 25mm;
     }
     .chart-container {
         position: relative;
         margin: auto;
-        height: 40vh;
+        height: 65vh;
         width: 75vw;
         padding-right: 10vw;
     }

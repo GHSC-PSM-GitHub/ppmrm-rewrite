@@ -59,8 +59,8 @@
     $("span.multiselect-native-select").addClass("form-control p-0 border-0 text-left");
 
     if ($("#SelectedPeriodId").val() !== '' && $("#chrtStockouts").length > 0) {
-        pPMRm.reports.report.get($("#SelectedPeriodId").val()).then(function (result) {
-        
+        pPMRm.reports.report.get($("#SelectedPeriodId").val(), $("#SelectedCountries").val()).then(function (result) {
+            
             const ctx = document.getElementById('chrtStockouts');
             const ctxShortages = document.getElementById('chrtShortages');
 
@@ -74,6 +74,7 @@
                     datasets: [{
                         label: '# of Countries/Channels per commodity stocked out',
                         backgroundColor: '#cd2026',
+                        color:"#000",
                         data: result.stockouts.data,
                         borderWidth: 1
                     }]
@@ -126,6 +127,7 @@
                         label: '# of Countries/Channels per Commodity Understocked',
                         backgroundColor: '#fad980',
                         borderWidth: 1,
+                        color: "#000",
                         data: result.shortages.data,
                     }]
                 },
@@ -177,6 +179,7 @@
                         label: '# of Countries/Channels per Commodity Overstocked',
                         backgroundColor: '#2e8540',
                         data: result.oversupplies.data,
+                        color: "#000",
                         borderWidth: 1
                     }]
                 },
