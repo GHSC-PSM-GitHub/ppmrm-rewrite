@@ -15,7 +15,15 @@ namespace PPMRm.Reports
         /// </summary>
         /// <param name="id">Integer Period ID (yyyyMM)</param>
         /// <returns></returns>
-        Task<PeriodSummaryDto> GetAsync(int id);
+        //Task<PeriodSummaryDto> GetAsync(int id);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id">Integer Period ID (yyyyMM)</param>
+        /// <param name="countryIds">List of country Ids</param>
+        /// <returns></returns>
+        Task<PeriodSummaryDto> GetAsync(int id, List<string> countryIds);
+
     }
 
     public class PeriodSummaryDto
@@ -29,7 +37,7 @@ namespace PPMRm.Reports
                 {
                     Product = x,
                     NumberOfCountries = CountrySummaries.Where(s => s.Stockouts.Any(p => p.Product.Id == x.Id)).Count()
-                }).Where(x => x.NumberOfCountries > 0).OrderBy(x => x.Product.Name.Length);
+                }).Where(x => x.NumberOfCountries > 0).OrderBy(x => x.Product.Name);
                 return new ProductCountryDto
                 {
                     Labels = stockouts.Select(x => x.Product.Name).ToList(),
@@ -46,7 +54,7 @@ namespace PPMRm.Reports
                 {
                     Product = x,
                     NumberOfCountries = CountrySummaries.Where(s => s.Shortages.Any(p => p.Product.Id == x.Id)).Count()
-                }).Where(x => x.NumberOfCountries > 0).OrderBy(x => x.Product.Name.Length);
+                }).Where(x => x.NumberOfCountries > 0).OrderBy(x => x.Product.Name);
                 return new ProductCountryDto
                 {
                     Labels = shortages.Select(x => x.Product.Name).ToList(),
@@ -63,7 +71,7 @@ namespace PPMRm.Reports
                 {
                     Product = x,
                     NumberOfCountries = CountrySummaries.Where(s => s.Oversupply.Any(p => p.Product.Id == x.Id)).Count()
-                }).Where(x => x.NumberOfCountries > 0).OrderBy(x => x.Product.Name.Length);
+                }).Where(x => x.NumberOfCountries > 0).OrderBy(x => x.Product.Name);
                 return new ProductCountryDto
                 {
                     Labels = oversupplies.Select(x => x.Product.Name).ToList(),

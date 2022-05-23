@@ -42,7 +42,7 @@ namespace PPMRm.Web.Pages.Reports
             if (ModelState.IsValid)
             {
                 SelectedPeriodId = Convert.ToInt32(SelectedPeriod.Value.ToString("yyyyMM"));
-                PeriodSummary = await ReportAppService.GetAsync(SelectedPeriodId.Value);
+                PeriodSummary = await ReportAppService.GetAsync(SelectedPeriodId.Value, SelectedCountries);
             }
             
         }
@@ -52,6 +52,7 @@ namespace PPMRm.Web.Pages.Reports
         public List<SelectListItem> Years { get; set; } = new();
         public List<SelectListItem> Months { get; set; } = new();
         [DisplayName("Countries")]
+        [Required]
         public List<string> SelectedCountries { get; set; } = new();
         [Required]
         public DateTime? SelectedPeriod { get; set; }

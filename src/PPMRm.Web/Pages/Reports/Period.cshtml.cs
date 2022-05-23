@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using PPMRm.Reports;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace PPMRm.Web.Pages.Reports
@@ -18,7 +19,7 @@ namespace PPMRm.Web.Pages.Reports
 
         public async Task OnGetAsync()
         {
-            var summary = await ReportAppService.GetAsync(Id);
+            var summary = await ReportAppService.GetAsync(Id, new List<string>());
             PeriodSummary = summary;
         }
 

@@ -207,7 +207,116 @@ namespace PPMRm.Reports
             return stockQuery.OrderBy(x => x.Country.Name).ThenBy(x => x.Period.Id).ThenBy(x => x.Product.Name).ThenBy(x => x.Program.Name).ToList();
         }
 
-        public async Task<PeriodSummaryDto> GetAsync(int id)
+        //public async Task<PeriodSummaryDto> GetAsync(int id)
+        //{
+        //    var queryable = await PeriodReportRepository.WithDetailsAsync(x => x.ProductStocks, x => x.ProductShipments);
+        //    var countries = await CountryRepository.GetQueryableAsync();
+        //    var periods = await PeriodRepository.GetQueryableAsync();
+        //    var products = await ProductRepository.GetListAsync();
+        //    var programs = await ProgramRepository.GetListAsync();
+        //    var period = await PeriodRepository.GetAsync(id);
+        //    var query = from pr in queryable
+        //                  join c in countries on pr.CountryId equals c.Id
+        //                  where pr.PeriodId == id // && pr.ProductStocks.Any()
+        //                  select new
+        //                  {
+        //                      PeriodReport = pr,
+        //                      Country = c,
+        //                      Programs = pr.GetDefaultProgramIds()
+        //                  };
+        //    var results = await AsyncExecuter.ToListAsync(query);
+
+        //    var productShipments = from ps in results.SelectMany(x => x.PeriodReport.ProductShipments)
+        //                            group ps by new { ps.PeriodReportId, ps.ProgramId, ps.ProductId } into g
+        //                            select new
+        //                            {
+        //                                PeriodReportId = g.Key.PeriodReportId,
+        //                                ProgramId = g.Key.ProgramId,
+        //                                ProductId = g.Key.ProductId,
+        //                                Shipments = g.ToList()
+        //                            };
+        //    #region Program Products only (not used)
+        //    //var programProducts = from ps in results.SelectMany(x => x.PeriodReport.ProductStocks)
+        //    //                      join pr in results on ps.PeriodReportId equals pr.PeriodReport.Id
+        //    //                      join product in products on ps.ProductId equals product.Id
+        //    //                      join program in programs on ps.ProgramId equals program.Id
+        //    //                      join ship in productShipments on new { ps.PeriodReportId, ps.ProgramId, ps.ProductId } equals new { ship.PeriodReportId, ship.ProgramId, ship.ProductId } into shipments
+        //    //                      from s in shipments.DefaultIfEmpty()
+        //    //                      select new ProgramProductDto
+        //    //                      {
+        //    //                          Product = new ProductDto { Id = product.Id, Name = product.Name },
+        //    //                          ActionRecommended = ps.ActionRecommended,
+        //    //                          AMC = ps.AMC,
+        //    //                          DateActionNeededBy = ps.DateActionNeededBy,
+        //    //                          DateOfSOH = ps.DateOfSOH,
+        //    //                          MaxStock = pr.Country.MaxStock,
+        //    //                          MinStock = pr.Country.MinStock,
+        //    //                          OtherSourceOfConsumption = ps.OtherSourceOfConsumption,
+        //    //                          Program = new ProgramDto { Id = program.Id, Name = program.Name},
+        //    //                          ReportStatus = pr.PeriodReport.ReportStatus.GetValueOrDefault(),
+        //    //                          Shipments = s?.Shipments?.Select(x => new ProductShipmentDto
+        //    //                          {
+        //    //                              AMC = ps.AMC,
+        //    //                              Supplier = x.Supplier,
+        //    //                              Quantity = x.Quantity,
+        //    //                              DataSource = x.DataSource,
+        //    //                              ShipmentDate = x.ShipmentDate,
+        //    //                              ShipmentDateType = x.ShipmentDateType,
+        //    //                              Id = x.Id
+        //    //                          }).OrderBy(x => x.ShipmentDate).ToList() ?? new List<ProductShipmentDto>(),
+        //    //                          SOH = ps.SOH,
+        //    //                          SourceOfConsumption = ps.SourceOfConsumption
+        //    //                      };
+        //    #endregion
+
+        //    var countrySummaries = results.Select(r => new CountrySummaryDto
+        //    {
+        //        Country = new CountryDto { Id = r.Country.Id, Name = r.Country.Name, MinStock = r.Country.MinStock, MaxStock = r.Country.MaxStock},
+        //        Programs = (from p in r.Programs
+        //                    join program in programs on p equals program.Id
+        //                    select new ProgramDto { Id = p, Name = program.Name }).ToList(),
+        //        CSUpdates = ObjectMapper.Map<CommoditySecurityUpdates, CommoditySecurityUpdatesDto>(r.PeriodReport.CommoditySecurityUpdates),
+        //        Products = (from ps in r.PeriodReport.ProductStocks
+        //                    join pr in results on ps.PeriodReportId equals pr.PeriodReport.Id
+        //                    join product in products on ps.ProductId equals product.Id
+        //                    join program in programs on ps.ProgramId equals program.Id
+        //                    join ship in productShipments on new { ps.PeriodReportId, ps.ProgramId, ps.ProductId } equals new { ship.PeriodReportId, ship.ProgramId, ship.ProductId } into shipments
+        //                    from s in shipments.DefaultIfEmpty()
+        //                    select new ProgramProductDto
+        //                   {
+        //                       Product = new ProductDto { Id = product.Id, Name = product.Name },
+        //                       ActionRecommended = ps.ActionRecommended,
+        //                       AMC = ps.AMC,
+        //                       DateActionNeededBy = ps.DateActionNeededBy,
+        //                       SOHLevels = ps.GetSOHLevelsList().Select(x => x.ToString()).ToList(),
+        //                       DateOfSOH = ps.DateOfSOH,
+        //                       MaxStock = pr.Country.MaxStock,
+        //                       MinStock = pr.Country.MinStock,
+        //                       OtherSourceOfConsumption = ps.OtherSourceOfConsumption,
+        //                       Program = new ProgramDto { Id = program.Id, Name = program.Name },
+        //                       ReportStatus = pr.PeriodReport.ReportStatus.GetValueOrDefault(),
+        //                       Shipments = s?.Shipments?.Select(x => new ProductShipmentDto
+        //                       {
+        //                           AMC = ps.AMC,
+        //                           Supplier = x.Supplier,
+        //                           Quantity = x.Quantity,
+        //                           DataSource = x.DataSource,
+        //                           ShipmentDate = x.ShipmentDate,
+        //                           ShipmentDateType = x.ShipmentDateType,
+        //                           Id = x.Id
+        //                       }).OrderBy(x => x.ShipmentDate).ToList() ?? new List<ProductShipmentDto>(),
+        //                       SOH = ps.SOH,
+        //                       SourceOfConsumption = ps.SourceOfConsumption
+        //                   }).OrderBy(x => x.Product.Name).ToList()
+        //    });
+        //    return new PeriodSummaryDto
+        //    {
+        //        CountrySummaries = countrySummaries.ToList(),
+        //        Period = new PeriodDto { Id = period.Id, StartDate = period.StartDate, EndDate = period.EndDate, Month = period.Month, Year = period.Year}
+        //    };
+        //}
+
+        public async Task<PeriodSummaryDto> GetAsync(int id, List<string> countryIds)
         {
             var queryable = await PeriodReportRepository.WithDetailsAsync(x => x.ProductStocks, x => x.ProductShipments);
             var countries = await CountryRepository.GetQueryableAsync();
@@ -216,25 +325,26 @@ namespace PPMRm.Reports
             var programs = await ProgramRepository.GetListAsync();
             var period = await PeriodRepository.GetAsync(id);
             var query = from pr in queryable
-                          join c in countries on pr.CountryId equals c.Id
-                          where pr.PeriodId == id // && pr.ProductStocks.Any()
-                          select new
-                          {
-                              PeriodReport = pr,
-                              Country = c,
-                              Programs = pr.GetDefaultProgramIds()
-                          };
+                        join c in countries on pr.CountryId equals c.Id
+                        where pr.PeriodId == id // && pr.ProductStocks.Any()
+                        && countryIds.Contains(c.Id) 
+                        select new
+                        {
+                            PeriodReport = pr,
+                            Country = c,
+                            Programs = pr.GetDefaultProgramIds()
+                        };
             var results = await AsyncExecuter.ToListAsync(query);
 
             var productShipments = from ps in results.SelectMany(x => x.PeriodReport.ProductShipments)
-                                    group ps by new { ps.PeriodReportId, ps.ProgramId, ps.ProductId } into g
-                                    select new
-                                    {
-                                        PeriodReportId = g.Key.PeriodReportId,
-                                        ProgramId = g.Key.ProgramId,
-                                        ProductId = g.Key.ProductId,
-                                        Shipments = g.ToList()
-                                    };
+                                   group ps by new { ps.PeriodReportId, ps.ProgramId, ps.ProductId } into g
+                                   select new
+                                   {
+                                       PeriodReportId = g.Key.PeriodReportId,
+                                       ProgramId = g.Key.ProgramId,
+                                       ProductId = g.Key.ProductId,
+                                       Shipments = g.ToList()
+                                   };
             #region Program Products only (not used)
             //var programProducts = from ps in results.SelectMany(x => x.PeriodReport.ProductStocks)
             //                      join pr in results on ps.PeriodReportId equals pr.PeriodReport.Id
@@ -271,7 +381,7 @@ namespace PPMRm.Reports
 
             var countrySummaries = results.Select(r => new CountrySummaryDto
             {
-                Country = new CountryDto { Id = r.Country.Id, Name = r.Country.Name, MinStock = r.Country.MinStock, MaxStock = r.Country.MaxStock},
+                Country = new CountryDto { Id = r.Country.Id, Name = r.Country.Name, MinStock = r.Country.MinStock, MaxStock = r.Country.MaxStock },
                 Programs = (from p in r.Programs
                             join program in programs on p equals program.Id
                             select new ProgramDto { Id = p, Name = program.Name }).ToList(),
@@ -283,36 +393,36 @@ namespace PPMRm.Reports
                             join ship in productShipments on new { ps.PeriodReportId, ps.ProgramId, ps.ProductId } equals new { ship.PeriodReportId, ship.ProgramId, ship.ProductId } into shipments
                             from s in shipments.DefaultIfEmpty()
                             select new ProgramProductDto
-                           {
-                               Product = new ProductDto { Id = product.Id, Name = product.Name },
-                               ActionRecommended = ps.ActionRecommended,
-                               AMC = ps.AMC,
-                               DateActionNeededBy = ps.DateActionNeededBy,
-                               SOHLevels = ps.GetSOHLevelsList().Select(x => x.ToString()).ToList(),
-                               DateOfSOH = ps.DateOfSOH,
-                               MaxStock = pr.Country.MaxStock,
-                               MinStock = pr.Country.MinStock,
-                               OtherSourceOfConsumption = ps.OtherSourceOfConsumption,
-                               Program = new ProgramDto { Id = program.Id, Name = program.Name },
-                               ReportStatus = pr.PeriodReport.ReportStatus.GetValueOrDefault(),
-                               Shipments = s?.Shipments?.Select(x => new ProductShipmentDto
-                               {
-                                   AMC = ps.AMC,
-                                   Supplier = x.Supplier,
-                                   Quantity = x.Quantity,
-                                   DataSource = x.DataSource,
-                                   ShipmentDate = x.ShipmentDate,
-                                   ShipmentDateType = x.ShipmentDateType,
-                                   Id = x.Id
-                               }).OrderBy(x => x.ShipmentDate).ToList() ?? new List<ProductShipmentDto>(),
-                               SOH = ps.SOH,
-                               SourceOfConsumption = ps.SourceOfConsumption
-                           }).ToList()
+                            {
+                                Product = new ProductDto { Id = product.Id, Name = product.Name },
+                                ActionRecommended = ps.ActionRecommended,
+                                AMC = ps.AMC,
+                                DateActionNeededBy = ps.DateActionNeededBy,
+                                SOHLevels = ps.GetSOHLevelsList().Select(x => x.ToString()).ToList(),
+                                DateOfSOH = ps.DateOfSOH,
+                                MaxStock = pr.Country.MaxStock,
+                                MinStock = pr.Country.MinStock,
+                                OtherSourceOfConsumption = ps.OtherSourceOfConsumption,
+                                Program = new ProgramDto { Id = program.Id, Name = program.Name },
+                                ReportStatus = pr.PeriodReport.ReportStatus.GetValueOrDefault(),
+                                Shipments = s?.Shipments?.Select(x => new ProductShipmentDto
+                                {
+                                    AMC = ps.AMC,
+                                    Supplier = x.Supplier,
+                                    Quantity = x.Quantity,
+                                    DataSource = x.DataSource,
+                                    ShipmentDate = x.ShipmentDate,
+                                    ShipmentDateType = x.ShipmentDateType,
+                                    Id = x.Id
+                                }).OrderBy(x => x.ShipmentDate).ToList() ?? new List<ProductShipmentDto>(),
+                                SOH = ps.SOH,
+                                SourceOfConsumption = ps.SourceOfConsumption
+                            }).OrderBy(x => x.Product.Name).ToList()
             });
             return new PeriodSummaryDto
             {
                 CountrySummaries = countrySummaries.ToList(),
-                Period = new PeriodDto { Id = period.Id, StartDate = period.StartDate, EndDate = period.EndDate, Month = period.Month, Year = period.Year}
+                Period = new PeriodDto { Id = period.Id, StartDate = period.StartDate, EndDate = period.EndDate, Month = period.Month, Year = period.Year }
             };
         }
     }
