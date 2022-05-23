@@ -97,6 +97,9 @@
                 <table class="table table-striped table-sm" id="tblStockouts">
                 <thead>
                     <tr>
+                        <th colspan="4" class="text-center">Stockouts</th>
+                    </tr>
+                    <tr>
                         <th>Country</th>
                         <th>Product</th>
                         <th style="width: 33%">Recommended Action</th>
@@ -135,6 +138,9 @@
                 <div class="page-break"></div>
                 <table class="table table-striped table-sm" id="tblShortages">
                 <thead>
+                                <tr>
+                                    <th colspan="4" class="text-center">Understocks</th>
+                                </tr>
                     <tr>
                         <th>Country</th>
                         <th>Product</th>
@@ -176,6 +182,9 @@
                 <div class="page-break"></div>
                 <table class="table table-striped table-sm" id="tblOversupply">
                 <thead>
+                                <tr>
+                                    <th colspan="4" class="text-center">Overstocks</th>
+                                </tr>
                     <tr>
                         <th>Country</th>
                         <th>Product</th>
@@ -220,7 +229,12 @@
                           </div>
                         </div>
                         <table class="table table-sm caption-top">
-                            <caption class="text-center text-capitalize" style="caption-side:top;">Commodity Security Updates</caption>
+                            <thead>
+                                
+                                <tr>
+                                    <th colspan="2" class="text-center">@c.Country.Name - Commodity Security Updates</th>
+                                </tr>
+                            </thead>
                             <tbody>
                                 <tr>
                                     <th style="width: 33.33%">Forecasting and Supply Planning</th>
@@ -263,6 +277,9 @@
                     <table class="table table-sm">
                             <caption class="text-center text-capitalize" style="caption-side:top;">@prog.Name - SOH Levels: @(c.SOHLevels?.Count > 0 ? string.Join(", ", @c.SOHLevels): "None")</caption>
                             <thead>
+                                <tr>
+                                    <th colspan="7" class="text-center">@c.Country.Name - @prog.Name</th>
+                                </tr>
                     <tr>
                         <th>Product</th>
                         <th>MOS</th>

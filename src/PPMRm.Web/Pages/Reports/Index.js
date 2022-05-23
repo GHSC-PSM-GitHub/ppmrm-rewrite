@@ -75,7 +75,6 @@
                     datasets: [{
                         label: '# of Countries/Channels per commodity stocked out',
                         backgroundColor: '#cd2026',
-                        borderColor: '#000',
                         fontColor: '#000',
                         color: "#000",
                         data: result.stockouts.data,
