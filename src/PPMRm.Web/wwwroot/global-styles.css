@@ -47,7 +47,7 @@ section {
     .chart-container {
         position: relative;
         margin: auto;
-        height: 65vh;
+        height: 60vh;
         width: 75vw;
         padding-right: 10vw;
     }

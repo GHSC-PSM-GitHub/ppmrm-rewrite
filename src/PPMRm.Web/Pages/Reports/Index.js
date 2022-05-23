@@ -60,7 +60,8 @@
 
     if ($("#SelectedPeriodId").val() !== '' && $("#chrtStockouts").length > 0) {
         pPMRm.reports.report.get($("#SelectedPeriodId").val(), $("#SelectedCountries").val()).then(function (result) {
-            
+            //global.Chart.defaults.fontColor = '#000';
+            Chart.defaults.color = '#000';
             const ctx = document.getElementById('chrtStockouts');
             const ctxShortages = document.getElementById('chrtShortages');
 
@@ -74,7 +75,9 @@
                     datasets: [{
                         label: '# of Countries/Channels per commodity stocked out',
                         backgroundColor: '#cd2026',
-                        color:"#000",
+                        borderColor: '#000',
+                        fontColor: '#000',
+                        color: "#000",
                         data: result.stockouts.data,
                         borderWidth: 1
                     }]
@@ -83,7 +86,7 @@
                     legend: {
                         display: true,
                         labels: {
-                            fontColor: 'rgb(255, 99, 132)'
+                            fontColor: '#000'
                         }
                     },
                     maintainAspectRatio: false,
@@ -92,7 +95,8 @@
                             stacked: true,
                             grid: {
                                 display: true,
-                                color: "rgba(255,99,132,0.2)"
+                                fontColor: '#000',
+                                color: "#000"
                             }
                         },
                         x: {
@@ -138,7 +142,7 @@
                             stacked: true,
                             grid: {
                                 display: true,
-                                color: "rgba(255,99,132,0.2)"
+                                color: "#000"
                             }
                         },
                         x: {
@@ -165,7 +169,7 @@
                     legend: {
                         display: true,
                         labels: {
-                            fontColor: 'rgb(255, 99, 132)'
+                            fontColor: '#000'
                         }
                     }
                 }
@@ -191,7 +195,7 @@
                             stacked: true,
                             grid: {
                                 display: true,
-                                color: "rgba(255,99,132,0.2)"
+                                color: "#000"
                             }
                         },
                         x: {
