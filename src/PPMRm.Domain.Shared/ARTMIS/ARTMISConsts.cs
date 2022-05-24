@@ -151,7 +151,8 @@ namespace PPMRm.ARTMIS
             {"100041AAA08AP", "SP"},
             {"100041AAA07SP", "SP"},
             {"100041AAA07NP", "SP"},
-
+            {"106286ABC0NYP", "PYAS-10X9-180" },
+            {"106284DEW0NXP","PYAS-30X3-60" }
         };
     }
 }
