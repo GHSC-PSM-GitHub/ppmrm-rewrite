@@ -1,8 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using PPMRm.Core;
 using PPMRm.Reports;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace PPMRm.Web.Pages.Reports
 {
@@ -10,17 +13,34 @@ namespace PPMRm.Web.Pages.Reports
     {
         [BindProperty(SupportsGet = true)]
         public int Id { get; set; }
-        IReportAppService ReportAppService { get; }
 
-        public PeriodModel(IReportAppService reportAppService)
+        [BindProperty(SupportsGet = true)]
+        public List<string> SelectedCountries { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public string CountryIds { get; set; }
+
+        [BindProperty]
+        public List<SelectListItem> Countries { get; set; }
+        IReportAppService ReportAppService { get; }
+        ICountryRepository CountryRepository { get; }
+
+        public PeriodModel(IReportAppService reportAppService, ICountryRepository countryRepository)
         {
             ReportAppService = reportAppService;
+            CountryRepository = countryRepository;
         }
 
         public async Task OnGetAsync()
         {
-            var summary = await ReportAppService.GetAsync(Id, new List<string>());
-            PeriodSummary = summary;
+            SelectedCountries = CountryIds?.Split(',').ToList();
+            var allCountries = await CountryRepository.GetUserCountriesAsync();
+            Countries = allCountries.OrderBy(c => c.Name).Select(c => new SelectListItem { Value = c.Id, Text = c.Name }).ToList();
+            if (SelectedCountries == null || !SelectedCountries.Any())
+            {
+                SelectedCountries = allCountries.Select(c => c.Id).ToList();
+            }
+            PeriodSummary = await ReportAppService.GetAsync(Id, SelectedCountries);
         }
 
         public int SelectedPeriodId => Id;

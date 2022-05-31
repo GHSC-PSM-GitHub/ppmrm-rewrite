@@ -31,6 +31,9 @@ section {
 }
 
 @media screen {
+    div#reportFilter > div > span {
+        display: none;
+    }
     header {
         display:none;
     }
@@ -49,6 +52,9 @@ section {
     }
     div.container, div.container-fluid {
         margin: 0 25mm 0 0;
+    }
+    div#reportFilter {
+        display:none;
     }
     .chart-container {
         position: relative;
