@@ -42,7 +42,10 @@ section {
 
 @media print {
     body {
-        margin: 0 25mm;
+        margin: 0 5mm;
+    }
+    div.container, div.container-fluid {
+        margin: 0 25mm 0 0;
     }
     .chart-container {
         position: relative;
