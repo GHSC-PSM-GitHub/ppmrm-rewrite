@@ -148,7 +148,7 @@
                     <td>@s.Period.Year</td>
                     <td>@s.SOHLevels</td>
                     <td>@s.SOH.ToString(PPMRm.PeriodReports.PeriodReportConsts.DataFormatting.SOH_AMC_Format)</td>
-                    <td>@s.MOS?.ToString("N1")</td>
+                    <td>@s.MOS?.ToString(PPMRm.PeriodReports.PeriodReportConsts.DataFormatting.MOS_Format)</td>
                     <td>@s.AMC?.ToString(PPMRm.PeriodReports.PeriodReportConsts.DataFormatting.SOH_AMC_Format)</td>
                     <td>@s.DateOfSOH?.ToString(PPMRm.PeriodReports.PeriodReportConsts.DataFormatting.DateFormat)</td>
                     <td>@s.MinStock</td>
@@ -162,8 +162,8 @@
                         if(@s.Shipments?.Count > i)
                         {
                             <td>@s[i].Supplier</td>
-                            <td>@s[i].Quantity </td>
-                            <td>@s[i].MOS?.ToString("N1")</td>
+                            <td>@s[i].Quantity.ToString(PPMRm.PeriodReports.PeriodReportConsts.DataFormatting.SOH_AMC_Format) </td>
+                            <td>@s[i].MOS?.ToString(PPMRm.PeriodReports.PeriodReportConsts.DataFormatting.MOS_Format)</td>
                             <td>@s[i].ShipmentDate?.ToString(PPMRm.PeriodReports.PeriodReportConsts.DataFormatting.DateFormat)</td>
                         }
                         else
