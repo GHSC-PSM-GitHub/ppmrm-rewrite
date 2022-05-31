@@ -1,0 +1,20 @@
+@using Volo.Abp.Ui.Branding
+@using Microsoft.Extensions.Hosting;
+@inject IBrandingProvider BrandingProvider
+@inject IHostEnvironment HostEnvironment
+<a class="navbar-brand" href="~/">
+    @if (!BrandingProvider.LogoUrl.IsNullOrWhiteSpace())
+    {
+        <img src="@BrandingProvider.LogoUrl" alt="@BrandingProvider.AppName" >
+    }
+    @BrandingProvider.AppName
+
+    @if(HostEnvironment.IsDevelopment())
+    {
+        <span class="badge badge-warning">Development</span>
+    }
+    else if(HostEnvironment.IsStaging())
+    {
+        <span class="badge badge-warning">Test</span>
+    }
+</a>
