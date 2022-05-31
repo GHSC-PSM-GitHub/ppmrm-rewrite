@@ -31,6 +31,9 @@ section {
 }
 
 @media screen {
+    header {
+        display:none;
+    }
     .chart-container {
         position: relative;
         margin: auto;
