@@ -231,7 +231,9 @@
                             <p class="lead">Min: @c.Country.MinStock - Max: @c.Country.MaxStock</p>
                           </div>
                         </div>
-                        <table class="table table-sm caption-top">
+                        @if(Model.PeriodSummary.DisplayCSUpdates)
+            {
+                <table class="table table-sm caption-top">
                             <thead>
                                 
                                 <tr>
@@ -273,6 +275,9 @@
                                 </tr>
                             </tbody>
                         </table>
+                
+            }
+            
                     </div>
                 <div class="page-break"></div>
                 @foreach(var prog in c.Programs)
@@ -308,14 +313,6 @@
                                 {
                                     <td>
                                     <table class="table table-sm compact small">
-                                          <thead>
-                                          <tr>
-                                            <th>Supplier</th>
-                                            <th>Next Shipment Date</th>
-                                            <th>Quantity</th>
-                                            <th>MOS</th>
-                                          </tr>
-                                          </thead>
                                           <tbody>
                                             @foreach(var s in p.Shipments.OrderBy(l => l.ShipmentDate))
                                             {

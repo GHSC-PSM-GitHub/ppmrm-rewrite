@@ -46,6 +46,8 @@ namespace PPMRm.Reports
             }
         }
 
+        public bool DisplayCSUpdates => Period?.Month % 3 == 0;
+
         public ProductCountryDto Shortages
         {
             get
