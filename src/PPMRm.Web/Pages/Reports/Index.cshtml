@@ -313,6 +313,14 @@
                                 {
                                     <td>
                                     <table class="table table-sm compact small">
+                                        <thead>
+                                          <tr>
+                                            <th>Supplier</th>
+                                            <th>Next Shipment Date</th>
+                                            <th>Quantity</th>
+                                            <th>MOS</th>
+                                          </tr>
+                                          </thead>
                                           <tbody>
                                             @foreach(var s in p.Shipments.OrderBy(l => l.ShipmentDate))
                                             {
