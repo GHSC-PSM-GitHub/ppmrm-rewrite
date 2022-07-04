@@ -154,5 +154,13 @@ namespace PPMRm.ARTMIS
             {"106286ABC0NYP", "PYAS-10X9-180" },
             {"106284DEW0NXP","PYAS-30X3-60" }
         };
+
+        public static class FileExtensions
+        {
+            public const string TarGz = ".tar.gz";
+            public const string CSV = ".csv";
+            public const string Txt = ".txt";
+        }
+
     }
 }
