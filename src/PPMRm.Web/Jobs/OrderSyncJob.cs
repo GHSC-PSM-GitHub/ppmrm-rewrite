@@ -24,8 +24,8 @@ namespace PPMRm.Web.Jobs
     }
     public class OrderSyncJob : AsyncBackgroundJob<OrderSyncJobArgs>, ITransientDependency
     {
-        const string OrderFilesPattern = $"*order*{ARTMISConsts.FileExtensions.Txt}";
-        const string ItemFilesPattern = $"*item*{ARTMISConsts.FileExtensions.Txt}";
+        readonly string OrderFilesPattern = $"*order*{ARTMISConsts.FileExtensions.Txt}";
+        readonly string ItemFilesPattern = $"*item*{ARTMISConsts.FileExtensions.Txt}";
 
         const string ARTMISConnector = "ARTMIS";
 
