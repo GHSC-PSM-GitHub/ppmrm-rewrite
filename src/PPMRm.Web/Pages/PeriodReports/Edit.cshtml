@@ -28,17 +28,21 @@
                     <abp-card-title class="">Status: @Model.PeriodReport.ReportStatus</abp-card-title>
                 </abp-column>
                 <abp-column size-md="_6" class="text-right">
-                <abp-button id="edit-cs-updates" data-id="@Model.Id"
-                                text="@(Model.IsReadonly  || !(await AuthService.AuthorizeAsync(PPMRmConsts.Permissions.DataProvider)).Succeeded ? "View CS Updates" : "View/Edit CS Updates")"
-                                button-type="Primary"/>
-                                @if((await AuthService.AuthorizeAsync(PPMRmConsts.Permissions.DataAdministrator)).Succeeded)
+                    @if (Model.PeriodReport.IsQuarterReport)
+                    {
+                        <abp-button id="edit-cs-updates" data-id="@Model.Id"
+                                    text="@(Model.IsReadonly  || !(await AuthService.AuthorizeAsync(PPMRmConsts.Permissions.DataProvider)).Succeeded ? "View CS Updates" : "View/Edit CS Updates")"
+                                    button-type="Primary" />
+                    }
+
+                    @if ((await AuthService.AuthorizeAsync(PPMRmConsts.Permissions.DataAdministrator)).Succeeded)
                     {
                         <div class="btn-group">
-                            @if(Model.PeriodReport.ReportStatus == PeriodReportStatus.Initialized)
+                            @if (Model.PeriodReport.ReportStatus == PeriodReportStatus.Initialized)
                             {
                                 <button id="btn-open" class="btn-report-status btn btn-warning" data-id="@Model.PeriodReport.Id" data-action="open"><i class="fa fa-folder-open-o" aria-hidden="true"></i> Open</button>
                             }
-                            else if(Model.PeriodReport.ReportStatus == PeriodReportStatus.Open || Model.PeriodReport.ReportStatus == PeriodReportStatus.Reopened)
+                            else if (Model.PeriodReport.ReportStatus == PeriodReportStatus.Open || Model.PeriodReport.ReportStatus == PeriodReportStatus.Reopened)
                             {
                                 <button id="btn-mark-as-final" class="btn-report-status btn btn-warning" data-id="@Model.PeriodReport.Id" data-action="finalize"><i class="fa fa-flag-checkered" aria-hidden="true"></i> Mark as Final</button>
                             }
@@ -49,7 +53,7 @@
                             }
                         </div>
                     }
-                    
+
                 </abp-column>
             </abp-row>
         </abp-card-header>

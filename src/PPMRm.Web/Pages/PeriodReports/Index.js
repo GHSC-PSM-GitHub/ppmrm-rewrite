@@ -49,13 +49,6 @@ $(document).ready(function () {
                     }
                 },
                 {
-                    "title": "CS Updates",
-                    "data": "id",
-                    "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
-                        $(nTd).html("<button type='button' class='btn btn-primary btn-sm btn-cs-updates' data-id='"+ oData.id +"'>CS Updates</button>");
-                    }
-                },
-                {
                     "title": "Enter/View Product Info",
                     "data": "id",
                     "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
