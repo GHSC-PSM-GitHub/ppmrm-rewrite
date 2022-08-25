@@ -56,6 +56,8 @@ namespace PPMRm.PeriodReports
         {
             switch (CountryId)
             {
+                case CountryConsts.CountryCodes.CongoDRC:
+                    return new List<int> { (int)Programs.NationalMalariaProgram, (int)Programs.NationalMalariaProgramGF };
                 case CountryConsts.CountryCodes.Uganda:
                     return new List<int> { (int)Programs.PublicSector, (int)Programs.PNFP };
                 case CountryConsts.CountryCodes.Myanmar:
