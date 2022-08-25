@@ -43,7 +43,8 @@ namespace PPMRm.Core
                     new Program(Programs.PartnersWorkingBeyondFPH, "Partners Working Beyond Formal Public Health"),
                     new Program(Programs.PSI, "Population Services International (PSI)"),
                     new Program(Programs.PublicSector, "Public Sector"),
-                    new Program(Programs.SaveTheChildren, "Save The Children")
+                    new Program(Programs.SaveTheChildren, "Save The Children"),
+                    new Program(Programs.NationalMalariaProgramGF, "National Malaria Program (GF)")
                 };
                 await ProgramRepository.InsertManyAsync(programs);
             }

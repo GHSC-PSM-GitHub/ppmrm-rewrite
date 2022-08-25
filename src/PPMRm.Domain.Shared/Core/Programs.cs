@@ -11,6 +11,7 @@ namespace PPMRm.Core
         PartnersWorkingBeyondFPH,
         PSI,
         PublicSector,
-        SaveTheChildren
+        SaveTheChildren,
+        NationalMalariaProgramGF
     }
 }
