@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Localization;
+using PPMRm.Localization;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Linq;
@@ -22,12 +24,15 @@ namespace PPMRm.Reports
         IRepository<PeriodReport, string> PeriodReportRepository { get; }
         IAsyncQueryableExecuter AsyncExecuter { get; }
 
+        private IStringLocalizer Localizer { get; }
+
         public ReportAppService(ICountryRepository countryRepository, 
             IRepository<Program, int> programRepository, 
             IRepository<Period, int> periodRepository, 
             IRepository<Product, string> productRepository, 
             IRepository<PeriodReport, string> periodReportRepository,
-            IAsyncQueryableExecuter asyncExecuter)
+            IAsyncQueryableExecuter asyncExecuter,
+            IStringLocalizer<PPMRmResource> localizer)
         {
             CountryRepository = countryRepository;
             ProgramRepository = programRepository;
@@ -35,6 +40,7 @@ namespace PPMRm.Reports
             ProductRepository = productRepository;
             PeriodReportRepository = periodReportRepository;
             AsyncExecuter = asyncExecuter;
+            Localizer = localizer;
         }
 
         #region Old Implementation
@@ -201,7 +207,7 @@ namespace PPMRm.Reports
                                  }).ToList() ?? new List<ShipmentSummaryDto>(),
                                  SOH = ps.SOH,
                                  SOHLevels = ps.SOHLevels.ToString(),
-                                 SourceOfConsumption = ps.OtherSourceOfConsumption ?? ps.SourceOfConsumption.ToString()
+                                 SourceOfConsumption = ps.OtherSourceOfConsumption ?? Localizer[$"Enum:SourceOfConsumption:{(int)ps.SourceOfConsumption}"].ToString()
                              };
 
             return stockQuery.OrderBy(x => x.Country.Name).ThenBy(x => x.Period.Id).ThenBy(x => x.Product.Name).ThenBy(x => x.Program.Name).ToList();
