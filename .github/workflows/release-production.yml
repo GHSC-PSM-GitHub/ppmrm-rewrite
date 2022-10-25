@@ -1,8 +1,7 @@
 name: ReleaseLive
 on:
-  push:
-    branches:
-      - main
+  release:
+    types: [published]
 jobs:
   push_to_ecr:
     runs-on: ubuntu-20.04
