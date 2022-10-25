@@ -39,7 +39,7 @@
     }
     class Program
     {
-        public const string ConnectionString = "Host=localhost;Port=5432;Database=ppmrm_june;User ID=postgres;Password=admin;";
+        public const string ConnectionString = "Host=localhost;Port=5432;Database=ppmrm_20221003;User ID=postgres;Password=mysecretpassword;";
 
 
         static List<OrderEto> orderEvents;
@@ -84,7 +84,7 @@
         {
             orderEvents = new List<OrderEto>();
             var processRunner = StreamProcessRunner.Create<string>(DefineProcess);
-            await processRunner.ExecuteAsync(@"..\..\..\data");
+            await processRunner.ExecuteAsync(@"../../../data");
             var store = new DocumentStore(new PPMRmStoreOptions(ConnectionString, null));
             using var session = store.OpenSession();
             var sortedEvents = orderEvents.OrderBy(e => e.FileName).ThenBy(e => e.LineNumber).Select(e => OrderLineEvent.Create(e));
@@ -153,7 +153,7 @@
         private static void DefineProcess(ISingleStream<string> contextStream)
         {
             var orderStream = contextStream
-                .CrossApplyFolderFiles("list all required files", "202206*.tar.gz", true)
+                .CrossApplyFolderFiles("list all required files", "202209*.tar.gz", true)
                 .CrossApplyGZipFiles("extract files from zip", "*order*.txt")
                 .CrossApplyTextFile("parse file", 
                     FlatFileDefinition.Create(i => new OrderEto

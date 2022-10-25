@@ -9,6 +9,8 @@ using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
 using System.Linq;
+using Baseline.ImTools;
+using PPMRm.Items;
 
 namespace PPMRm.ARTMIS.OrderLines
 {
@@ -37,7 +39,12 @@ namespace PPMRm.ARTMIS.OrderLines
             //var productsQueryable = await ProductRepository.GetQueryableAsync();
             var countries = CountryRepository.Where(c => input.Countries.Contains(c.Id)).ToList();
             var products = ProductRepository.Where(p => input.Products.Contains(p.Id)).ToList();
-            var items = await Session.Query<Items.Item>().ToListAsync();
+            var allItems = await Session.Query<Items.Item>().ToListAsync();
+            var items = allItems.Concat(new List<Item>()
+            {
+                new Item() {Id = "106286ABC0NYP", ProductId = "PYAS-10X9-180", Name = "Pyronaridine/Artesunate 180/60 mg Film-Coated Tablet, 10 x 9 Blister Pack Tablets", BaseUnitMultiplier = 10},
+                new Item() {Id = "106284DEW0NXP", ProductId = "PYAS-30X3-60", Name = "Pyronaridine/Artesunate 60/20 mg Granules for Suspension, 30 X 3 Sachets ", BaseUnitMultiplier = 30},
+            });
             var totalCount = await queryable.CountAsync();
             var results = (from l in await queryable.OrderBy(q => q.CountryId).Skip(input.SkipCount).Take(input.MaxResultCount).ToListAsync()
                            join c in countries on l.CountryId equals c.Id
