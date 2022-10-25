@@ -11,6 +11,7 @@
             public const string Core = "Core";
             public const string DataProvider = "DataProvider";
             public const string DataReviewer = "DataReviewer";
+            public const string DataAdministrator = "DataAdministrator";
         }
 
         public static class ProductTracerCategories

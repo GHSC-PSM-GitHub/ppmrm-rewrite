@@ -1,11 +1,7 @@
 ﻿@page
 @model PPMRm.Web.Pages.PeriodReports.IndexModel
 @section styles{
-   <style type="text/css">
-    li.multiselect-item {
-        text-align: left;
-    }    
-   </style>
+   
 }
 @section scripts
 {
@@ -22,7 +18,36 @@
 </div>
 <abp-card>
     <abp-card-header>
-        <div class="container">
+        <form class="needs-validation" novalidate>
+            <div class="form-row mt-3">
+                <div class="col-md-4 mb-3">
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="inputGroupPrependCountry">Country</span>
+                    </div>
+                    <select asp-for="@Model.SelectedCountries" asp-items="@Model.Countries" class="form-control"></select>
+                  </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="inputGroupPrependYear">Year</span>
+                    </div>
+                    <select asp-for="@Model.SelectedYear" asp-items="@Model.Years" class="form-control"></select>
+                  </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="inputGroupPrependPeriod">Period</span>
+                    </div>
+                    <select asp-for="@Model.SelectedMonth" asp-items="@Model.Months" class="form-control"></select>
+       
+                  </div>
+                </div>
+              </div>
+        </form>
+        <!--<div class="container">
           <div class="row">
             <div class="col">
                 <abp-select asp-for="@Model.SelectedCountries" asp-items="@Model.Countries" />
@@ -44,7 +69,8 @@
                 </div>
             </div>
          </div>
-        </div>
+        </div>-->
+
     </abp-card-header>
 </abp-card>
 <abp-table class="table-striped table-bordered .w-auto small" id="PeriodReportsTable"></abp-table>

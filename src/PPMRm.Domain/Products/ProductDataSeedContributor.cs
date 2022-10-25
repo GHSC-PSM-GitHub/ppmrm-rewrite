@@ -21,10 +21,12 @@ namespace PPMRm.Products
         [UnitOfWork]
         public async Task SeedAsync(DataSeedContext context)
         {
-            if(await ProductRepository.GetCountAsync() == 0)
+            var seedProducts = ProductConsts.PPMRmProducts.Select(p => new Product(p.Id, p.Name, p.Category)).OrderBy(p => p.Name);
+            if (await ProductRepository.GetCountAsync() < seedProducts.Count())
             {
-                var products = ProductConsts.PPMRmProducts.Select(p => new Product(p.Id, p.Name, p.Category)).OrderBy(p => p.Name);
-                await ProductRepository.InsertManyAsync(products);
+                var allProducts = await ProductRepository.GetListAsync();
+                var newProductIds = seedProducts.Select(x => x.Id).Except(allProducts.Select(x => x.Id));
+                await ProductRepository.InsertManyAsync(seedProducts.Where(x => newProductIds.Contains(x.Id)));
             }
         }
     }

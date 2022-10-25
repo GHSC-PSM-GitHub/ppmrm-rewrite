@@ -37,6 +37,9 @@ namespace PPMRm.Products
             ProductValues.DHAPPQ40mg320mg9tabs,
             ProductValues.DHAPPQ20mg160mg3tabs,
 
+            ProductValues.PyronaridineArtesunate180_60mg_10x9Blisters,
+            ProductValues.PyronaridineArtesunate60_20mg_30x3Sachets,
+
             ProductValues.Primaquine7_5mg,
             ProductValues.Primaquine15mg,
 
@@ -80,7 +83,9 @@ namespace PPMRm.Products
             public static readonly (string Id, string Name, TracerCategory Category) DHAPPQ40mg320mg9tabs = ("DHAPPQ9-40", "DHA-PPQ 40mg/320mg-9 tabs", TracerCategory.ACTs);
             public static readonly (string Id, string Name, TracerCategory Category) DHAPPQ20mg160mg3tabs = ("DHAPPQ3-20", "DHA-PPQ 20mg/160mg-3 tabs", TracerCategory.ACTs);
 
-           
+
+            public static readonly (string Id, string Name, TracerCategory Category) PyronaridineArtesunate180_60mg_10x9Blisters = ("PYAS-10X9-180", "Pyronaridine/Artesunate 180/60 mg Film-Coated Tablet, 10x9 Blister Pack Tablets", TracerCategory.ACTs);
+            public static readonly (string Id, string Name, TracerCategory Category) PyronaridineArtesunate60_20mg_30x3Sachets = ("PYAS-30X3-60", "Pyronaridine/Artesunate 60/20 mg Granules for Suspension, 30X3 Sachets", TracerCategory.ACTs);
 
             public static readonly (string Id, string Name, TracerCategory Category) Primaquine7_5mg = ("PQ-7_5", "Primaquine 7.5mg", TracerCategory.OtherPharma);
             public static readonly (string Id, string Name, TracerCategory Category) Primaquine15mg = ("PQ-15", "Primaquine 15mg", TracerCategory.OtherPharma);
@@ -93,6 +98,8 @@ namespace PPMRm.Products
 
 
             /*
+             * Pyronaridine/Artesunate 180/60 mg Film-Coated Tablet, 10 x 9 Blister Pack Tablets - 106286ABC0NYP - PYAS-10X9-180 
+             * Pyronaridine/Artesunate 60/20 mg Granules for Suspension, 30 X 3 Sachets - 106284DEW0NXP - PYAS-30X3-60
              * Artesunate/Amodiaquine 25mg/67.5mg FDC 3 tabs
              * Artesunate/Amodiaquine 50mg/135mg FDC 3 tabs
              * Artesunate/Amodiaquine 100mg/270mg FDC 3 tabs

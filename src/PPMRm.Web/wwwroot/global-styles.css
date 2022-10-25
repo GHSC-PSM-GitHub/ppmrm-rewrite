@@ -10,3 +10,92 @@ button.multiselect {
     padding-top:0.85rem;
     padding-bottom:0.85rem;
 }
+
+.full-width {
+    width: 94vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+}
+section {
+    display:block;
+}
+
+
+
+.scrollable {
+    height: 50vw;
+    overflow-y: scroll;
+}
+
+@media screen {
+    div#reportFilter > div > span {
+        display: none;
+    }
+    header {
+        display:none;
+    }
+    .chart-container {
+        position: relative;
+        margin: auto;
+        height: 50vh;
+        width: 75vw;
+        padding-right:10vw;
+    }
+}
+
+@media print {
+    body {
+        margin: 0 5mm;
+    }
+    div.container, div.container-fluid {
+        margin: 0 25mm 0 0;
+    }
+    div#reportFilter {
+        display:none;
+    }
+    .chart-container {
+        position: relative;
+        margin: auto;
+        height: 60vh;
+        width: 75vw;
+        padding-right: 10vw;
+    }
+    @page {
+        size: A4 landscape;
+    }
+
+    @page:right {
+        @bottom-right {
+            content: counter(page);
+        }
+    }
+
+    div.page-break {
+        page-break-after: always;
+    }
+
+    footer {
+        margin-top: 10px;
+    }
+
+    .chart-container
+    {
+        margin-top:50px;
+        margin-right:25vw;
+    }
+
+    .chart-container canvas {
+        margin-right: 25vw;
+    }
+
+    div.card {
+        display:none;
+    }
+
+    footer > p {
+        display: none;
+    }
+}

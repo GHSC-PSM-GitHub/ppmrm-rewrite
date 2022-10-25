@@ -28,17 +28,21 @@
                     <abp-card-title class="">Status: @Model.PeriodReport.ReportStatus</abp-card-title>
                 </abp-column>
                 <abp-column size-md="_6" class="text-right">
-                <abp-button id="edit-cs-updates" data-id="@Model.Id"
-                                text="@(Model.IsReadonly ? "View CS Updates" : "View/Edit CS Updates")"
-                                button-type="Primary"/>
-                                @if((await AuthService.AuthorizeAsync(PPMRmConsts.Permissions.DataReviewer)).Succeeded)
+                    @if (Model.PeriodReport.IsQuarterReport)
+                    {
+                        <abp-button id="edit-cs-updates" data-id="@Model.Id"
+                                    text="@(Model.IsReadonly  || !(await AuthService.AuthorizeAsync(PPMRmConsts.Permissions.DataProvider)).Succeeded ? "View CS Updates" : "View/Edit CS Updates")"
+                                    button-type="Primary" />
+                    }
+
+                    @if ((await AuthService.AuthorizeAsync(PPMRmConsts.Permissions.DataAdministrator)).Succeeded)
                     {
                         <div class="btn-group">
-                            @if(Model.PeriodReport.ReportStatus == PeriodReportStatus.Initialized)
+                            @if (Model.PeriodReport.ReportStatus == PeriodReportStatus.Initialized)
                             {
                                 <button id="btn-open" class="btn-report-status btn btn-warning" data-id="@Model.PeriodReport.Id" data-action="open"><i class="fa fa-folder-open-o" aria-hidden="true"></i> Open</button>
                             }
-                            else if(Model.PeriodReport.ReportStatus == PeriodReportStatus.Open || Model.PeriodReport.ReportStatus == PeriodReportStatus.Reopened)
+                            else if (Model.PeriodReport.ReportStatus == PeriodReportStatus.Open || Model.PeriodReport.ReportStatus == PeriodReportStatus.Reopened)
                             {
                                 <button id="btn-mark-as-final" class="btn-report-status btn btn-warning" data-id="@Model.PeriodReport.Id" data-action="finalize"><i class="fa fa-flag-checkered" aria-hidden="true"></i> Mark as Final</button>
                             }
@@ -49,7 +53,7 @@
                             }
                         </div>
                     }
-                    
+
                 </abp-column>
             </abp-row>
         </abp-card-header>
@@ -70,9 +74,9 @@
                                     <abp-card-title>@program.Program.Name</abp-card-title>
                                 </abp-column>
                                 <abp-column size-md="_6" class="text-right">
-                                @if(!Model.IsReadonly)
+                                @if(!Model.IsReadonly && (await AuthService.AuthorizeAsync(PPMRmConsts.Permissions.DataProvider)).Succeeded)
                         {
-                        <abp-button class="btn-add-program-product btn-sm @(Model.IsReadonly ? "disabled" : "")"
+                        <!-- <abp-button class="btn-add-program-product btn-sm @(Model.IsReadonly ? "disabled" : "")"
                                                 data-period-report-id="@program.PeriodReportId"
                                                 data-program-id="@program.Program.Id"
                                                 text="Add Product"
@@ -83,7 +87,7 @@
                                                                     class="btn-add-shipment btn-sm @(Model.IsReadonly ? "disabled" : "")"
                                                                     icon="plus"
                                                                     text="Add Shipment"
-                                                                    button-type="Success"/>   
+                                                                    button-type="Success"/>   -->
                         }
                                 </abp-column>
                             </abp-row>
@@ -166,7 +170,7 @@
                                             }
                                         <abp-row>
                                             
-                                                @if(!Model.IsReadonly)
+                                                @if(!Model.IsReadonly && (await AuthService.AuthorizeAsync(PPMRmConsts.Permissions.DataProvider)).Succeeded)
                                                 {
                                             <abp-column size-md="_4">
 
@@ -227,7 +231,7 @@
                                                         
                                                         </abp-column>
                                                         <abp-column size-md="_6">
-                                                        @if(!Model.IsReadonly)
+                                                        @if(!Model.IsReadonly  && (await AuthService.AuthorizeAsync(PPMRmConsts.Permissions.DataProvider)).Succeeded)
                                                         {
                                                         <abp-button data-id="@s.Id" data-product-id="@s.ProductId" data-program-id="@p.Program.Id" data-period-report-id="@Model.Id" data-shipment-id="@s.Id"
                                                                     class="btn-edit-shipment btn-sm @(Model.IsReadonly ? "disabled" : "")"
@@ -247,7 +251,7 @@
                                             }
                                             <tr>
                                                 <td class="text-right" colspan="6">
-                                                @if(!Model.IsReadonly)
+                                                @if(!Model.IsReadonly  && (await AuthService.AuthorizeAsync(PPMRmConsts.Permissions.DataProvider)).Succeeded)
                                             {
                                             <abp-button data-product-id="@p.Product.Id" data-program-id="@p.Program.Id" data-period-report-id="@Model.Id"
                                                                     class="btn-add-shipment btn-sm @(Model.IsReadonly ? "disabled" : "")"

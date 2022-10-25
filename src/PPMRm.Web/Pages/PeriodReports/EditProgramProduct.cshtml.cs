@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -40,11 +41,13 @@ namespace PPMRm.Web.Pages.PeriodReports
         [BindProperty]
         public bool IsReadonly { get; set; }
 
-        public EditProgramProductModel(IPeriodReportAppService appService, IRepository<Product, string> productRepository, IRepository<Core.Program, int> programRepository)
+        IAuthorizationService AuthService { get; }
+        public EditProgramProductModel(IPeriodReportAppService appService, IAuthorizationService authService, IRepository<Product, string> productRepository, IRepository<Core.Program, int> programRepository)
         {
             AppService = appService;
             ProductRepository = productRepository;
             ProgramRepository = programRepository;
+            AuthService = authService;
         }
         public async Task OnGetAsync(string id, string periodReportId, int programId)
         {
@@ -55,7 +58,7 @@ namespace PPMRm.Web.Pages.PeriodReports
             ProgramName = Programs.SingleOrDefault(p => p.Value == $"{programId}")?.Text;
             PeriodReport = (await AppService.GetAsync(periodReportId));
             var programProduct = await AppService.GetProgramProductAsync(periodReportId, programId, id);
-            IsReadonly = programProduct.ReportStatus != PeriodReportStatus.Open && programProduct.ReportStatus != PeriodReportStatus.Reopened;
+            IsReadonly = (programProduct.ReportStatus != PeriodReportStatus.Open && programProduct.ReportStatus != PeriodReportStatus.Reopened) || !(await AuthService.AuthorizeAsync(PPMRmConsts.Permissions.DataProvider)).Succeeded;
             Product = new UpdateProgramProductViewModel
             {
                 ProductId = id,

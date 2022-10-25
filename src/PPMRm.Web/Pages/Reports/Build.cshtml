@@ -1,0 +1,192 @@
+﻿@page
+@using Volo.Abp.AspNetCore.Mvc.UI.Layout
+@inject IPageLayout PageLayout
+@{
+    PageLayout.Content.Title = "Build Your Own Report";
+}
+@model PPMRm.Web.Pages.Reports.BuildModel
+@{
+}
+@section scripts
+{
+    <abp-script src="/Pages/Reports/Build.js" />
+    <abp-script src="/js/bootstrap-multiselect.min.js" />
+    <abp-script src="/libs/datatables.net/js/jquery.dataTables.js" />
+    <abp-script src="/js/dataTables.buttons.min.js" />
+    <abp-script src="/js/jszip.min.js" />
+    <abp-script src="/js/pdfmake.min.js" />
+    <abp-script src="/js/vfs_fonts.js" />
+    <abp-script src="/libs/chart.js/Chart.bundle.js" />
+    <abp-script src="/js/buttons.html5.min.js" />
+}
+
+@section styles
+{
+   <link rel="stylesheet" href="/libs/datatables.net-bs4/css/dataTables.bootstrap4.css" />
+    <link rel="stylesheet" href="/styles/buttons.dataTables.min.css" />
+    
+}
+<abp-card class="mb-2">
+    <abp-card-header>
+                <abp-card-title>Build Your Own Report</abp-card-title><br />
+            <abp-card-subtitle class="text-muted mb-3">Stock Status list page</abp-card-subtitle>
+            <form class="needs-validation" novalidate method="post">
+  
+<div class="form-row mt-3">
+    <div class="col-md-4 mb-3">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="inputGroupPrependCountry">Countries</span>
+        </div>
+        <select asp-for="@Model.SelectedCountries" asp-items="@Model.Countries"></select>
+      </div>
+    </div>
+    <div class="col-md-4 mb-3">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="inputGroupPrependCountry">Start Period</span>
+        </div>
+        <!-- <input type="text" asp-for="@Model.StartPeriod" class="period-picker form-control" readonly="readonly" /> -->
+      <input type="text" id="StartPeriod" asp-for="@Model.StartPeriod" name="StartPeriod" readonly="readonly" class="period-picker  form-control" />
+      </div>
+    </div>
+    <div class="col-md-4 mb-3">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="inputGroupPrependYear">End Period</span>
+        </div>
+        <!--<input type="text" asp-for="@Model.EndPeriod" class="period-picker form-control" readonly="readonly" />-->
+       <input type="text" id="EndPeriod" name="EndPeriod" asp-for="@Model.EndPeriod" readonly="readonly" class="period-picker form-control" />
+      </div>
+    </div>
+    
+  </div>
+
+  <div class="form-row mt-3">
+    <div class="col-md-6 mb-3">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="inputGroupPrependYear">Programs</span>
+        </div>
+        <select asp-for="@Model.SelectedPrograms" asp-items="@Model.Programs" class="form-control"></select>
+      </div>
+    </div>
+    <div class="col-md-6 mb-3">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="inputGroupPrependPeriod">Products</span>
+        </div>
+        <select asp-for="@Model.SelectedProducts" asp-items="@Model.Products" class="form-control"></select>
+       
+      </div>
+    </div>
+    <!-- <div class="col-md-4 mb-3">
+      <div class="input-group">
+        
+        <input type="submit" value="Generate" class="btn btn-primary" />
+       
+      </div> 
+    </div>-->
+  </div>
+
+  <div class="form-row mt-3">
+      <div class="col-md-12 mb-3">
+      <div class="input-group">
+        
+      </div>
+        <input type="submit" value="Generate" class="btn btn-primary form-control" />
+    </div>
+    
+  </div>
+</form>
+        
+    </abp-card-header>
+</abp-card>
+<div class="" style="">
+
+<div class="table-responsive-lg">
+<table id="tblReport" class="table-striped table-bordered table-sm small display compact my-5" style="zoom:75%;">
+    <thead>
+            <th>Country</th>
+            <th>Program</th>
+            <th>Product</th>
+            <th>Month</th>
+            <th>Year</th>
+            <th>SOH Levels</th>
+            <th>SOH</th>
+            <th>MOS</th>
+            <th>AMC</th>
+            <th>Date of SOH</th>
+            <th>Min</th>
+            <th>Max</th>
+            <th>Source Of Consumption</th>
+            <th>Actions Recommended</th>
+            <th>Date Action Needed by</th>
+            <th>Next Shipment Info (Supplier, Expected Date, Quantity, Shipment MOS, Data Source)</th>
+            @if(Model.Results != null && Model.Results.Any())
+            {
+                @for(var i=0; i < Model.ShipmentColumns; i++)
+                {
+                    <th class="col-shipment">Shipment @(i+1) Supplier</th>
+                    <th class="col-shipment">Shipment @(i+1) Qty</th>
+                    <th class="col-shipment">Shipment @(i+1) MOS</th>
+                    <th class="col-shipment">Shipment @(i+1) Date</th>
+                }
+
+            }       
+    </thead>
+    <tbody>
+        @if(Model.Results != null && Model.Results.Any())
+        {
+            foreach(var s in Model.Results)
+            {
+                <tr>
+                    <td>@s.Country.Name</td>
+                    <td>@s.Program.Name</td>
+                    <td>@s.Product.Name</td>
+                    <td>@s.Period.MonthName</td>
+                    <td>@s.Period.Year</td>
+                    <td>@s.SOHLevels</td>
+                    <td>@s.SOH.ToString(PPMRm.PeriodReports.PeriodReportConsts.DataFormatting.SOH_AMC_Format)</td>
+                    <td>@s.MOS?.ToString(PPMRm.PeriodReports.PeriodReportConsts.DataFormatting.MOS_Format)</td>
+                    <td>@s.AMC?.ToString(PPMRm.PeriodReports.PeriodReportConsts.DataFormatting.SOH_AMC_Format)</td>
+                    <td>@s.DateOfSOH?.ToString(PPMRm.PeriodReports.PeriodReportConsts.DataFormatting.DateFormat)</td>
+                    <td>@s.MinStock</td>
+                    <td>@s.MaxStock</td>
+                    <td>@s.SourceOfConsumption</td>
+                    <td>@s.ActionRecommended</td>
+                    <td>@s.DateActionNeededBy?.ToString(PPMRm.PeriodReports.PeriodReportConsts.DataFormatting.DateFormat)</td>
+                    <td>@s.ShipmentSummary</td>
+                    @for(var i=0; i < Model.ShipmentColumns; i++)
+                    {
+                        if(@s.Shipments?.Count > i)
+                        {
+                            <td>@s[i].Supplier</td>
+                            <td>@s[i].Quantity.ToString(PPMRm.PeriodReports.PeriodReportConsts.DataFormatting.SOH_AMC_Format) </td>
+                            <td>@s[i].MOS?.ToString(PPMRm.PeriodReports.PeriodReportConsts.DataFormatting.MOS_Format)</td>
+                            <td>@s[i].ShipmentDate?.ToString(PPMRm.PeriodReports.PeriodReportConsts.DataFormatting.DateFormat)</td>
+                        }
+                        else
+                        {
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        }
+                    }
+                </tr>           
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="21" class="text-center">No data to display</td>
+            </tr>
+        }      
+    </tbody>
+</table>
+</div>
+</div>
+<div style="display:none">
+<canvas id="myChart"></canvas>
+</div>

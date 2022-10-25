@@ -37,7 +37,7 @@ namespace PPMRm.PeriodReports
         [UnitOfWork]
         public async Task SeedAsync(DataSeedContext context)
         {
-            var periods = new int[] { 202203 };
+            var periods = new int[] { 202209 };
             foreach (var pId in periods)
             {
                 if (await Repository.CountAsync(pr => pr.PeriodId == pId) == 0)
@@ -50,14 +50,15 @@ namespace PPMRm.PeriodReports
                     //await Repository.InsertManyAsync(reports);
                     foreach (var report in reports)
                     {
+                        report.Open();
                         var shipment = await ShipmentRepository.GetAsync(report.CountryId, report.PeriodId);
                         var periodShipments = shipment.Shipments
                             .Where(l => l.PPMRmProductId != null && l.ShipmentDateType != ARTMIS.ARTMISConsts.OrderDeliveryDateTypes.ActualDeliveryDate || (l.ShipmentDate >= period.StartDate));
 
                         foreach (var s in periodShipments)
                         {
-                            var shipmentItem = items.Single(i => i.Id == s.ProductId);
-                            var product = products.SingleOrDefault(p => p.Id == shipmentItem.ProductId);
+                            var shipmentItem = items.SingleOrDefault(i => i.Id == s.ProductId);
+                            var product = products.SingleOrDefault(p => p.Id == shipmentItem?.ProductId);
                             if (product == null)
                             {
                                 Console.WriteLine($"{s.ProductId} - {s.PPMRmProductId} - product not found skipping.");

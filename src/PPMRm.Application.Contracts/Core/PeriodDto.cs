@@ -8,6 +8,7 @@ namespace PPMRm.Core
     {
         public int Year { get; set; }
         public int Month { get; set; }
+        public string MonthName => $"{StartDate:MMM}";
         public string Name => $"{StartDate:MMMM} {StartDate:yyyy}";
         public string ShortName => $"{StartDate:MMM} {StartDate:yyyy}";
         public DateTime StartDate { get; set; }

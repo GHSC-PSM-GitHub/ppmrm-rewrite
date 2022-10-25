@@ -64,12 +64,26 @@ namespace PPMRm.Web.Menus
                         )
                 );
 
-                
+                context.Menu.AddItem(
+                    new ApplicationMenuItem(
+                        "Reports",
+                       "Reports",
+                        icon: "fa fa-order"
+                        ).AddItem(
+                            new ApplicationMenuItem(
+                                "Overview",
+                                "View Period Reports",
+                                url: "/reports"
+                            )
+                        ).AddItem(
+                            new ApplicationMenuItem(
+                                "Build",
+                                "Build your own report",
+                                url: "/reports/build"
+                            )
+                        )
+                );
 
-                
-            }
-            if(await context.IsGrantedAsync(PPMRmConsts.Permissions.DataReviewer))
-            {
                 context.Menu.AddItem(
                     new ApplicationMenuItem(
                         "ARTMIS",
@@ -89,6 +103,12 @@ namespace PPMRm.Web.Menus
                             )
                         )
                 );
+
+
+            }
+            if(await context.IsGrantedAsync(PPMRmConsts.Permissions.DataReviewer))
+            {
+                
             }
             //    context.Menu.GetAdministration().AddItem(
             //    new ApplicationMenuItem(

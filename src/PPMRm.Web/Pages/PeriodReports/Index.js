@@ -49,13 +49,6 @@ $(document).ready(function () {
                     }
                 },
                 {
-                    "title": "CS Updates",
-                    "data": "id",
-                    "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
-                        $(nTd).html("<button type='button' class='btn btn-primary btn-sm btn-cs-updates' data-id='"+ oData.id +"'>CS Updates</button>");
-                    }
-                },
-                {
                     "title": "Enter/View Product Info",
                     "data": "id",
                     "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
@@ -83,9 +76,14 @@ $(document).ready(function () {
         includeSelectAllOption: true,
         enableFiltering: true,
         enableCaseInsensitiveFiltering: true,
-        maxHeight: 200,
-        buttonWidth: '250px'
+        // inherits the class of the button from the original select
+        //inheritClass: true,
+        buttonClass: 'form-control',
+        buttonWidth: '100%',
+        maxHeight: 250
+
     });
+    $("span.multiselect-native-select").addClass("form-control p-0 border-0 text-left");
 
 
     $('#SelectedCountries').on('change', function () {

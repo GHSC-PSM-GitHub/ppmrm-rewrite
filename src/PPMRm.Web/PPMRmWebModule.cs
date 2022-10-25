@@ -40,6 +40,7 @@ using Volo.Abp.VirtualFileSystem;
 using Volo.CmsKit.Web;
 using Volo.Abp.AspNetCore.Mvc.UI.Components.LayoutHook;
 using PPMRm.Web.Components.Footer;
+using Volo.Abp.BackgroundWorkers;
 
 namespace PPMRm.Web
 {
@@ -58,6 +59,7 @@ namespace PPMRm.Web
         typeof(AbpSwashbuckleModule)
         )]
     [DependsOn(typeof(CmsKitWebModule))]
+    [DependsOn(typeof(AbpBackgroundWorkersModule))]
     public class PPMRmWebModule : AbpModule
     {
         public override void PreConfigureServices(ServiceConfigurationContext context)
@@ -123,7 +125,6 @@ namespace PPMRm.Web
                         bundle.AddFiles("/global-styles.css");
                         bundle.AddFiles("/libs/bootstrap/css/bootstrap.css");
                         bundle.AddFiles("/styles/bootstrap-multiselect.css");
-                        bundle.AddFiles("/styles/buttons.dataTables.min.css");
                     }
                 );
             });
@@ -217,6 +218,9 @@ namespace PPMRm.Web
 
         public override void OnApplicationInitialization(ApplicationInitializationContext context)
         {
+            // Init background worker
+            //context.AddBackgroundWorker<PPMRm.Web.Jobs.BackgroundSyncWorker>();
+
             var app = context.GetApplicationBuilder();
             var env = context.GetEnvironment();
 

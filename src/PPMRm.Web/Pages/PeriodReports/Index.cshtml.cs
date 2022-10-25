@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using PPMRm.Core;
+using PPMRm.PeriodReports;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
@@ -16,20 +17,24 @@ namespace PPMRm.Web.Pages.PeriodReports
     public class IndexModel : PageModel
     {
         ICountryRepository CountryRepository { get; }
-        public IndexModel(ICountryRepository countryRepository)
+        IRepository<PeriodReport, string> PeriodReportRepository { get; }
+        public IndexModel(ICountryRepository countryRepository, IRepository<PeriodReport, string> periodReportRepository)
         {
             CountryRepository = countryRepository;
+            PeriodReportRepository = periodReportRepository;
         }
 
         public async Task OnGetAsync()
         {
             var allCountries = await CountryRepository.GetUserCountriesAsync();
+            var latestReport = PeriodReportRepository.OrderByDescending(x => x.PeriodId).FirstOrDefault();
+            var periodId = latestReport?.PeriodId ?? 202205;
             Countries = allCountries.OrderBy(c => c.Name).Select(c => new SelectListItem { Value = c.Id, Text = c.Name }).ToList();
             SelectedCountries = Countries.Select(c => c.Value).ToList();
             Months = Enumerable.Range(1, 12).Select(i => new SelectListItem { Value = $"{i}", Text = DateTimeFormatInfo.CurrentInfo.GetMonthName(i) }).ToList();
-            SelectedMonth = 3; // TODO: Get latest month from period repo
+            SelectedMonth = periodId % 100; // TODO: Get latest month from period repo
             Years = Enumerable.Range(2021, 2).Select(i => new SelectListItem { Value = $"{i}", Text = $"{i}" }).ToList();
-            SelectedYear = 2022; // TODO: Get latest year from period repo
+            SelectedYear = periodId/100; // TODO: Get latest year from period repo
         }
 
         public List<SelectListItem> Countries { get; set; } = new();

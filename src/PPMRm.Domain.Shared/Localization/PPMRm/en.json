@@ -20,6 +20,7 @@
     "Permissions:Core": "PPMRm",
     "Permissions:DataReviewer": "Data Reviewer",
     "Permissions:DataProvider": "Data Provider",
+    "Permissions:DataAdministrator": "Data Administrator",
     "Enum:PeriodReportStatus:0": "Initialized",
     "Enum:PeriodReportStatus:1": "Open",
     "Enum:PeriodReportStatus:2": "Marked as Final",
@@ -44,8 +45,8 @@
     "Enum:MOSStatus:3": "Min to Max",
     "Enum:MOSStatus:4": "Overstocked",
     "Enum:SourceOfConsumption:1": "Forecasted",
-    "Enum:SourceOfConsumption:2": "LMIS",
-    "Enum:SourceOfConsumption:3": "Combined",
+    "Enum:SourceOfConsumption:2": "LMIS (Actual)",
+    "Enum:SourceOfConsumption:3": "Combined (Forecasted + Actual)",
     "Enum:SourceOfConsumption:4": "AMD",
     "Enum:SourceOfConsumption:5": "Other"
   }

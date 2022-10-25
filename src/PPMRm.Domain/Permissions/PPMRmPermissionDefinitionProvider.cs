@@ -27,6 +27,13 @@ namespace PPMRm.Permissions
                 PPMRmConsts.Permissions.DataProvider,
                 LocalizableString.Create<PPMRmResource>($"Permissions:{PPMRmConsts.Permissions.DataProvider}")
             );
+
+            ppmrmGroup.AddPermission(
+                PPMRmConsts.Permissions.DataAdministrator,
+                LocalizableString.Create<PPMRmResource>($"Permissions:{PPMRmConsts.Permissions.DataAdministrator}")
+            );
+
+
         }
     }
 }

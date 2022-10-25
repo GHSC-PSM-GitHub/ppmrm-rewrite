@@ -16,6 +16,8 @@ namespace PPMRm.PeriodReports
         HostGovernment,
         UNDP,
         NMCP,
-        CHAZ
+        CHAZ,
+        WorldVision,
+        MSF
     }
 }
