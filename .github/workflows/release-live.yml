@@ -1,4 +1,4 @@
-name: ReleaseLive
+name: ReleaseProduction
 on:
   release:
     types: [published]
@@ -80,7 +80,7 @@ jobs:
           ASPNETCORE_ENVIRONMENT: ${{ env.aspnetcore_environment }}
         with:
           input: deploy/task-definition-template-production.json
-          output: deploy/task-definition-production.json
+          output: deploy/task-definition.json
 
       - name: Create task definition if doesn't exist
         run: aws ecs describe-task-definition --task-definition ${{ env.app_name }} || aws ecs register-task-definition --cli-input-json file://deploy/task-definition.json
