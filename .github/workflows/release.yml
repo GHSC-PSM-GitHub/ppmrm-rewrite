@@ -1,7 +1,7 @@
 name: Release
 on:
   release:
-    types: [released]
+    types: [published, released]
 jobs:
   push_to_ecr:
     runs-on: ubuntu-20.04

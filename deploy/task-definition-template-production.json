@@ -1,5 +1,5 @@
 {
-  "family": "${APP_NAME}-live",
+  "family": "ppmrm-rewrite-live",
   "requiresCompatibilities": [
     "EC2"
   ],
@@ -15,11 +15,11 @@
       "environment": [
         {
           "name": "VIRTUAL_HOST",
-          "value": "${HOST_DOMAIN}"
+          "value": "app.ppmrm.org"
         },
         {
           "name": "LETSENCRYPT_HOST",
-          "value": "${HOST_DOMAIN}"
+          "value": "app.ppmrm.org"
         },
         {
           "name": "LETSENCRYPT_EMAIL",
