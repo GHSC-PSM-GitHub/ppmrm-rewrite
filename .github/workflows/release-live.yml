@@ -10,7 +10,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: repository name fix
-        run: echo "image_repository_name=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+        run: echo "image_repository_name=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')-live" >> $GITHUB_ENV
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -57,11 +57,11 @@ jobs:
 
       - name: Repository name fix and env values setup
         run: |
-          echo "image_repository_name=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+          echo "image_repository_name=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')-live" >> $GITHUB_ENV
           echo "domain=${{ secrets.HOST_DOMAIN }}" >> $GITHUB_ENV
           echo "letsencrypt_email=${{ secrets.LETSENCRYPT_EMAIL }}" >> $GITHUB_ENV
           echo "app_name=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]' | tr -d . | cut -d'/' -f2)" >> $GITHUB_ENV
-          echo "cluster_name=${{ secrets.AWS_ECS_CLUSTER }}" >> $GITHUB_ENV
+          echo "cluster_name=ppmrm-live" >> $GITHUB_ENV
           echo "image_url=${{ steps.login_ecr.outputs.registry }}/$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')-live:${{ github.event.release.tag_name }}" >> $GITHUB_ENV
           echo "aws_region=${{ secrets.AWS_REGION }}" >> $GITHUB_ENV
           echo "aspnetcore_environment=${{ secrets.ASPNETCORE_ENVIRONMENT }}" >> $GITHUB_ENV
