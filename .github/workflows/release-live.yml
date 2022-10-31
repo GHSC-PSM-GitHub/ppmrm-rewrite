@@ -1,11 +1,10 @@
-name: ReleaseProduction
+name: ReleaseProd
 on:
   release:
     types: [published]
 jobs:
   push_to_ecr:
     runs-on: ubuntu-20.04
-    environment: production
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -36,7 +35,7 @@ jobs:
           file: Dockerfile
           context: .
           push: true
-          tags: ${{ steps.login_ecr.outputs.registry }}/${{ env.image_repository_name }}-live:${{ github.event.release.tag_name }}
+          tags: ${{ steps.login_ecr.outputs.registry }}/${{ env.image_repository_name }}:${{ github.event.release.tag_name }}
 
   deploy_ecs:
     needs: push_to_ecr

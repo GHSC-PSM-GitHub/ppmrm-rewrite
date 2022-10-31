@@ -1,5 +1,5 @@
 {
-  "family": "ppmrm-rewrite-live",
+  "family": "ppmrm-live",
   "requiresCompatibilities": [
     "EC2"
   ],
@@ -39,11 +39,11 @@
       "volumesFrom": [],
       "image": "${IMAGE_URL}",
       "essential": true,
-      "name": "${APP_NAME}-live",
+      "name": "ppmrm-live",
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
-          "awslogs-group": "${CLUSTER_NAME}-${APP_NAME}-live",
+          "awslogs-group": "${CLUSTER_NAME}-ppmrm-live",
           "awslogs-region": "${AWS_REGION}",
           "awslogs-create-group": "true"
         }
