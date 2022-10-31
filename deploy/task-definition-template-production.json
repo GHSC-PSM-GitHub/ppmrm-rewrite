@@ -37,7 +37,7 @@
       "mountPoints": [],
       "memoryReservation": 128,
       "volumesFrom": [],
-      "image": "${IMAGE_URL}-live",
+      "image": "${IMAGE_URL}",
       "essential": true,
       "name": "${APP_NAME}-live",
       "logConfiguration": {
