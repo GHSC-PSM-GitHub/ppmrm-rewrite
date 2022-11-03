@@ -41,6 +41,7 @@ using Volo.CmsKit.Web;
 using Volo.Abp.AspNetCore.Mvc.UI.Components.LayoutHook;
 using PPMRm.Web.Components.Footer;
 using Volo.Abp.BackgroundWorkers;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace PPMRm.Web
 {
@@ -81,7 +82,13 @@ namespace PPMRm.Web
         {
             var hostingEnvironment = context.Services.GetHostingEnvironment();
             var configuration = context.Services.GetConfiguration();
-
+            context.Services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+                options.ForwardLimit = 2;
+                options.KnownNetworks.Clear();
+                options.KnownProxies.Clear();
+            });
             ConfigureUrls(configuration);
             ConfigureBundles();
             ConfigureAuthentication(context, configuration);
@@ -220,10 +227,10 @@ namespace PPMRm.Web
         {
             // Init background worker
             //context.AddBackgroundWorker<PPMRm.Web.Jobs.BackgroundSyncWorker>();
-
+            
             var app = context.GetApplicationBuilder();
             var env = context.GetEnvironment();
-
+            app.UseForwardedHeaders();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
