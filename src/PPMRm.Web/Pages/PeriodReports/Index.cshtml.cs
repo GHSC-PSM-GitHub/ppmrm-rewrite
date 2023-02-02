@@ -33,7 +33,7 @@ namespace PPMRm.Web.Pages.PeriodReports
             SelectedCountries = Countries.Select(c => c.Value).ToList();
             Months = Enumerable.Range(1, 12).Select(i => new SelectListItem { Value = $"{i}", Text = DateTimeFormatInfo.CurrentInfo.GetMonthName(i) }).ToList();
             SelectedMonth = periodId % 100; // TODO: Get latest month from period repo
-            Years = Enumerable.Range(2021, 2).Select(i => new SelectListItem { Value = $"{i}", Text = $"{i}" }).ToList();
+            Years = Enumerable.Range(2021, 3).Select(i => new SelectListItem { Value = $"{i}", Text = $"{i}" }).ToList();
             SelectedYear = periodId/100; // TODO: Get latest year from period repo
         }
 
