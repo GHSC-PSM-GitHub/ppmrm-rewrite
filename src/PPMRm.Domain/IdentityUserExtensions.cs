@@ -30,12 +30,12 @@ namespace PPMRm
         }
 
 
-        public static DateTime GetUserLastLogin(this IdentityUser user)
+        public static string GetUserLastLogin(this IdentityUser user)
         {
-            return user.GetProperty<DateTime>(IdentityConsts.UserExtensionProperties.LastLogin);
+            return user.GetProperty<string>(IdentityConsts.UserExtensionProperties.LastLogin);
         }
 
-        public static void SetUserLastLogin(this IdentityUser user, DateTime value)
+        public static void SetUserLastLogin(this IdentityUser user, string value)
         {
             user.SetProperty(IdentityConsts.UserExtensionProperties.LastLogin, value);
         }

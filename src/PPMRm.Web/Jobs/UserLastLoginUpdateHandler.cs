@@ -40,7 +40,7 @@ namespace PPMRm.Web.Jobs
 
                 try
                 {
-                    IdentityUserExtensions.SetUserLastLogin(users, DateTime.Now);
+                    IdentityUserExtensions.SetUserLastLogin(users, DateTime.Now.ToLongDateString() );
                     await _identityUserRepository.UpdateAsync(users);
                 }
                 catch(Exception ex)

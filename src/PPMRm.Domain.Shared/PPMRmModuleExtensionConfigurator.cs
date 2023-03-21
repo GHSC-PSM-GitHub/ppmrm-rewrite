@@ -116,13 +116,13 @@ namespace PPMRm
                     {
                         identity.ConfigureUser(user =>
                         {
-                            user.AddOrUpdateProperty<DateTime>( //property type: datetime
+                            user.AddOrUpdateProperty<string>( //property type: datetime
                                 IdentityConsts.UserExtensionProperties.LastLogin, //property name
                                 property =>
                                 {
                                     //validation rules
-                                    property.DefaultValue = DateTime.Now;
-                                    property.UI.OnTable.IsVisible = true;
+                                    property.DefaultValue = null;
+                                    property.UI.OnTable.IsVisible = true; 
                                     property.UI.OnCreateForm.IsVisible = false;
                                     property.UI.OnEditForm.IsVisible = false;
 
