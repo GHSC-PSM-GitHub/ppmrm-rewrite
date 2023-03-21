@@ -33,7 +33,7 @@ namespace PPMRm.Web.Jobs
             Guid userid = eventData.Entity.UserId.Value;
             var action = eventData.Entity.Action;
 
-            if (action == "LoginSucceeded")
+            if (action == IdentitySecurityLogActionConsts.LoginSucceeded)
             {
 
                 var users = await _identityUserRepository.GetAsync(userid);
