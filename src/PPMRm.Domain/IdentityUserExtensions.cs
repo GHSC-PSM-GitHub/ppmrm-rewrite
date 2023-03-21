@@ -28,5 +28,16 @@ namespace PPMRm
         {
             user.SetProperty(IdentityConsts.UserExtensionProperties.UserType, value);
         }
+
+
+        public static DateTime GetUserLastLogin(this IdentityUser user)
+        {
+            return user.GetProperty<DateTime>(IdentityConsts.UserExtensionProperties.LastLogin);
+        }
+
+        public static void SetUserLastLogin(this IdentityUser user, DateTime value)
+        {
+            user.SetProperty(IdentityConsts.UserExtensionProperties.LastLogin, value);
+        }
     }
 }

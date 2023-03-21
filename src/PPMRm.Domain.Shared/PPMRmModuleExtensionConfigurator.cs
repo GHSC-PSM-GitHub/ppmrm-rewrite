@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using PPMRm.Identity;
 using Volo.Abp.Identity;
 using Volo.Abp.ObjectExtending;
@@ -105,6 +106,34 @@ namespace PPMRm
                                     property.DefaultValue = UserType.DataProvider;
                                     //...other configurations for this property
                                     property.DisplayName = new Volo.Abp.Localization.FixedLocalizableString(IdentityConsts.UserExtensionProperties.UserTypeDisplayName);
+                                }
+                            );
+                        });
+                    });
+
+                ObjectExtensionManager.Instance.Modules()
+                    .ConfigureIdentity(identity =>
+                    {
+                        identity.ConfigureUser(user =>
+                        {
+                            user.AddOrUpdateProperty<DateTime>( //property type: datetime
+                                IdentityConsts.UserExtensionProperties.LastLogin, //property name
+                                property =>
+                                {
+                                    //validation rules
+                                    property.DefaultValue = DateTime.Now;
+                                    property.UI.OnTable.IsVisible = true;
+                                    property.UI.OnCreateForm.IsVisible = false;
+                                    property.UI.OnEditForm.IsVisible = false;
+
+                                    property.Api.OnCreate.IsAvailable = true;
+                                    property.Api.OnUpdate.IsAvailable = true;
+                                    property.Api.OnGet.IsAvailable = true;
+
+                                    property.Attributes.Clear();
+                                     
+                                    //...other configurations for this property
+                                    property.DisplayName = new Volo.Abp.Localization.FixedLocalizableString(IdentityConsts.UserExtensionProperties.LastLoginDisplayName);
                                 }
                             );
                         });
