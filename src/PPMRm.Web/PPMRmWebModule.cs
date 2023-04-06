@@ -42,6 +42,11 @@ using Volo.Abp.AspNetCore.Mvc.UI.Components.LayoutHook;
 using PPMRm.Web.Components.Footer;
 using Volo.Abp.BackgroundWorkers;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Http;
+ 
+
 
 namespace PPMRm.Web
 {
@@ -99,6 +104,7 @@ namespace PPMRm.Web
             ConfigureAutoApiControllers();
             ConfigureSwaggerServices(context.Services);
             ConfigureLayouts();
+            ConfigureHealthCheckServices(context.Services);
 
         }
 
@@ -213,6 +219,8 @@ namespace PPMRm.Web
 
         private void ConfigureSwaggerServices(IServiceCollection services)
         {
+
+            
             services.AddAbpSwaggerGen(
                 options =>
                 {
@@ -222,7 +230,12 @@ namespace PPMRm.Web
                 }
             );
         }
+        private void ConfigureHealthCheckServices(IServiceCollection services)
+        {
 
+            services.AddHealthChecks().AddDbContextCheck<PPMRmDbContext>();
+            
+        }
         public override void OnApplicationInitialization(ApplicationInitializationContext context)
         {
             // Init background worker
@@ -230,6 +243,18 @@ namespace PPMRm.Web
             
             var app = context.GetApplicationBuilder();
             var env = context.GetEnvironment();
+            // app.UseHealthChecks("/healthz");
+            app.UseHealthChecks("/healthz", new HealthCheckOptions
+            {
+                ResultStatusCodes =
+                {
+                    [HealthStatus.Healthy] = StatusCodes.Status200OK,
+                    [HealthStatus.Degraded] = StatusCodes.Status200OK,
+                    [HealthStatus.Unhealthy] = StatusCodes.Status503ServiceUnavailable
+                }
+            });
+
+
             app.UseForwardedHeaders();
             if (env.IsDevelopment())
             {
@@ -265,6 +290,7 @@ namespace PPMRm.Web
             app.UseAuditing();
             app.UseAbpSerilogEnrichers();
             app.UseConfiguredEndpoints();
+         
         }
     }
 }
