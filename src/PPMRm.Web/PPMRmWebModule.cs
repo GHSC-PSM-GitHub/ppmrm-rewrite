@@ -42,6 +42,9 @@ using Volo.Abp.AspNetCore.Mvc.UI.Components.LayoutHook;
 using PPMRm.Web.Components.Footer;
 using Volo.Abp.BackgroundWorkers;
 using Microsoft.AspNetCore.HttpOverrides;
+using Hangfire;
+using Hangfire.PostgreSql;
+using Volo.Abp.BackgroundJobs.Hangfire;
 
 namespace PPMRm.Web
 {
@@ -61,6 +64,10 @@ namespace PPMRm.Web
         )]
     [DependsOn(typeof(CmsKitWebModule))]
     [DependsOn(typeof(AbpBackgroundWorkersModule))]
+    [DependsOn(
+    //...other dependencies
+    typeof(AbpBackgroundJobsHangfireModule) //Add the new module dependency
+    )]
     public class PPMRmWebModule : AbpModule
     {
         public override void PreConfigureServices(ServiceConfigurationContext context)
@@ -99,9 +106,17 @@ namespace PPMRm.Web
             ConfigureAutoApiControllers();
             ConfigureSwaggerServices(context.Services);
             ConfigureLayouts();
+            ConfigureHangfire(context, configuration);
 
         }
 
+        private void ConfigureHangfire(ServiceConfigurationContext context, IConfiguration configuration)
+        {
+            context.Services.AddHangfire(config =>
+            {
+                config.UsePostgreSqlStorage(configuration.GetConnectionString("Default"));
+            });
+        }
         private void ConfigureLayouts()
         {
             Configure<AbpLayoutHookOptions>(options =>
@@ -265,6 +280,9 @@ namespace PPMRm.Web
             app.UseAuditing();
             app.UseAbpSerilogEnrichers();
             app.UseConfiguredEndpoints();
+            app.UseHangfireDashboard();
+
+            RecurringJob.AddOrUpdate("ARTMISDataSync", () => Console.Write("Sync ARTMIS!"), Cron.Monthly(2, 6));
         }
     }
 }
