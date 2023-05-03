@@ -41,8 +41,8 @@ section {
         position: relative;
         margin: auto;
         height: 50vh;
-        width: 75vw;
-        padding-right:10vw;
+        width: 120vw;
+        padding-right: 30vw;
     }
 }
 
@@ -60,8 +60,8 @@ section {
         position: relative;
         margin: auto;
         height: 60vh;
-        width: 75vw;
-        padding-right: 10vw;
+        width: 120vw;
+        padding-right: 30vw;
     }
     @page {
         size: A4 landscape;
@@ -84,11 +84,11 @@ section {
     .chart-container
     {
         margin-top:50px;
-        margin-right:25vw;
+        margin-right:40vw;
     }
 
     .chart-container canvas {
-        margin-right: 25vw;
+        margin-right: 50vw;
     }
 
     div.card {
