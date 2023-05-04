@@ -9,6 +9,9 @@ namespace PPMRm.Identity
             public const string CountryIdDisplayName = "Country";
             public const string UserType = "UserType";
             public const string UserTypeDisplayName = "User Type";
+
+            public const string LastLogin = "LastLogin";
+            public const string LastLoginDisplayName = "Last Login";
         }
     }
 }
