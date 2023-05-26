@@ -84,8 +84,16 @@ $(document).ready(function () {
                     data: "roNumber"
                 },
                 {
-                    title: "Order Number",
+                    title: "RO Prime Line Number",
+                    data: "roPrimeLineNumber"
+                },
+                {
+                    title: "Order #",
                     data: "orderNumber"
+                },
+                {
+                    title: "Order Line",
+                    data: "orderLineNumber"
                 },
                 {
                     title: "Product",
