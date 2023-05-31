@@ -45,6 +45,16 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Hangfire;
 using Hangfire.PostgreSql;
 using Volo.Abp.BackgroundJobs.Hangfire;
+using Volo.Abp.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using PPMRm.Web.Jobs;
+using Volo.Abp.Emailing;
+using Volo.Abp.TextTemplating;
+using Serilog.Core;
+using static Volo.Abp.AspNetCore.Mvc.UI.Components.LayoutHook.LayoutHooks;
+using System.Threading.Tasks;
+using static IdentityServer4.Models.IdentityResources;
+using Volo.Abp.Emailing.Templates;
 
 namespace PPMRm.Web
 {
@@ -282,7 +292,24 @@ namespace PPMRm.Web
             app.UseConfiguredEndpoints();
             app.UseHangfireDashboard();
 
-            RecurringJob.AddOrUpdate("ARTMISDataSync", () => Console.Write("Sync ARTMIS!"), Cron.Monthly(2, 6));
+            RecurringJob.AddOrUpdate<SyncManager>(x => x.Sync(), Cron.Monthly(2, 6, 0));
         }
+    }
+}
+
+public class SyncManager : ITransientDependency
+{
+    IEmailSender _emailSender;
+    ITemplateRenderer _templateRenderer;
+
+    public SyncManager(IEmailSender emailSender, ITemplateRenderer templateRenderer)
+    {
+        _emailSender = emailSender;
+        _templateRenderer = templateRenderer;
+    }
+
+    public async Task Sync()
+    {
+        await Task.CompletedTask;
     }
 }
