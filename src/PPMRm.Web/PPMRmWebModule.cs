@@ -55,6 +55,7 @@ using static Volo.Abp.AspNetCore.Mvc.UI.Components.LayoutHook.LayoutHooks;
 using System.Threading.Tasks;
 using static IdentityServer4.Models.IdentityResources;
 using Volo.Abp.Emailing.Templates;
+using Hangfire.Dashboard;
 
 namespace PPMRm.Web
 {
@@ -290,7 +291,15 @@ namespace PPMRm.Web
             app.UseAuditing();
             app.UseAbpSerilogEnrichers();
             app.UseConfiguredEndpoints();
-            app.UseHangfireDashboard();
+            app.UseHangfireDashboard("/hangfire", new DashboardOptions
+            {
+                DashboardTitle = "PPMRm Jobs",
+                Authorization = new[]
+                {
+                    new HangfireAuthorizationFilter(),
+                },
+
+            });
 
             RecurringJob.AddOrUpdate<SyncManager>(x => x.Sync(), Cron.Monthly(2, 6, 0));
         }
@@ -311,5 +320,14 @@ public class SyncManager : ITransientDependency
     public async Task Sync()
     {
         await Task.CompletedTask;
+    }
+}
+
+public class HangfireAuthorizationFilter : IDashboardAuthorizationFilter
+{
+    public bool Authorize(DashboardContext context)
+    {
+        var httpContext = context.GetHttpContext();
+        return httpContext.User.Identity?.IsAuthenticated ?? false;
     }
 }
