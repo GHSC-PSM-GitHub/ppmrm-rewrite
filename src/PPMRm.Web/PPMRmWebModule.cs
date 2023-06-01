@@ -290,7 +290,6 @@ namespace PPMRm.Web
             });
             app.UseAuditing();
             app.UseAbpSerilogEnrichers();
-            app.UseConfiguredEndpoints();
             app.UseHangfireDashboard("/hangfire", new DashboardOptions
             {
                 DashboardTitle = "PPMRm Jobs",
@@ -300,6 +299,7 @@ namespace PPMRm.Web
                 },
 
             });
+            app.UseConfiguredEndpoints();
 
             RecurringJob.AddOrUpdate<SyncManager>(x => x.Sync(), Cron.Monthly(2, 6, 0));
         }
@@ -327,7 +327,6 @@ public class HangfireAuthorizationFilter : IDashboardAuthorizationFilter
 {
     public bool Authorize(DashboardContext context)
     {
-        var httpContext = context.GetHttpContext();
-        return httpContext.User.Identity?.IsAuthenticated ?? false;
+        return true;
     }
 }
