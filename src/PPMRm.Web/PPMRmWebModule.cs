@@ -301,7 +301,7 @@ namespace PPMRm.Web
             });
             app.UseConfiguredEndpoints();
 
-            RecurringJob.AddOrUpdate<SyncManager>(x => x.Sync(), Cron.Monthly(2, 6, 0));
+            RecurringJob.AddOrUpdate<SyncManager>(x => x.Sync(), Cron.Monthly(17, 6, 0));
         }
     }
 }
