@@ -56,6 +56,17 @@ using System.Threading.Tasks;
 using static IdentityServer4.Models.IdentityResources;
 using Volo.Abp.Emailing.Templates;
 using Hangfire.Dashboard;
+using PPMRm.Core;
+using PPMRm.Items;
+using PPMRm.PeriodReports;
+using PPMRm.Products;
+using PPMRm.ARTMIS.PeriodShipments;
+using Volo.Abp.Domain.Repositories;
+using System.Linq;
+using PPMRm.ARTMIS;
+using System.Security.Cryptography;
+using Volo.Abp.Uow;
+using Volo.CmsKit.Tags;
 
 namespace PPMRm.Web
 {
@@ -123,6 +134,7 @@ namespace PPMRm.Web
 
         private void ConfigureHangfire(ServiceConfigurationContext context, IConfiguration configuration)
         {
+            context.Services.AddTransient<ISyncManager, SyncManager>();
             context.Services.AddHangfire(config =>
             {
                 config.UsePostgreSqlStorage(configuration.GetConnectionString("Default"));
@@ -301,26 +313,93 @@ namespace PPMRm.Web
             });
             app.UseConfiguredEndpoints();
 
-            RecurringJob.AddOrUpdate<SyncManager>(x => x.Sync(), Cron.Monthly(17, 6, 0));
+            RecurringJob.AddOrUpdate<ISyncManager>(x => x.Start(), Cron.Monthly(23, 12, 15));
         }
     }
 }
 
-public class SyncManager : ITransientDependency
+public interface ISyncManager
+{
+    void Start();
+}
+public class SyncManager : ISyncManager
 {
     IEmailSender _emailSender;
     ITemplateRenderer _templateRenderer;
+    private IServiceProvider _serviceProvider;
 
-    public SyncManager(IEmailSender emailSender, ITemplateRenderer templateRenderer)
+    IRepository<PeriodReport, string> Repository { get; set; }
+    PeriodReportManager PeriodReportManager { get; set; }
+    IPeriodShipmentRepository ShipmentRepository { get; set; }
+    IRepository<Country, string> CountryRepository { get; set; }
+    IRepository<Period, int> PeriodRepository { get; set; }
+    IRepository<Product, string> ProductRepository { get; set; }
+    IItemRepository ItemRepository { get; set; }
+
+    public SyncManager(IEmailSender emailSender, ITemplateRenderer templateRenderer, IRepository<PeriodReport, string> repository, IRepository<Country, string> countryRepository, IRepository<Product, string> productRepository, IRepository<Period, int> periodRepository, IItemRepository itemRepository, PeriodReportManager periodReportManager, IPeriodShipmentRepository shipmentRepository)
     {
         _emailSender = emailSender;
         _templateRenderer = templateRenderer;
+        Repository = repository;
+        PeriodRepository = periodRepository;
+        CountryRepository = countryRepository;
+        PeriodReportManager = periodReportManager;
+        ItemRepository = itemRepository;
+        ShipmentRepository = shipmentRepository;
+        ProductRepository = productRepository;
     }
 
-    public async Task Sync()
+    [UnitOfWork]
+    public void Start()
     {
-        await Task.CompletedTask;
+        var lastPeriod = Repository.OrderByDescending(x => x.PeriodId).FirstOrDefault();
+        var nextPeriodId = lastPeriod.PeriodId + 1; // Check year
+        if (Repository.Count(pr => pr.PeriodId == nextPeriodId) == 0)
+        {
+            var items = ItemRepository.GetListAsync().Result;
+            var products = ProductRepository.ToList();
+            var countries = CountryRepository.ToList();
+            var period = PeriodRepository.GetAsync(nextPeriodId).Result;
+            var reports = PeriodReportManager.CreateManyAsync(period, countries).Result;
+            var lastPeriodReports = Repository.WithDetails(r => r.ProductShipments).Where(r => r.PeriodId == lastPeriod.PeriodId).ToList();
+            //await Repository.InsertManyAsync(reports);
+            foreach (var report in reports)
+            {
+                report.Open();
+                var shipment = ShipmentRepository.GetAsync(report.CountryId, report.PeriodId).Result;
+                var periodShipments = shipment.Shipments
+                    .Where(l => l.PPMRmProductId != null && l.ShipmentDateType != ARTMISConsts.OrderDeliveryDateTypes.ActualDeliveryDate || (l.ShipmentDate >= period.StartDate));
+
+                foreach (var s in periodShipments)
+                {
+                    var shipmentItem = items.SingleOrDefault(i => i.Id == s.ProductId);
+                    var product = products.SingleOrDefault(p => p.Id == shipmentItem?.ProductId);
+                    if (product == null)
+                    {
+                        Console.WriteLine($"{s.ProductId} - {s.PPMRmProductId} - product not found skipping.");
+                        continue;
+                    }
+                    var shipmentDateType = s.ShipmentDateType == ARTMISConsts.OrderDeliveryDateTypes.ActualDeliveryDate ? ShipmentDateType.AcDD :
+                        s.ShipmentDateType == ARTMISConsts.OrderDeliveryDateTypes.EstimatedDeliveryDate ? ShipmentDateType.EDD :
+                        ShipmentDateType.RDD;
+                    var totalQuantity = s.OrderedQuantity * shipmentItem.BaseUnitMultiplier;
+                    report.AddOrUpdateShipment(s.Id, product.Id, s.ShipmentDate, shipmentDateType, totalQuantity);
+                }
+
+                var lastReport = lastPeriodReports.Single(r => r.CountryId == report.CountryId);
+                if(lastReport != null && lastReport.ProductShipments != null)
+                {
+                    var nonPmiShipments = lastReport.ProductShipments.Where(s => s.Supplier != Supplier.PMI).ToList();
+                    foreach (var s in nonPmiShipments)
+                    {
+                        report.AddOrUpdateShipment(Guid.NewGuid(), s.ProgramId, s.ProductId, s.Supplier, s.ShipmentDate, s.ShipmentDateType, s.Quantity, s.DataSource);
+                    }
+                }
+            }
+            Repository.InsertManyAsync(reports).Wait();
+        }
     }
+    
 }
 
 public class HangfireAuthorizationFilter : IDashboardAuthorizationFilter
