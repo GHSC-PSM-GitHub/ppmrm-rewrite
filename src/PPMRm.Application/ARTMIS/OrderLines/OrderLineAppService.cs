@@ -11,6 +11,7 @@ using Volo.Abp.Domain.Repositories;
 using System.Linq;
 using Baseline.ImTools;
 using PPMRm.Items;
+using PPMRm.PeriodReports;
 
 namespace PPMRm.ARTMIS.OrderLines
 {
@@ -19,11 +20,13 @@ namespace PPMRm.ARTMIS.OrderLines
         IRepository<Core.Country, string> CountryRepository { get; }
         IRepository<Products.Product, string> ProductRepository { get; }
         IDocumentSession Session { get; }
-        public OrderLineAppService(IDocumentSession session, IRepository<Core.Country, string> countryRepository, IRepository<Products.Product, string> productRepository)
+        PeriodReportManager PeriodReportManager { get; }
+        public OrderLineAppService(IDocumentSession session, IRepository<Core.Country, string> countryRepository, IRepository<Products.Product, string> productRepository, PeriodReportManager periodReportManager)
         {
             Session = session;
             CountryRepository = countryRepository;
             ProductRepository = productRepository;
+            PeriodReportManager = periodReportManager;
         }
         public Task<OrderLineDto> GetAsync(string id)
         {
@@ -32,8 +35,9 @@ namespace PPMRm.ARTMIS.OrderLines
 
         async public Task<PagedResultDto<OrderLineDto>> GetListAsync(GetOrderLinesDto input)
         {
+            var currentPeriod = await PeriodReportManager.GetCurrentPeriodAsync();
             Expression<Func<OrderLine, bool>> filter = l => input.Countries.Contains(l.CountryId) && input.Products.Contains(l.PPMRmProductId) && 
-                                                (l.ActualDeliveryDate >= input.ShipmentDateAfter || l.ActualDeliveryDate == null);
+                                                (l.ActualDeliveryDate >= currentPeriod.StartDate || l.ActualDeliveryDate == null);
             var queryable = Session.Query<OrderLine>().Where(filter);
             //var countriesQueryable = await CountryRepository.GetQueryableAsync();
             //var productsQueryable = await ProductRepository.GetQueryableAsync();
