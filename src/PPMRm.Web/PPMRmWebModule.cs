@@ -313,14 +313,14 @@ namespace PPMRm.Web
             });
             app.UseConfiguredEndpoints();
 
-            RecurringJob.AddOrUpdate<ISyncManager>(x => x.Start(), Cron.Monthly(23, 12, 15));
+            RecurringJob.AddOrUpdate<ISyncManager>(x => x.Start(), Cron.Monthly(2, 6));
         }
     }
 }
 
 public interface ISyncManager
 {
-    void Start();
+    Task Start();
 }
 public class SyncManager : ISyncManager
 {
@@ -350,23 +350,24 @@ public class SyncManager : ISyncManager
     }
 
     [UnitOfWork]
-    public void Start()
+    public async Task Start()
     {
-        var lastPeriod = Repository.OrderByDescending(x => x.PeriodId).FirstOrDefault();
-        var nextPeriodId = lastPeriod.PeriodId + 1; // Check year
-        if (Repository.Count(pr => pr.PeriodId == nextPeriodId) == 0)
+        var lastPeriod = await PeriodReportManager.GetCurrentPeriodAsync();
+        var nextPeriod = await PeriodReportManager.GetNextPeriodAsync();
+        var nextPeriodId = nextPeriod.Id;
+        if (await Repository.CountAsync(pr => pr.PeriodId == nextPeriodId) == 0)
         {
-            var items = ItemRepository.GetListAsync().Result;
-            var products = ProductRepository.ToList();
-            var countries = CountryRepository.ToList();
-            var period = PeriodRepository.GetAsync(nextPeriodId).Result;
-            var reports = PeriodReportManager.CreateManyAsync(period, countries).Result;
-            var lastPeriodReports = Repository.WithDetails(r => r.ProductShipments).Where(r => r.PeriodId == lastPeriod.PeriodId).ToList();
+            var items = await ItemRepository.GetListAsync();
+            var products = await ProductRepository.ToListAsync();
+            var countries = await CountryRepository.ToListAsync();
+            var period = nextPeriod;
+            var reports = await PeriodReportManager.CreateManyAsync(period, countries);
+            var lastPeriodReports = await PeriodReportManager.GetPeriodReportsAsync(lastPeriod.Id);
             //await Repository.InsertManyAsync(reports);
             foreach (var report in reports)
             {
                 report.Open();
-                var shipment = ShipmentRepository.GetAsync(report.CountryId, report.PeriodId).Result;
+                var shipment = await ShipmentRepository.GetAsync(report.CountryId, report.PeriodId);
                 var periodShipments = shipment.Shipments
                     .Where(l => l.PPMRmProductId != null && l.ShipmentDateType != ARTMISConsts.OrderDeliveryDateTypes.ActualDeliveryDate || (l.ShipmentDate >= period.StartDate));
 
@@ -389,14 +390,14 @@ public class SyncManager : ISyncManager
                 var lastReport = lastPeriodReports.Single(r => r.CountryId == report.CountryId);
                 if(lastReport != null && lastReport.ProductShipments != null)
                 {
-                    var nonPmiShipments = lastReport.ProductShipments.Where(s => s.Supplier != Supplier.PMI).ToList();
+                    var nonPmiShipments = lastReport.GetNonPMIShipments();
                     foreach (var s in nonPmiShipments)
                     {
                         report.AddOrUpdateShipment(Guid.NewGuid(), s.ProgramId, s.ProductId, s.Supplier, s.ShipmentDate, s.ShipmentDateType, s.Quantity, s.DataSource);
                     }
                 }
             }
-            Repository.InsertManyAsync(reports).Wait();
+            await Repository.InsertManyAsync(reports);
         }
     }
     
