@@ -13,7 +13,7 @@ namespace PPMRm.ARTMIS.OrderLines
         Task<PagedResultDto<OrderLineDto>> GetListAsync(GetOrderLinesDto input);
     }
 
-    public class GetOrderLinesDto : PagedResultRequestDto
+    public class GetOrderLinesDto : PagedAndSortedResultRequestDto
     {
         public List<string> Countries { get; set; }
         public List<string> Products { get; set; }

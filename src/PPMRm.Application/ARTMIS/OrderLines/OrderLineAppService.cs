@@ -12,6 +12,7 @@ using System.Linq;
 using Baseline.ImTools;
 using PPMRm.Items;
 using PPMRm.PeriodReports;
+using System.Linq.Dynamic.Core;
 
 namespace PPMRm.ARTMIS.OrderLines
 {
@@ -33,15 +34,19 @@ namespace PPMRm.ARTMIS.OrderLines
             throw new NotImplementedException();
         }
 
-        async public Task<PagedResultDto<OrderLineDto>> GetListAsync(GetOrderLinesDto input)
+        async public Task<PagedResultDto<OrderLineDto>> GetListAsync(GetOrderLinesDto input) 
+            
         {
+           
             var currentPeriod = await PeriodReportManager.GetCurrentPeriodAsync();
             Expression<Func<OrderLine, bool>> filter = l => input.Countries.Contains(l.CountryId) && input.Products.Contains(l.PPMRmProductId) && 
                                                 (l.ActualDeliveryDate >= currentPeriod.StartDate || l.ActualDeliveryDate == null);
             var queryable = Session.Query<OrderLine>().Where(filter);
+           
             //var countriesQueryable = await CountryRepository.GetQueryableAsync();
             //var productsQueryable = await ProductRepository.GetQueryableAsync();
             var countries = CountryRepository.Where(c => input.Countries.Contains(c.Id)).ToList();
+           
             var products = ProductRepository.Where(p => input.Products.Contains(p.Id)).ToList();
             var allItems = await Session.Query<Items.Item>().ToListAsync();
             var items = allItems.Concat(new List<Item>()
@@ -49,12 +54,11 @@ namespace PPMRm.ARTMIS.OrderLines
                 new Item() {Id = "106286ABC0NYP", ProductId = "PYAS-10X9-180", Name = "Pyronaridine/Artesunate 180/60 mg Film-Coated Tablet, 10 x 9 Blister Pack Tablets", BaseUnitMultiplier = 10},
                 new Item() {Id = "106284DEW0NXP", ProductId = "PYAS-30X3-60", Name = "Pyronaridine/Artesunate 60/20 mg Granules for Suspension, 30 X 3 Sachets ", BaseUnitMultiplier = 30},
             });
-            var totalCount = await queryable.CountAsync();
-            var results = (from l in await queryable.OrderBy(q => q.CountryId).Skip(input.SkipCount).Take(input.MaxResultCount).ToListAsync()
+            var totalCount = await queryable.CountAsync();           
+            var results = (from l in await queryable.ToListAsync()                                               
                            join c in countries on l.CountryId equals c.Id
                            join p in products on l.PPMRmProductId equals p.Id
-                           join i in items on l.ProductId equals i.Id
-                           orderby c.Name
+                           join i in items on l.ProductId equals i.Id 
                            select new
                            {
                                OrderLine = l,
@@ -77,8 +81,12 @@ namespace PPMRm.ARTMIS.OrderLines
                 r.OrderLine.Item = new Items.ItemDto { Id = r.Item.Id, Name = r.Item.Name, BaseUnitMultiplier = r.Item.BaseUnitMultiplier };
             });
 
-            var response = result.Select(r => r.OrderLine).ToList();
-                
+            var response =  result.Select(r => r.OrderLine).AsQueryable()
+                           .OrderBy(input.Sorting ?? "country.name asc")
+                           .Skip(input.SkipCount)
+                           .Take(input.MaxResultCount).ToList();
+            
+            //response.Skip(input.SkipCount).Take(input.MaxResultCount).ToList();
             //var response = result.Select(r => new
             //{
             //    OrderLine = ObjectMapper.Map<OrderLine, OrderLineDto>(r.OrderLine),

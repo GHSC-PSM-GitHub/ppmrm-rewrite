@@ -7,6 +7,7 @@ using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Identity;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 
 namespace PPMRm.Core
 {
@@ -39,8 +40,13 @@ namespace PPMRm.Core
         async public Task<PagedResultDto<CountryDto>> GetUserCountryListAsync(PagedAndSortedResultRequestDto input)
         {
             var countries = (await CountryRepository.GetUserCountriesAsync());
-            var results = ObjectMapper.Map<List<Country>, List<CountryDto>>(countries.Skip(input.SkipCount).Take(input.MaxResultCount).ToList());
-            return new PagedResultDto<CountryDto>(countries.Count, results);
+            
+            var results = ObjectMapper.Map<List<Country>, List<CountryDto>>(countries.ToList());
+            var response = results.AsQueryable()
+                           .OrderBy(input.Sorting ?? "Name")
+                           .Skip(input.SkipCount)
+                           .Take(input.MaxResultCount);
+            return new PagedResultDto<CountryDto>(countries.Count, response.ToList());
         }
 
         public async Task UpdateAsync(string id, UpdateCountryDto countryDto)

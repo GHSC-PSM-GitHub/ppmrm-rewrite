@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
+using System.Linq.Dynamic.Core;
 
 namespace PPMRm.Items
 {
@@ -30,9 +31,14 @@ namespace PPMRm.Items
         {
             using var session = DocumentStore.LightweightSession();
             var totalCount = await session.Query<Item>().Where(i => i.ProductId != null).CountAsync();
-            var items = await session.Query<Item>().Where(i => i.ProductId != null).OrderBy(i => i.Name).Skip(input.SkipCount).Take(input.MaxResultCount).ToListAsync();
+            var items = await session.Query<Item>().Where(i => i.ProductId != null).ToListAsync();
             var result = ObjectMapper.Map<List<Item>, List<ItemDto>>(items.ToList());
-            return new PagedResultDto<ItemDto>(totalCount, result);
+
+            var response = result.AsQueryable()
+                           .OrderBy(input.Sorting ?? "Name")
+                           .Skip(input.SkipCount)
+                           .Take(input.MaxResultCount).ToList();
+            return new PagedResultDto<ItemDto>(totalCount, response);
         }
     }
 }

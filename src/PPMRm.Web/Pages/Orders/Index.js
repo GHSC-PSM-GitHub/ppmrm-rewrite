@@ -58,26 +58,30 @@ $(document).ready(function () {
             serverSide: true,
             processing: true,
             paging: true,
-            order: [[1, "asc"]],
+            order: [[0, "asc"]],
             searching: false,
             scrollX: true,
             ajax: abp.libs.datatables.createAjax(pPMRm.orders.order.getList, inputAction),
             columnDefs: [
                 {
                     title: "Country",
-                    data: "countryId"
+                    data: "countryId",
+                    orderable: true
                 },
                 {
                     title: "RO Number",
-                    data: "roNumber"
+                    data: "roNumber",
+                    orderable: true
                 },
                 {
                     title: "Order Number",
-                    data: "orderNumber"
+                    data: "orderNumber",
+                    orderable: true
                 },
                 {
                     title: "PO/DO/IO Number",
-                    data: "podoioNumber"
+                    data: "podoioNumber",
+                    orderable: true
                 },
                 {
                     "className": 'dt-control',
