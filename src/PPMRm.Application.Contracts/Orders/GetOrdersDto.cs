@@ -5,7 +5,7 @@ using Volo.Abp.Application.Dtos;
 
 namespace PPMRm.Orders
 {
-    public class GetOrdersDto : PagedResultRequestDto
+    public class GetOrdersDto : PagedAndSortedResultRequestDto
     {
         public List<string> Countries { get; set; }
         public List<string> Products { get; set; }

@@ -10,6 +10,7 @@ using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
+using System.Linq.Dynamic.Core;
 
 namespace PPMRm.PeriodReports
 {
@@ -62,7 +63,7 @@ namespace PPMRm.PeriodReports
             // Filter
 
             var totalCount = query.Count();
-            var results = await AsyncExecuter.ToListAsync(query.OrderBy(r => r.Country.Name).ThenByDescending(r => r.Period.Id).Skip(input.SkipCount).Take(input.MaxResultCount));
+            var results = await AsyncExecuter.ToListAsync(query.OrderBy(input.Sorting ?? "country.name").Skip(input.SkipCount).Take(input.MaxResultCount));
             return new PagedResultDto<PeriodReportDto>(totalCount, results);
         }
 

@@ -12,23 +12,28 @@
             columnDefs: [
                 {
                     title: "Code",
-                    data: "id"
+                    data: "id",
+                    orderable: true
                 },
                 {
                     title: "Name",
-                    data: "name"
+                    data: "name",
+                    orderable: true
                 },
                 {
                     title: "Category",
-                    data: "tracerCategory"
+                    data: "tracerCategory",
+                    orderable: true
                 },
                 {
                     title: "Base Unit",
-                    data: "baseUnit"
+                    data: "baseUnit",
+                    orderable: true
                 },
                 {
                     title: "Multiplier",
-                    data: "baseUnitMultiplier"
+                    data: "baseUnitMultiplier",
+                    orderable: true
                 }
             ]
         })
