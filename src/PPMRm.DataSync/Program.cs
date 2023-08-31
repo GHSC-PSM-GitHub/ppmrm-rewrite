@@ -39,7 +39,7 @@
     }
     class Program
     {
-        public const string ConnectionString = "Host=localhost;Port=5432;Database=ppmrm_20230503;User ID=postgres;Password=mysecretpassword;";
+        public const string ConnectionString = "Host=localhost;Port=5432;Database=ppmrm_may;User ID=postgres;Password=mysecretpassword;";
 
 
         static List<OrderEto> orderEvents;
@@ -153,7 +153,7 @@
         private static void DefineProcess(ISingleStream<string> contextStream)
         {
             var orderStream = contextStream
-                .CrossApplyFolderFiles("list all required files", "202304*.tar.gz", true)
+                .CrossApplyFolderFiles("list all required files", "202307*.tar.gz", true)
                 .CrossApplyGZipFiles("extract files from zip", "*order*.txt")
                 .CrossApplyTextFile("parse file", 
                     FlatFileDefinition.Create(i => new OrderEto
