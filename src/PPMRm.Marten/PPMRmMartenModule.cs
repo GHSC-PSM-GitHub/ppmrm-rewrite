@@ -34,7 +34,7 @@ namespace PPMRm
             context.Services.AddScoped(sp => sp.GetRequiredService<IDocumentStore>().LightweightSession());
             context.Services.AddScoped(sp => sp.GetRequiredService<IDocumentStore>().QuerySession());
             context.Services.AddScoped<IItemRepository, ItemRepository>();
-            context.Services.AddScoped<IPeriodShipmentRepository, PeriodShipmentRepository>();
+            context.Services.AddScoped<IPeriodShipmentRepository, OrderLinePeriodShipmentRepository>();
 
         }
     }

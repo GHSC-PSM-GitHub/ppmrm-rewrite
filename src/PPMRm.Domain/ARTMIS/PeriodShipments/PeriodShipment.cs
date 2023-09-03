@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DateType = PPMRm.PeriodReports.ShipmentDateType;
 using Volo.Abp;
 
 namespace PPMRm.ARTMIS.PeriodShipments
@@ -47,6 +48,9 @@ namespace PPMRm.ARTMIS.PeriodShipments
         public decimal OrderedQuantity { get; set; }
         public DateTime? ShipmentDate { get; set; }
         public string ShipmentDateType { get; set; }
+        public DateType GetShipmentDateType() => ShipmentDateType == ARTMISConsts.OrderDeliveryDateTypes.ActualDeliveryDate ? DateType.AcDD :
+                   ShipmentDateType == ARTMISConsts.OrderDeliveryDateTypes.EstimatedDeliveryDate ? DateType.EDD :
+                    DateType.RDD;
 
         public static ShipmentLine Create(OrderLineEvent @event)
         {

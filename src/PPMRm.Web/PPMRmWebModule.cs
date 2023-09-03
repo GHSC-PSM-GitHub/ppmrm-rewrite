@@ -67,6 +67,7 @@ using PPMRm.ARTMIS;
 using System.Security.Cryptography;
 using Volo.Abp.Uow;
 using Volo.CmsKit.Tags;
+using System.Collections.Generic;
 
 namespace PPMRm.Web
 {
@@ -355,7 +356,12 @@ public class SyncManager : ISyncManager
         var lastPeriod = await PeriodReportManager.GetCurrentPeriodAsync();
         var nextPeriod = await PeriodReportManager.GetNextPeriodAsync();
         var nextPeriodId = nextPeriod.Id;
-        var items = await ItemRepository.GetListAsync();
+        var allItems = await ItemRepository.GetListAsync();
+        var items = allItems.Concat(new List<Item>()
+            {
+                new Item() {Id = "106286ABC0NYP", ProductId = "PYAS-10X9-180", Name = "Pyronaridine/Artesunate 180/60 mg Film-Coated Tablet, 10 x 9 Blister Pack Tablets", BaseUnitMultiplier = 10},
+                new Item() {Id = "106284DEW0NXP", ProductId = "PYAS-30X3-60", Name = "Pyronaridine/Artesunate 60/20 mg Granules for Suspension, 30 X 3 Sachets ", BaseUnitMultiplier = 30},
+            });
         var products = await ProductRepository.ToListAsync();
         var countries = await CountryRepository.ToListAsync();
         var period = nextPeriod;
@@ -378,9 +384,7 @@ public class SyncManager : ISyncManager
                     Console.WriteLine($"{s.ProductId} - {s.PPMRmProductId} - product not found skipping.");
                     continue;
                 }
-                var shipmentDateType = s.ShipmentDateType == ARTMISConsts.OrderDeliveryDateTypes.ActualDeliveryDate ? ShipmentDateType.AcDD :
-                    s.ShipmentDateType == ARTMISConsts.OrderDeliveryDateTypes.EstimatedDeliveryDate ? ShipmentDateType.EDD :
-                    ShipmentDateType.RDD;
+                var shipmentDateType = s.GetShipmentDateType();
                 var totalQuantity = s.OrderedQuantity * shipmentItem.BaseUnitMultiplier;
                 report.AddOrUpdateShipment(s.Id, product.Id, s.ShipmentDate, shipmentDateType, totalQuantity);
             }
