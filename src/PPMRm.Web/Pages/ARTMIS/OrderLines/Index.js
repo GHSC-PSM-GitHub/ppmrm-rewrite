@@ -70,56 +70,70 @@ $(document).ready(function () {
             serverSide: true,
             processing: true,
             paging: true,
-            order: [[1, "asc"]],
+            order: [[0, "asc"], [1, "asc"]],
+           // orderMulti: true,
             searching: false,
             scrollX: true,
             ajax: abp.libs.datatables.createAjax(pPMRm.aRTMIS.orderLines.orderLine.getList, inputAction),
             columnDefs: [
                 {
                     title: "Country",
-                    data: "country.name"
+                    data: "country.name",
+                    orderable: true
                 },
                 {
                     title: "RO Number",
-                    data: "roNumber"
+                    data: "roNumber",
+                    orderable: true
                 },
                 {
                     title: "RO Prime Line Number",
-                    data: "roPrimeLineNumber"
+                    data: "roPrimeLineNumber",
+                    orderable: true
+
                 },
                 {
                     title: "Order #",
-                    data: "orderNumber"
+                    data: "orderNumber",
+                    orderable: true
                 },
                 {
                     title: "Order Line",
-                    data: "orderLineNumber"
+                    data: "orderLineNumber",
+                    orderable: true
                 },
                 {
                     title: "Product",
-                    data: "product.name"
+                    data: "product.name",
+                    orderable: true
                 },
                 {
                     title: "Ordered Quantity",
-                    data: "orderedQuantity",
-                    render: $.fn.dataTable.render.number(',', '.', 0, '')
+                    data: "orderedQuantity" ,
+                    render: $.fn.dataTable.render.number(',', '.', 0, ''),
+                    orderable: true
                 },
                 {
-                    title: "Base Unit Multiplier",
-                    data: "item.baseUnitMultiplier"
+                    title: "Base Unit Multiplier" ,
+                    data: "item.baseUnitMultiplier",
+                    orderable: true
                 },
                 {
                     title: "Total Quantity",
                     data: "totalQuantity",
-                    render: $.fn.dataTable.render.number(',', '.', 0, '')
+                  
+                    render: $.fn.dataTable.render.number(',', '.', 0, ''),
+                    orderable: true
                 },
                 {
                     title: "Shipment Date",
-                    data: "shipmentDateFormatted"
+                    data: "shipmentDateFormatted",
+                    orderable: true
                 },
                 {
                     title: "Shipment Date Type",
-                    data: "shipmentDateType"
+                    data: "shipmentDateType",
+                    orderable: true
                 }
             ]
         })

@@ -10,8 +10,5 @@ namespace PPMRm.ARTMIS.PeriodShipments
     public interface IPeriodShipmentRepository
     {
         Task<PeriodShipment> GetAsync(string countryId, int periodId);
-
-        //Task<PeriodShipment> StoreAsync(PeriodShipment periodShipment);
-
     }
 }

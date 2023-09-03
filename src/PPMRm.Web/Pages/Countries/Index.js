@@ -18,19 +18,23 @@
             columnDefs: [
                 {
                     title: "Code",
-                    data: "id"
+                    data: "id",
+                    orderable: true
                 },
                 {
                     title: "Name",
-                    data: "name"
+                    data: "name",
+                    orderable: true
                 },
                 {
                     title: "Min Stock",
-                    data: "minStock"
+                    data: "minStock",
+                    orderable: true
                 },
                 {
                     title: "Max Stock",
-                    data: "maxStock"
+                    data: "maxStock",
+                    orderable: true
                 },
                 {
                     title: 'Actions',

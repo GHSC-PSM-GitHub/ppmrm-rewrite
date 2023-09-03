@@ -5,7 +5,7 @@ using Volo.Abp.Application.Dtos;
 
 namespace PPMRm.PeriodReports
 {
-    public class GetPeriodReportDto : PagedResultRequestDto
+    public class GetPeriodReportDto : PagedAndSortedResultRequestDto
     {
         public List<string> Countries { get; set; } = new();
         public int? Year { get; set; }

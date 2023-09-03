@@ -9,6 +9,7 @@ using PPMRm.Entities;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
+using System.Linq.Dynamic.Core;
 
 namespace PPMRm.Orders
 {
@@ -51,7 +52,7 @@ namespace PPMRm.Orders
 
             var totalCount = await ordersQueryable.CountAsync();
             var productIds = products.Select(p => p.ProductId).ToList();
-            var items = await ordersQueryable.OrderBy(i => i.CountryId).Skip(input.SkipCount).Take(input.MaxResultCount).ToListAsync();
+            var items = await ordersQueryable.OrderBy(i => i.CountryId).ToListAsync();
             var result = ObjectMapper.Map<List<ARTMIS.Orders.Order>, List<OrderDto>>(items.ToList());
             foreach (var o in result)
             {
@@ -64,7 +65,12 @@ namespace PPMRm.Orders
                     l.ActualDeliveryDate = l.ActualDeliveryDate;
                 }
             }
-            return new PagedResultDto<OrderDto>(totalCount, result);
+
+            var response = result.AsQueryable()
+                           .OrderBy(input.Sorting ?? "countryId")
+                           .Skip(input.SkipCount)
+                           .Take(input.MaxResultCount).ToList();
+            return new PagedResultDto<OrderDto>(totalCount, response);
         }
 
         public async Task<PagedResultDto<OrderLineDto>> GetShipmentsAsync(GetOrdersDto input)
@@ -74,7 +80,7 @@ namespace PPMRm.Orders
             var pIds = products.Select(p => p.Id).ToList();
             var linesQueryable = session.Query<ARTMIS.Orders.Order>().SelectMany(o => o.Lines).Where(_ => pIds.Contains(_.ProductId));
             
-            var lines = await linesQueryable.Skip(input.SkipCount).Take(input.MaxResultCount).ToListAsync();
+            var lines = await linesQueryable.ToListAsync();
             var ordersQueryable = session.Query<ARTMIS.Orders.Order>().Where(o => o.DisplayDate > new DateTime(2021, 12, 1)).OrderBy(o => o.CountryId).SelectMany(o => o.Lines).Join(products, o => o.ProductId, p => p.Id, (o, p) => new OrderLineDto
             {
                 Item = new Items.ItemDto { Id = p.Id, Name = p.Name, BaseUnitMultiplier = p.BaseUnitMultiplier },
@@ -84,7 +90,11 @@ namespace PPMRm.Orders
                 ROPrimeLineNumber = o.ROPrimeLineNumber
             });
             var totalCount = await ordersQueryable.CountAsync();
-            var result = await ordersQueryable.ToListAsync();
+            var result = await ordersQueryable
+                               .OrderBy(input.Sorting ?? "Id")
+                               .Skip(input.SkipCount)
+                               .Take(input.MaxResultCount).ToListAsync();
+
             return new PagedResultDto<OrderLineDto>(totalCount, result);
         }
 

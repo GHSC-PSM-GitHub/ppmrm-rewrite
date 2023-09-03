@@ -45,6 +45,29 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Hangfire;
 using Hangfire.PostgreSql;
 using Volo.Abp.BackgroundJobs.Hangfire;
+using Volo.Abp.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using PPMRm.Web.Jobs;
+using Volo.Abp.Emailing;
+using Volo.Abp.TextTemplating;
+using Serilog.Core;
+using static Volo.Abp.AspNetCore.Mvc.UI.Components.LayoutHook.LayoutHooks;
+using System.Threading.Tasks;
+using static IdentityServer4.Models.IdentityResources;
+using Volo.Abp.Emailing.Templates;
+using Hangfire.Dashboard;
+using PPMRm.Core;
+using PPMRm.Items;
+using PPMRm.PeriodReports;
+using PPMRm.Products;
+using PPMRm.ARTMIS.PeriodShipments;
+using Volo.Abp.Domain.Repositories;
+using System.Linq;
+using PPMRm.ARTMIS;
+using System.Security.Cryptography;
+using Volo.Abp.Uow;
+using Volo.CmsKit.Tags;
+using System.Collections.Generic;
 
 namespace PPMRm.Web
 {
@@ -112,6 +135,7 @@ namespace PPMRm.Web
 
         private void ConfigureHangfire(ServiceConfigurationContext context, IConfiguration configuration)
         {
+            context.Services.AddTransient<ISyncManager, SyncManager>();
             context.Services.AddHangfire(config =>
             {
                 config.UsePostgreSqlStorage(configuration.GetConnectionString("Default"));
@@ -279,10 +303,111 @@ namespace PPMRm.Web
             });
             app.UseAuditing();
             app.UseAbpSerilogEnrichers();
-            app.UseConfiguredEndpoints();
-            app.UseHangfireDashboard();
+            app.UseHangfireDashboard("/hangfire", new DashboardOptions
+            {
+                DashboardTitle = "PPMRm Jobs",
+                Authorization = new[]
+                {
+                    new HangfireAuthorizationFilter(),
+                },
 
-            RecurringJob.AddOrUpdate("ARTMISDataSync", () => Console.Write("Sync ARTMIS!"), Cron.Monthly(2, 6));
+            });
+            app.UseConfiguredEndpoints();
+
+            RecurringJob.AddOrUpdate<ISyncManager>(x => x.Start(), Cron.Monthly(2, 6));
         }
+    }
+}
+
+public interface ISyncManager
+{
+    Task Start();
+}
+public class SyncManager : ISyncManager
+{
+    IEmailSender _emailSender;
+    ITemplateRenderer _templateRenderer;
+    private IServiceProvider _serviceProvider;
+
+    IRepository<PeriodReport, string> Repository { get; set; }
+    PeriodReportManager PeriodReportManager { get; set; }
+    IPeriodShipmentRepository ShipmentRepository { get; set; }
+    IRepository<Country, string> CountryRepository { get; set; }
+    IRepository<Period, int> PeriodRepository { get; set; }
+    IRepository<Product, string> ProductRepository { get; set; }
+    IItemRepository ItemRepository { get; set; }
+
+    public SyncManager(IEmailSender emailSender, ITemplateRenderer templateRenderer, IRepository<PeriodReport, string> repository, IRepository<Country, string> countryRepository, IRepository<Product, string> productRepository, IRepository<Period, int> periodRepository, IItemRepository itemRepository, PeriodReportManager periodReportManager, IPeriodShipmentRepository shipmentRepository)
+    {
+        _emailSender = emailSender;
+        _templateRenderer = templateRenderer;
+        Repository = repository;
+        PeriodRepository = periodRepository;
+        CountryRepository = countryRepository;
+        PeriodReportManager = periodReportManager;
+        ItemRepository = itemRepository;
+        ShipmentRepository = shipmentRepository;
+        ProductRepository = productRepository;
+    }
+
+    [UnitOfWork]
+    public async Task Start()
+    {
+        var lastPeriod = await PeriodReportManager.GetCurrentPeriodAsync();
+        var nextPeriod = await PeriodReportManager.GetNextPeriodAsync();
+        var nextPeriodId = nextPeriod.Id;
+        var allItems = await ItemRepository.GetListAsync();
+        var items = allItems.Concat(new List<Item>()
+            {
+                new Item() {Id = "106286ABC0NYP", ProductId = "PYAS-10X9-180", Name = "Pyronaridine/Artesunate 180/60 mg Film-Coated Tablet, 10 x 9 Blister Pack Tablets", BaseUnitMultiplier = 10},
+                new Item() {Id = "106284DEW0NXP", ProductId = "PYAS-30X3-60", Name = "Pyronaridine/Artesunate 60/20 mg Granules for Suspension, 30 X 3 Sachets ", BaseUnitMultiplier = 30},
+            });
+        var products = await ProductRepository.ToListAsync();
+        var countries = await CountryRepository.ToListAsync();
+        var period = nextPeriod;
+        var reports = await PeriodReportManager.CreateManyAsync(period, countries);
+        var lastPeriodReports = await PeriodReportManager.GetPeriodReportsAsync(lastPeriod.Id);
+        //await Repository.InsertManyAsync(reports);
+        foreach (var report in reports)
+        {
+            report.Open();
+            var shipment = await ShipmentRepository.GetAsync(report.CountryId, report.PeriodId);
+            var periodShipments = shipment.Shipments
+                .Where(l => l.PPMRmProductId != null && l.ShipmentDateType != ARTMISConsts.OrderDeliveryDateTypes.ActualDeliveryDate || (l.ShipmentDate >= period.StartDate));
+
+            foreach (var s in periodShipments)
+            {
+                var shipmentItem = items.SingleOrDefault(i => i.Id == s.ProductId);
+                var product = products.SingleOrDefault(p => p.Id == shipmentItem?.ProductId);
+                if (product == null)
+                {
+                    Console.WriteLine($"{s.ProductId} - {s.PPMRmProductId} - product not found skipping.");
+                    continue;
+                }
+                var shipmentDateType = s.GetShipmentDateType();
+                var totalQuantity = s.OrderedQuantity * shipmentItem.BaseUnitMultiplier;
+                report.AddOrUpdateShipment(s.Id, product.Id, s.ShipmentDate, shipmentDateType, totalQuantity);
+            }
+
+            var lastReport = lastPeriodReports.Single(r => r.CountryId == report.CountryId);
+            if (lastReport != null && lastReport.ProductShipments != null)
+            {
+                var nonPmiShipments = lastReport.GetNonPMIShipments();
+                foreach (var s in nonPmiShipments)
+                {
+                    report.AddOrUpdateShipment(Guid.NewGuid(), s.ProgramId, s.ProductId, s.Supplier, s.ShipmentDate, s.ShipmentDateType, s.Quantity, s.DataSource);
+                }
+            }
+        }
+        await Repository.InsertManyAsync(reports);
+    }
+    
+}
+
+public class HangfireAuthorizationFilter : IDashboardAuthorizationFilter
+{
+    public bool Authorize(DashboardContext context)
+    {
+        return true;
     }
 }

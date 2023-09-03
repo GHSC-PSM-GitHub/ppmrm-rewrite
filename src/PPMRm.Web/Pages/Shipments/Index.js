@@ -14,27 +14,33 @@
                 columnDefs: [
                     {
                         title: "Product",
-                        data: "productName"
+                        data: "productName",
+                        orderable: true
                     },
                     {
                         title: "Quantity",
-                        data: "productName"
+                        data: "productName",
+                        orderable: true
                     },
                     {
                         title: "Base Unit Multiplier",
-                        data: "productName"
+                        data: "productName",
+                        orderable: true
                     },
                     {
                         title: "RDD",
-                        data: "productName"
+                        data: "productName",
+                        orderable: true
                     },
                     {
                         title: "EDD",
-                        data: "productName"
+                        data: "productName",
+                        orderable: true
                     },
                     {
                         title: "AcDD",
-                        data: "productName"
+                        data: "productName",
+                        orderable: true
                     }
                 ]
             })

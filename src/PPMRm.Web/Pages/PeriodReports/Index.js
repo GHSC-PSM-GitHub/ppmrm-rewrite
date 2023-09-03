@@ -31,29 +31,34 @@ $(document).ready(function () {
                     data: "id",
                     "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
                         $(nTd).html("<a href='/periodreports/edit/" + oData.id + "'>"+oData.id+"</a>");
-                    }
+                    },
+                    orderable: true
                 },
                 {
                     title: "Country",
-                    data: "country.name"
+                    data: "country.name",
+                    orderable: true
                 },
                 {
                     title: "Period",
-                    data: "period.name"
+                    data: "period.name",
+                    orderable: false
                 },
                 {
                     title: "Status",
                     data: "reportStatus",
                     render: function (data) {
                         return l('Enum:PeriodReportStatus:' + data);
-                    }
+                    },
+                    orderable: true
                 },
                 {
                     "title": "Enter/View Product Info",
                     "data": "id",
                     "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
                         $(nTd).html("<a class='btn btn-primary btn-sm' role='button' href='/periodreports/edit/" + oData.id + "'>View/Edit</a>");
-                    }
+                    },
+                    orderable: false
                 }
             ]
         })

@@ -68,6 +68,10 @@ namespace PPMRm.PeriodReports
         }
         public int GetPMIProgramId() => (int)GetARTMISProgram();
 
+        public List<ProductShipment> GetNonPMIShipments()
+        {
+            return ProductShipments.Where(s => s.Supplier != Supplier.PMI)?.ToList();
+        }
         
 
         public Programs GetARTMISProgram()

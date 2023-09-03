@@ -12,11 +12,13 @@
             columnDefs: [
                 {
                     title: "Code",
-                    data: "id"
+                    data: "id",
+                    orderable: true
                 },
                 {
                     title: "Name",
-                    data: "name"
+                    data: "name",
+                    orderable: true
                 },
                 {
                     title: "Actions", data: "id",
