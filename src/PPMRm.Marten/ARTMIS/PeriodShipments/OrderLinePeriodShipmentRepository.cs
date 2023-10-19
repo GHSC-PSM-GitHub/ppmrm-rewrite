@@ -41,7 +41,7 @@ namespace PPMRm.ARTMIS.PeriodShipments
             var periodShipmentId = $"{countryId}-{periodId}";
 
             var periodShipment = await Session.LoadAsync<PeriodShipment>(periodShipmentId);
-            if (periodShipment != null) return periodShipment;
+            //if (periodShipment != null) return periodShipment;
 
             var period = await PeriodRepository.GetAsync(periodId);
 
