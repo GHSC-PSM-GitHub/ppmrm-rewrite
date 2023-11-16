@@ -11,6 +11,8 @@ using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
 using System.Linq.Dynamic.Core;
+using Microsoft.Extensions.Logging;
+using Volo.Abp.Users;
 
 namespace PPMRm.PeriodReports
 {
@@ -23,13 +25,22 @@ namespace PPMRm.PeriodReports
         IRepository<Period, int> PeriodRepository { get; }
         IRepository<Program, int> ProgramRepository { get; }
         IRepository<Country, string> CountryRepository { get; }
-        public PeriodReportAppService(IRepository<PeriodReport, string> repository, IRepository<Program,int> programRepository, IRepository<Country, string> countryRepository, IRepository<Period, int> periodRepository, IRepository<Product, string> productRepository) : base(repository)
+        ICurrentUser CurrentUser { get; }
+        ILogger<PeriodReportAppService> Logger { get; }
+        public PeriodReportAppService(
+            IRepository<PeriodReport, string> repository, IRepository<Program,int> programRepository,
+            IRepository<Country, string> countryRepository, IRepository<Period, int> periodRepository,
+            IRepository<Product, string> productRepository,
+            ICurrentUser currentUser,
+            ILogger<PeriodReportAppService> logger) : base(repository)
         {
             PeriodReportRepository = repository;
             ProductRepository = productRepository;
             ProgramRepository = programRepository;
             PeriodRepository = periodRepository;
             CountryRepository = countryRepository;
+            Logger = logger;
+            CurrentUser = currentUser;
         }
         //public async Task<PeriodReportDetailDto> GetAsync(string countryId, int period)
         //{
@@ -291,7 +302,19 @@ namespace PPMRm.PeriodReports
             var periodReport = (await PeriodReportRepository.WithDetailsAsync(r => r.ProductShipments)).Single(r => r.Id == id);
             var productShipment = periodReport.ProductShipments.SingleOrDefault(s => s.Id == shipmentId);
             if (productShipment == null) throw new BusinessException("The specified shipment was not found!");
-            periodReport.RemoveShipment(shipmentId);
+            if(productShipment.Supplier == Supplier.PMI)
+            {
+                try
+                {
+                    //Serilog.Log.Warning("Shipment Deleted! {@Country} {@PeriodReport} {@Product} {@Quantity} by user {@User}", periodReport.CountryId, periodReport.Id, productShipment.ProductId, productShipment.Quantity, CurrentUser.Name);
+                    Logger.LogWarning("Shipment Deleted! Country {@Country} Report {@PeriodReport} Product {@Product} Quantity {@Quantity} by user {@User}", periodReport.CountryId, periodReport.Id, productShipment.ProductId, productShipment.Quantity, CurrentUser.Name);
+                    periodReport.RemoveShipment(shipmentId);
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }
             await PeriodReportRepository.UpdateAsync(periodReport);
         }
 

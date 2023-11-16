@@ -15,12 +15,15 @@
     <UserSecretsId>PPMRm-4681b4fd-151f-4221-84a4-929d86723e4c</UserSecretsId>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'Azure' " />
   <ItemGroup>
     <Compile Remove="Logs\**" />
     <Content Remove="Logs\**" />
     <EmbeddedResource Remove="Logs\**" />
     <None Remove="Logs\**" />
    
+    <None Remove="AWS.Logger.SeriLog" />
+    <None Remove="AWSSDK.Extensions.NETCore.Setup" />
   </ItemGroup>
 
   <ItemGroup>
@@ -50,6 +53,8 @@
     <PackageReference Include="Paillave.EtlNet.TextFile" Version="2.0.4" />
     <PackageReference Include="Volo.Abp.BackgroundJobs.HangFire" Version="4.4.0" />
     <PackageReference Include="Hangfire.PostgreSql" Version="1.7.1" />
+    <PackageReference Include="AWS.Logger.SeriLog" Version="3.3.0" />
+    <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.7.7" />
   </ItemGroup>
 
   <ItemGroup>

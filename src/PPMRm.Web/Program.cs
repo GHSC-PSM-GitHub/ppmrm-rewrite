@@ -1,4 +1,6 @@
 ﻿using System;
+using AWS.Logger;
+using AWS.Logger.SeriLog;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -11,20 +13,28 @@ namespace PPMRm.Web
     {
         public static int Main(string[] args)
         {
+            var logGroup = $"ppmrm-{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}";
+            var configuration = new AWSLoggerConfig(logGroup);
+            configuration.Region = "us-east-1";
+
             Log.Logger = new LoggerConfiguration()
 #if DEBUG
-                .MinimumLevel.Debug()
+                .MinimumLevel.Warning()
 #else
                 .MinimumLevel.Information()
 #endif
-                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                 .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
+                .MinimumLevel.Override("PPMRm", LogEventLevel.Information)
                 .Enrich.FromLogContext()
                 .WriteTo.Async(c => c.File("Logs/logs.txt"))
+                .WriteTo.AWSSeriLog(configuration)
 #if DEBUG
                 .WriteTo.Async(c => c.Console())
+                .WriteTo.AWSSeriLog(configuration)
 #endif
                 .CreateLogger();
+            Log.Warning("Starting up");
 
             try
             {
@@ -53,7 +63,11 @@ namespace PPMRm.Web
                 {
                     webBuilder.UseStartup<Startup>();
                 })
+            .ConfigureLogging((context, loggingConfig) =>
+            {
+                loggingConfig.AddSerilog(Log.Logger);
+            })
                 .UseAutofac()
-                .UseSerilog();
+                .UseSerilog(Log.Logger);
     }
 }
