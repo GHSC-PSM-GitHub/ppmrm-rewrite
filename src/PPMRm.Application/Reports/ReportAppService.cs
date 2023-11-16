@@ -427,7 +427,7 @@ namespace PPMRm.Reports
             });
             return new PeriodSummaryDto
             {
-                CountrySummaries = countrySummaries.ToList(),
+                CountrySummaries = countrySummaries.OrderBy(c => c.Country.Name).ToList(),
                 Period = new PeriodDto { Id = period.Id, StartDate = period.StartDate, EndDate = period.EndDate, Month = period.Month, Year = period.Year }
             };
         }
