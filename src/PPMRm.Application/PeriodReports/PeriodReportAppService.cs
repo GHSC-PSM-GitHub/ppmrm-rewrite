@@ -303,20 +303,11 @@ namespace PPMRm.PeriodReports
             var productShipment = periodReport.ProductShipments.SingleOrDefault(s => s.Id == shipmentId);
             if (productShipment == null) throw new BusinessException("The specified shipment was not found!");
             periodReport.RemoveShipment(shipmentId);
+            await PeriodReportRepository.UpdateAsync(periodReport);
             if (productShipment.Supplier == Supplier.PMI)
             {
-                try
-                {
-                    //Serilog.Log.Warning("Shipment Deleted! {@Country} {@PeriodReport} {@Product} {@Quantity} by user {@User}", periodReport.CountryId, periodReport.Id, productShipment.ProductId, productShipment.Quantity, CurrentUser.Name);
-                    Logger.LogWarning("Shipment Deleted! Country {@Country} Report {@PeriodReport} Product {@Product} Quantity {@Quantity} by user {@User}", periodReport.CountryId, periodReport.Id, productShipment.ProductId, productShipment.Quantity, CurrentUser.Name);
-                    
-                }
-                catch (Exception ex)
-                {
-
-                }
+                Logger.LogWarning("Shipment Deleted! Country {@Country} Report {@PeriodReport} Product {@Product} Quantity {@Quantity} by user {@User}", periodReport.CountryId, periodReport.Id, productShipment.ProductId, productShipment.Quantity, CurrentUser.Name);
             }
-            await PeriodReportRepository.UpdateAsync(periodReport);
         }
 
         public async Task AddShipmentAsync(string id, int programId, string productId, CreateUpdateShipmentDto shipment)
