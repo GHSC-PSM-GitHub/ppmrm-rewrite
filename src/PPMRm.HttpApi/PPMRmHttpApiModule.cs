@@ -1,4 +1,6 @@
 using Localization.Resources.AbpUi;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 using PPMRm.Localization;
 using Volo.Abp.Account;
 using Volo.Abp.FeatureManagement;
@@ -27,6 +29,8 @@ namespace PPMRm
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
             ConfigureLocalization();
+
+            ConfigureIdentityOptions(context);
         }
 
         private void ConfigureLocalization()
@@ -38,6 +42,17 @@ namespace PPMRm
                     .AddBaseTypes(
                         typeof(AbpUiResource)
                     );
+            });
+        }
+        
+        
+        private void ConfigureIdentityOptions(ServiceConfigurationContext context)
+        {
+            context.Services.Configure<IdentityOptions>(options =>
+            {
+                options.SignIn.RequireConfirmedAccount = true;
+                options.SignIn.RequireConfirmedEmail = true;
+                options.SignIn.RequireConfirmedPhoneNumber = false;
             });
         }
     }

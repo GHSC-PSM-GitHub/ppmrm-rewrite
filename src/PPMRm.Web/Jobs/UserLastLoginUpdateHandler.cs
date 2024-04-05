@@ -1,17 +1,10 @@
 ﻿using System;
-using System.Net;
-using System.Net.Mail;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Entities.Events;
-using Volo.Abp.Emailing;
-using Volo.Abp.Emailing.Templates;
 using Volo.Abp.EventBus;
 using Volo.Abp.Identity;
-using Volo.Abp.Security.Encryption;
-using Volo.Abp.Settings;
-using Volo.Abp.TextTemplating;
 
 namespace PPMRm.Web.Jobs
 {

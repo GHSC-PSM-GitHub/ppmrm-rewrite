@@ -42,11 +42,11 @@ namespace PPMRm.Web.Jobs
             );
             try
             {
-                await EmailSender.SendAsync(
-                    "eyassug@gmail.com,jraji@ghsc-psm.org,swang@ghsc-psm.org,jthomas@chemonics.com,jinsthomas@gmail.com,clemke@usaid.gov,nprintz@usaid.gov,chershey@usaid.gov,aball@usaid.gov,nhuhn@usaid.gov",
-                    "New user registration",
-                    body
-                );
+                //await EmailSender.SendAsync(
+                //    "eyassug@gmail.com,jraji@ghsc-psm.org,swang@ghsc-psm.org,jthomas@chemonics.com,jinsthomas@gmail.com,clemke@usaid.gov,nprintz@usaid.gov,chershey@usaid.gov,aball@usaid.gov,nhuhn@usaid.gov",
+                //    "New user registration",
+                //    body
+                //);
             }
             catch (Exception ex)
             {

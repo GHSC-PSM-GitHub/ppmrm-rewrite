@@ -4,6 +4,7 @@
     {
         DataProvider,
         DataReviewer,
-        SystemAdmin
+        SystemAdmin,
+        Draft
     }
 }

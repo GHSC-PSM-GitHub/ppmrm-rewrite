@@ -24,6 +24,7 @@
    
     <None Remove="AWS.Logger.SeriLog" />
     <None Remove="AWSSDK.Extensions.NETCore.Setup" />
+    <None Remove="Pages\Account\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -85,6 +86,7 @@
     <Folder Include="Pages\CountryPeriods\" />
     <Folder Include="Pages\PeriodReports" />
     <Folder Include="Pages\CountryPeriods\ViewModels\" />
+    <Folder Include="Pages\Account\" />
   </ItemGroup>
 
 
