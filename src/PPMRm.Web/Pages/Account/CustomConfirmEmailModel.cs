@@ -34,28 +34,33 @@ namespace PPMRm.Web.Pages.Account
 
             code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
             var result = await _userManager.ConfirmEmailAsync(user, code);
-            var userName = user.UserName;
-            var email = user.Email;
+            if(result.Succeeded)
+            {
+                var userName = user.UserName;
+                var email = user.Email;
 
-            var body = await _templateRenderer.RenderAsync(
-                StandardEmailTemplates.Message,
-                new
+                var body = await _templateRenderer.RenderAsync(
+                    StandardEmailTemplates.Message,
+                    new
+                    {
+                        message = $"New user {userName} with email address {email} has registered. Please approve/deny access in PPMRm Dashboard."
+                    });
+                try
                 {
-                    message = $"New user {userName} with email address {email} has registered. Please approve/deny access in PPMRm Dashboard."
-                });
-            try
-            {
-                await _emailSender.SendAsync(
-                    "eyassu@botanow.com",
-                    "New user registration",
-                    body
-                );
+                    await _emailSender.SendAsync(
+                        "eyassug@gmail.com,jraji@ghsc-psm.org,swang@ghsc-psm.org,jthomas@chemonics.com,jinsthomas@gmail.com,clemke@usaid.gov,nprintz@usaid.gov,chershey@usaid.gov,aball@usaid.gov,nhuhn@usaid.gov",
+                        "New user registration",
+                        body
+                    );
+                }
+                catch (Exception)
+                {
+
+                }
+                return Page();
             }
-            catch (Exception)
-            {
-                
-            }
-            return Page();
+
+            return NotFound($"Unable to confirm Email address for user.");
         }
     }
 }
