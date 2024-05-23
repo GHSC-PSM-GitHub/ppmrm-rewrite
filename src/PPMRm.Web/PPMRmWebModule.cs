@@ -1,73 +1,59 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using Hangfire;
+using Hangfire.Dashboard;
+using Hangfire.PostgreSql;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
+using PPMRm.ARTMIS;
+using PPMRm.ARTMIS.PeriodShipments;
+using PPMRm.Core;
 using PPMRm.EntityFrameworkCore;
+using PPMRm.Items;
 using PPMRm.Localization;
 using PPMRm.MultiTenancy;
+using PPMRm.PeriodReports;
+using PPMRm.Products;
+using PPMRm.Web.Components.Footer;
 using PPMRm.Web.Menus;
-using Microsoft.OpenApi.Models;
 using Volo.Abp;
 using Volo.Abp.Account.Web;
 using Volo.Abp.AspNetCore.Authentication.JwtBearer;
 using Volo.Abp.AspNetCore.Mvc;
 using Volo.Abp.AspNetCore.Mvc.Localization;
-using Volo.Abp.AspNetCore.Mvc.UI;
-using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap;
 using Volo.Abp.AspNetCore.Mvc.UI.Bundling;
-using Volo.Abp.AspNetCore.Mvc.UI.MultiTenancy;
+using Volo.Abp.AspNetCore.Mvc.UI.Components.LayoutHook;
 using Volo.Abp.AspNetCore.Mvc.UI.Theme.Basic;
 using Volo.Abp.AspNetCore.Mvc.UI.Theme.Basic.Bundling;
 using Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared;
 using Volo.Abp.AspNetCore.Serilog;
 using Volo.Abp.Autofac;
 using Volo.Abp.AutoMapper;
-using Volo.Abp.FeatureManagement;
+using Volo.Abp.BackgroundJobs.Hangfire;
+using Volo.Abp.BackgroundWorkers;
+using Volo.Abp.Domain.Repositories;
+using Volo.Abp.Emailing;
+using Volo.Abp.Emailing.Templates;
 using Volo.Abp.Identity.Web;
 using Volo.Abp.Localization;
 using Volo.Abp.Modularity;
-using Volo.Abp.PermissionManagement.Web;
 using Volo.Abp.SettingManagement.Web;
 using Volo.Abp.Swashbuckle;
 using Volo.Abp.TenantManagement.Web;
-using Volo.Abp.UI.Navigation.Urls;
-using Volo.Abp.UI;
+using Volo.Abp.TextTemplating;
 using Volo.Abp.UI.Navigation;
+using Volo.Abp.UI.Navigation.Urls;
+using Volo.Abp.Uow;
 using Volo.Abp.VirtualFileSystem;
 using Volo.CmsKit.Web;
-using Volo.Abp.AspNetCore.Mvc.UI.Components.LayoutHook;
-using PPMRm.Web.Components.Footer;
-using Volo.Abp.BackgroundWorkers;
-using Microsoft.AspNetCore.HttpOverrides;
-using Hangfire;
-using Hangfire.PostgreSql;
-using Volo.Abp.BackgroundJobs.Hangfire;
-using Volo.Abp.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using PPMRm.Web.Jobs;
-using Volo.Abp.Emailing;
-using Volo.Abp.TextTemplating;
-using Serilog.Core;
-using static Volo.Abp.AspNetCore.Mvc.UI.Components.LayoutHook.LayoutHooks;
-using System.Threading.Tasks;
-using static IdentityServer4.Models.IdentityResources;
-using Volo.Abp.Emailing.Templates;
-using Hangfire.Dashboard;
-using PPMRm.Core;
-using PPMRm.Items;
-using PPMRm.PeriodReports;
-using PPMRm.Products;
-using PPMRm.ARTMIS.PeriodShipments;
-using Volo.Abp.Domain.Repositories;
-using System.Linq;
-using PPMRm.ARTMIS;
-using System.Security.Cryptography;
-using Volo.Abp.Uow;
-using Volo.CmsKit.Tags;
-using System.Collections.Generic;
 
 namespace PPMRm.Web
 {
@@ -315,6 +301,8 @@ namespace PPMRm.Web
             app.UseConfiguredEndpoints();
 
             RecurringJob.AddOrUpdate<ISyncManager>(x => x.Start(), Cron.Monthly(2, 6));
+            RecurringJob.AddOrUpdate<ISyncManager>("Warn Inactive users", x => x.SendWarningEmailsToInactiveUsers(), Cron.Daily);
+            RecurringJob.AddOrUpdate<ISyncManager>("Remove Inactive Users", x => x.RemoveInactiveUsers(), Cron.Daily);
         }
     }
 }
@@ -322,6 +310,8 @@ namespace PPMRm.Web
 public interface ISyncManager
 {
     Task Start();
+    Task SendWarningEmailsToInactiveUsers();
+    Task RemoveInactiveUsers();
 }
 public class SyncManager : ISyncManager
 {
@@ -401,7 +391,28 @@ public class SyncManager : ISyncManager
         }
         await Repository.InsertManyAsync(reports);
     }
-    
+
+    public async Task SendWarningEmailsToInactiveUsers()
+    {
+        //var users = 
+        var body = await _templateRenderer.RenderAsync(
+            StandardEmailTemplates.Message,
+            new
+            {
+                message = $"Your PPMRm user account with this email address is expiring in 15 days. Please login to the PPMRm platform to keep your account."
+            });
+        await _emailSender.SendAsync(
+            "eyassu@botanow.com",
+            "Account Deactivation",
+            body
+        );
+    }
+
+    public async Task RemoveInactiveUsers()
+    {
+        await Task.CompletedTask;
+        Console.WriteLine("Removing users");
+    }
 }
 
 public class HangfireAuthorizationFilter : IDashboardAuthorizationFilter
