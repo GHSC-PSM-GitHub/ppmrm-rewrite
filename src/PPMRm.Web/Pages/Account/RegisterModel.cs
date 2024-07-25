@@ -61,6 +61,7 @@ namespace PPMRm.Web.Pages.Account
                 {
                     existingUser.IsDeleted = false;
                     existingUser.SetEmailConfirmed(false);
+                    existingUser.SetUserType(Identity.UserType.Draft);
                     await UserManager.SetUserNameAsync(existingUser, Input.UserName);
                     await UserManager.RemovePasswordAsync(existingUser);
                     await UserManager.AddPasswordAsync(existingUser, Input.Password);

@@ -44,7 +44,7 @@ namespace PPMRm.Web.Jobs
         {
             var inactivityTimeSpan = 165;
             var users = await _userRepository.GetListAsync();
-            var inactiveUsers = users.Where(u => u.EmailConfirmed && u.DaysSinceLastLogin() > inactivityTimeSpan).ToList();
+            var inactiveUsers = users.Where(u => u.EmailConfirmed && u.DaysSinceLastLogin() == inactivityTimeSpan).ToList();
             foreach (var user in inactiveUsers)
             {
                 var lastLogin = user.DaysSinceLastLogin();
@@ -54,11 +54,11 @@ namespace PPMRm.Web.Jobs
                     {
                         message = $"Your PPMRm user account with this email address is expiring in 15 days. Please login to the PPMRm platform to keep your account."
                     });
-                //await _emailSender.SendAsync(
-                //    user.Email,
-                //    "Account Deactivation",
-                //    body
-                //);
+                await _emailSender.SendAsync(
+                    user.Email,
+                    "Account Deactivation",
+                    body
+                );
             }
         }
     }
