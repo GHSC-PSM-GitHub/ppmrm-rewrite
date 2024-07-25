@@ -11,6 +11,7 @@ using Microsoft.Extensions.Options;
 using Volo.Abp;
 using Volo.Abp.Account;
 using Volo.Abp.Account.Web.Pages.Account;
+using Volo.Abp.Data;
 using Volo.Abp.Emailing;
 using Volo.Abp.Emailing.Templates;
 using Volo.Abp.Identity;
@@ -22,17 +23,18 @@ namespace PPMRm.Web.Pages.Account
     public class CustomRegisterModel : RegisterModel
     {
         private readonly IEmailSender _emailSender;
-        
+        IDataFilter DataFilter { get; }
         IEmailSender EmailSender { get; }
         ITemplateRenderer TemplateRenderer { get; }
 
         public CustomRegisterModel(
             IAccountAppService accountAppService,
             IEmailSender emailSender,
-            ITemplateRenderer templateRenderer) : base(accountAppService)
+            ITemplateRenderer templateRenderer,
+            IDataFilter dataFilter) : base(accountAppService)
         {
             _emailSender = emailSender;
-            
+            DataFilter = dataFilter;
         }
 
         public override async Task<IActionResult> OnPostAsync()
@@ -52,6 +54,22 @@ namespace PPMRm.Web.Pages.Account
         protected override async Task RegisterLocalUserAsync()
         {
             ValidateModel();
+            using(DataFilter.Disable<ISoftDelete>())
+            {
+                var existingUser = await UserManager.FindByEmailAsync(Input.EmailAddress);
+                if(existingUser != null && existingUser.IsDeleted)
+                {
+                    existingUser.IsDeleted = false;
+                    existingUser.SetEmailConfirmed(false);
+                    await UserManager.SetUserNameAsync(existingUser, Input.UserName);
+                    await UserManager.RemovePasswordAsync(existingUser);
+                    await UserManager.AddPasswordAsync(existingUser, Input.Password);
+                    await UserManager.UpdateAsync(existingUser);
+                    await SendEmailToAskForEmailConfirmationAsync(existingUser);
+                    return;
+
+                }
+            }
 
             var userDto = await AccountAppService.RegisterAsync(
                 new RegisterDto

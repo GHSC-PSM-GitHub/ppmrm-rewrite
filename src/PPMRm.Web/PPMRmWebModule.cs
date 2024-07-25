@@ -23,6 +23,7 @@ using PPMRm.MultiTenancy;
 using PPMRm.PeriodReports;
 using PPMRm.Products;
 using PPMRm.Web.Components.Footer;
+using PPMRm.Web.Jobs;
 using PPMRm.Web.Menus;
 using Volo.Abp;
 using Volo.Abp.Account.Web;
@@ -122,6 +123,7 @@ namespace PPMRm.Web
         private void ConfigureHangfire(ServiceConfigurationContext context, IConfiguration configuration)
         {
             context.Services.AddTransient<ISyncManager, SyncManager>();
+            context.Services.AddTransient<IUserCleanupJob, UserCleanupJob>();
             context.Services.AddHangfire(config =>
             {
                 config.UsePostgreSqlStorage(configuration.GetConnectionString("Default"));
@@ -301,8 +303,8 @@ namespace PPMRm.Web
             app.UseConfiguredEndpoints();
 
             RecurringJob.AddOrUpdate<ISyncManager>(x => x.Start(), Cron.Monthly(2, 6));
-            RecurringJob.AddOrUpdate<ISyncManager>("Warn Inactive users", x => x.SendWarningEmailsToInactiveUsers(), Cron.Daily);
-            RecurringJob.AddOrUpdate<ISyncManager>("Remove Inactive Users", x => x.RemoveInactiveUsers(), Cron.Daily);
+            RecurringJob.AddOrUpdate<IUserCleanupJob>("Warn Inactive users", x => x.SendWarningEmailsToInactiveUsers(), Cron.Daily(6));
+            RecurringJob.AddOrUpdate<IUserCleanupJob>("Remove Inactive Users", x => x.RemoveInactiveUsers(), Cron.Daily(6));
         }
     }
 }
@@ -310,8 +312,6 @@ namespace PPMRm.Web
 public interface ISyncManager
 {
     Task Start();
-    Task SendWarningEmailsToInactiveUsers();
-    Task RemoveInactiveUsers();
 }
 public class SyncManager : ISyncManager
 {

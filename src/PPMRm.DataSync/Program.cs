@@ -123,6 +123,7 @@
             ////Console.WriteLine($"Unique orders - {eventsByOrderLine.Count()}");
             ////session.Events.StartStream("order", sortedEvents);
             //await session.SaveChangesAsync();
+
             Console.WriteLine($"Completed importing ARTMIS Changesets!");
             Console.ReadLine();
         }
@@ -153,7 +154,7 @@
         private static void DefineProcess(ISingleStream<string> contextStream)
         {
             var orderStream = contextStream
-                .CrossApplyFolderFiles("list all required files", "202404*.tar.gz", true)
+                .CrossApplyFolderFiles("list all required files", "202406*.tar.gz", true)
                 .CrossApplyGZipFiles("extract files from zip", "*order*.txt")
                 .CrossApplyTextFile("parse file", 
                     FlatFileDefinition.Create(i => new OrderEto

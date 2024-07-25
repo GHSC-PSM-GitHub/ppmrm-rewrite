@@ -39,5 +39,25 @@ namespace PPMRm
         {
             user.SetProperty(IdentityConsts.UserExtensionProperties.LastLogin, value);
         }
+
+        public static DateTime? GetLastLoginDate(this IdentityUser user)
+        {
+            var dateString = user.GetUserLastLogin();
+            if(DateTime.TryParse(dateString, out var date))
+            {
+                return date;
+            }
+            return null;
+        }
+
+        public static int DaysSinceLastLogin(this IdentityUser user)
+        {
+            var lastLogin = user.GetLastLoginDate();
+            if(lastLogin != null)
+            {
+                return DateTime.Today.Subtract(lastLogin.Value.Date).Days;
+            }
+            return 0;
+        }
     }
 }
