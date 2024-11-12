@@ -154,7 +154,7 @@
         private static void DefineProcess(ISingleStream<string> contextStream)
         {
             var orderStream = contextStream
-                .CrossApplyFolderFiles("list all required files", "202406*.tar.gz", true)
+                .CrossApplyFolderFiles("list all required files", "202408*.tar.gz", true)
                 .CrossApplyGZipFiles("extract files from zip", "*order*.txt")
                 .CrossApplyTextFile("parse file", 
                     FlatFileDefinition.Create(i => new OrderEto
