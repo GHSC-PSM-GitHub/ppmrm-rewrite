@@ -302,7 +302,7 @@ namespace PPMRm.Web
             });
             app.UseConfiguredEndpoints();
 
-            RecurringJob.AddOrUpdate<ISyncManager>(x => x.Start(), Cron.Monthly(2, 6));
+            // RecurringJob.AddOrUpdate<ISyncManager>(x => x.Start(), Cron.Monthly(2, 6));
             RecurringJob.AddOrUpdate<IUserCleanupJob>("Warn Inactive users", x => x.SendWarningEmailsToInactiveUsers(), Cron.Daily(6));
             RecurringJob.AddOrUpdate<IUserCleanupJob>("Remove Inactive Users", x => x.RemoveInactiveUsers(), Cron.Daily(6));
         }
